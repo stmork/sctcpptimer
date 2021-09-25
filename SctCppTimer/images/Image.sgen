@@ -1,0 +1,19 @@
+GeneratorModel for yakindu::images
+{
+	const PROJECT : string = "SctCppTimer"
+	const FOLDER  : string = "images"
+
+	statechart Statechart
+	{
+		feature Outlet
+		{
+			targetProject = PROJECT
+			targetFolder = FOLDER
+		}
+
+		feature Renderer
+		{
+			format = "png"
+		}
+	}
+}

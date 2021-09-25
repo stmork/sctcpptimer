@@ -5,7 +5,7 @@
 //  Created by Steffen A. Mork on 25.09.21.
 //
 
-#include "SctCppTimer.hpp"
+#include "SctCppTimer.h"
 
 using namespace sc::timer;
 

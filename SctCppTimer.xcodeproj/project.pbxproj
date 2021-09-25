@@ -10,6 +10,7 @@
 		933696DF26FDAAA80028E6A8 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933696DE26FDAAA80028E6A8 /* main.cpp */; };
 		933696E826FDAADD0028E6A8 /* CppTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933696E626FDAADD0028E6A8 /* CppTimer.cpp */; };
 		933696F126FF34DE0028E6A8 /* SctCppTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933696EF26FF34DE0028E6A8 /* SctCppTimer.cpp */; };
+		933696F526FF36940028E6A8 /* SctCppTimerService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933696F326FF36940028E6A8 /* SctCppTimerService.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,7 +33,9 @@
 		933696EC26FF34570028E6A8 /* src-gen */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "src-gen"; sourceTree = "<group>"; };
 		933696ED26FF34650028E6A8 /* src-lib */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "src-lib"; sourceTree = "<group>"; };
 		933696EF26FF34DE0028E6A8 /* SctCppTimer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SctCppTimer.cpp; sourceTree = "<group>"; };
-		933696F026FF34DE0028E6A8 /* SctCppTimer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SctCppTimer.hpp; sourceTree = "<group>"; };
+		933696F026FF34DE0028E6A8 /* SctCppTimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SctCppTimer.h; sourceTree = "<group>"; };
+		933696F326FF36940028E6A8 /* SctCppTimerService.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SctCppTimerService.cpp; sourceTree = "<group>"; };
+		933696F426FF36940028E6A8 /* SctCppTimerService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SctCppTimerService.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,7 +74,9 @@
 				933696E626FDAADD0028E6A8 /* CppTimer.cpp */,
 				933696E726FDAADD0028E6A8 /* CppTimer.h */,
 				933696EF26FF34DE0028E6A8 /* SctCppTimer.cpp */,
-				933696F026FF34DE0028E6A8 /* SctCppTimer.hpp */,
+				933696F026FF34DE0028E6A8 /* SctCppTimer.h */,
+				933696F326FF36940028E6A8 /* SctCppTimerService.cpp */,
+				933696F426FF36940028E6A8 /* SctCppTimerService.h */,
 			);
 			path = SctCppTimer;
 			sourceTree = "<group>";
@@ -134,6 +139,7 @@
 			files = (
 				933696DF26FDAAA80028E6A8 /* main.cpp in Sources */,
 				933696E826FDAADD0028E6A8 /* CppTimer.cpp in Sources */,
+				933696F526FF36940028E6A8 /* SctCppTimerService.cpp in Sources */,
 				933696F126FF34DE0028E6A8 /* SctCppTimer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

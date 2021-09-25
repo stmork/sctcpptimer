@@ -71,7 +71,7 @@ void AbstractTimerStatechart::dispatch_event(SctEvent * event)
 		default:
 			break;
 	}
-	delete event;
+//	delete event;
 }
 
 void AbstractTimerStatechart::iface_dispatch_event(SctEvent * event)

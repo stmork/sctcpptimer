@@ -37,5 +37,7 @@ int main(int argc, const char * argv[])
     std::cout << "--------------------------" << std::endl << std::flush;
     a.stop();
     b.stop();
+
+	statechart.exit();
     return 0;
 }

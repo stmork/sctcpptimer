@@ -30,6 +30,7 @@ void SctCppTimerService::setTimer(
     if (it == timer_map.end())
     {
         timer = new SctCppTimer(statemachine, event);
+		timer_map[event] = timer;
     }
     else
     {
@@ -41,5 +42,7 @@ void SctCppTimerService::setTimer(
 void SctCppTimerService::unsetTimer(
                         TimedInterface* statemachine, sc_eventid event)
 {
-    timer_map[event]->stop();
+	SctCppTimer * timer = timer_map[event];
+
+	timer->stop();
 }

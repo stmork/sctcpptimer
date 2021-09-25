@@ -8,7 +8,7 @@
 #include <stdint.h>
 
 #ifndef sc_string
-#define sc_string      std::string &
+#define sc_string      const char *
 #endif
 
 typedef int_fast16_t   sc_short;

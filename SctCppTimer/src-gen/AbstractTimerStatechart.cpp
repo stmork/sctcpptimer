@@ -71,7 +71,7 @@ void AbstractTimerStatechart::dispatch_event(SctEvent * event)
 		default:
 			break;
 	}
-//	delete event;
+	delete event;
 }
 
 void AbstractTimerStatechart::iface_dispatch_event(SctEvent * event)
@@ -351,6 +351,7 @@ sc_integer AbstractTimerStatechart::main_region_First_react(const sc_integer tra
 		if (timeEvents[0])
 		{ 
 			exseq_main_region_First();
+			ifaceOperationCallback->dump((sc_string) "1 -> 2");
 			enseq_main_region_Second_default();
 			react(0);
 			transitioned_after = 0;
@@ -380,6 +381,7 @@ sc_integer AbstractTimerStatechart::main_region_Second_react(const sc_integer tr
 		if (timeEvents[3])
 		{ 
 			exseq_main_region_Second();
+			ifaceOperationCallback->dump((sc_string) "2 -> choice");
 			react_main_region__choice_0();
 			transitioned_after = 0;
 		} 

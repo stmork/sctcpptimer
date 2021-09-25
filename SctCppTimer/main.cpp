@@ -38,6 +38,7 @@ int main(int argc, const char * argv[])
     a.stop();
     b.stop();
 
+	sleep(42);
 	statechart.exit();
     return 0;
 }

@@ -6,10 +6,10 @@
         <outgoingTransitions xmi:id="_ISVepR3rEeyyQoFjqZiZFg" target="_ISWFsB3rEeyyQoFjqZiZFg"/>
       </vertices>
       <vertices xsi:type="sgraph:State" xmi:id="_ISWFsB3rEeyyQoFjqZiZFg" specification="entry / dump(&quot;Enter first state&quot;)&#xA;every 500 ms / dump(&quot;Timer 500ms&quot;)&#xA;after 750ms / dump(&quot;Single shot&quot;)&#xA;exit / dump(&quot;Exit first state&quot;)" name="First" incomingTransitions="_ISVepR3rEeyyQoFjqZiZFg _ISX64R3rEeyyQoFjqZiZFg">
-        <outgoingTransitions xmi:id="_ISWswR3rEeyyQoFjqZiZFg" specification="after 10s" target="_ISXT0x3rEeyyQoFjqZiZFg"/>
+        <outgoingTransitions xmi:id="_ISWswR3rEeyyQoFjqZiZFg" specification="after 10s / dump(&quot;1 -> 2&quot;)" target="_ISXT0x3rEeyyQoFjqZiZFg"/>
       </vertices>
       <vertices xsi:type="sgraph:State" xmi:id="_ISXT0x3rEeyyQoFjqZiZFg" specification="entry / dump(&quot;Enter second state&quot;)&#xA;exit / dump(&quot;Exit second state&quot;)" name="Second" incomingTransitions="_ISWswR3rEeyyQoFjqZiZFg">
-        <outgoingTransitions xmi:id="_q53TUB3rEeyyQoFjqZiZFg" specification="after 500ms" target="_eJRVsB3rEeyyQoFjqZiZFg"/>
+        <outgoingTransitions xmi:id="_q53TUB3rEeyyQoFjqZiZFg" specification="after 500ms / dump(&quot;2 -> choice&quot;)" target="_eJRVsB3rEeyyQoFjqZiZFg"/>
       </vertices>
       <vertices xsi:type="sgraph:Choice" xmi:id="_eJRVsB3rEeyyQoFjqZiZFg" incomingTransitions="_q53TUB3rEeyyQoFjqZiZFg">
         <outgoingTransitions xmi:id="_ISX64R3rEeyyQoFjqZiZFg" specification="/ counter++" target="_ISWFsB3rEeyyQoFjqZiZFg"/>

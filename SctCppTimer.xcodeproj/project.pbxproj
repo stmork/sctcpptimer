@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		933696DF26FDAAA80028E6A8 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933696DE26FDAAA80028E6A8 /* main.cpp */; };
+		933696E826FDAADD0028E6A8 /* CppTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933696E626FDAADD0028E6A8 /* CppTimer.cpp */; };
+		933696F126FF34DE0028E6A8 /* SctCppTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933696EF26FF34DE0028E6A8 /* SctCppTimer.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +27,12 @@
 /* Begin PBXFileReference section */
 		933696DB26FDAAA80028E6A8 /* SctCppTimer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SctCppTimer; sourceTree = BUILT_PRODUCTS_DIR; };
 		933696DE26FDAAA80028E6A8 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		933696E626FDAADD0028E6A8 /* CppTimer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CppTimer.cpp; sourceTree = "<group>"; };
+		933696E726FDAADD0028E6A8 /* CppTimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CppTimer.h; sourceTree = "<group>"; };
+		933696EC26FF34570028E6A8 /* src-gen */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "src-gen"; sourceTree = "<group>"; };
+		933696ED26FF34650028E6A8 /* src-lib */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "src-lib"; sourceTree = "<group>"; };
+		933696EF26FF34DE0028E6A8 /* SctCppTimer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SctCppTimer.cpp; sourceTree = "<group>"; };
+		933696F026FF34DE0028E6A8 /* SctCppTimer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SctCppTimer.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +65,13 @@
 		933696DD26FDAAA80028E6A8 /* SctCppTimer */ = {
 			isa = PBXGroup;
 			children = (
+				933696ED26FF34650028E6A8 /* src-lib */,
+				933696EC26FF34570028E6A8 /* src-gen */,
 				933696DE26FDAAA80028E6A8 /* main.cpp */,
+				933696E626FDAADD0028E6A8 /* CppTimer.cpp */,
+				933696E726FDAADD0028E6A8 /* CppTimer.h */,
+				933696EF26FF34DE0028E6A8 /* SctCppTimer.cpp */,
+				933696F026FF34DE0028E6A8 /* SctCppTimer.hpp */,
 			);
 			path = SctCppTimer;
 			sourceTree = "<group>";
@@ -119,6 +133,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				933696DF26FDAAA80028E6A8 /* main.cpp in Sources */,
+				933696E826FDAADD0028E6A8 /* CppTimer.cpp in Sources */,
+				933696F126FF34DE0028E6A8 /* SctCppTimer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,7 +147,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -190,7 +206,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;

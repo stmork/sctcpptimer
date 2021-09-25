@@ -1,0 +1,32 @@
+GeneratorModel for yakindu::cpp
+{
+	const PROJECT : string = "SctCppTimer"
+
+	const SRCGEN : string = "src-gen"
+	const SRCLIB : string = "src-lib"
+
+	statechart Statechart
+	{
+		feature Outlet
+		{
+			targetProject = PROJECT
+			targetFolder = SRCGEN
+			libraryTargetFolder = SRCLIB
+			
+			
+		}
+		
+		feature GeneralFeatures
+		{
+			timerService = false
+		}
+		
+		feature IdentifierSettings
+		{
+			headerFilenameExtension = "h"
+			sourceFilenameExtension = "cpp"
+			separator = "_"
+			moduleName = "AbstractTimerStatechart"
+		}
+	}
+}

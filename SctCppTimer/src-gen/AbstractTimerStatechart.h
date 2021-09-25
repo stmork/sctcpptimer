@@ -30,7 +30,8 @@ typedef enum  {
 	invalid_event = SC_INVALID_EVENT_VALUE,
 	Statechart_main_region_First_time_event_0,
 	Statechart_main_region_First_time_event_1,
-	Statechart_main_region_StateB_time_event_0
+	Statechart_main_region_First_time_event_2,
+	Statechart_main_region_Second_time_event_0
 } AbstractTimerStatechartEventName;
 
 class SctEvent
@@ -66,7 +67,7 @@ class TimedSctEvent : public SctEvent
 
 /*! Define indices of states in the StateConfVector */
 #define SCVI_MAIN_REGION_FIRST 0
-#define SCVI_MAIN_REGION_STATEB 0
+#define SCVI_MAIN_REGION_SECOND 0
 #define SCVI_MAIN_REGION__FINAL_ 0
 
 
@@ -82,7 +83,7 @@ class AbstractTimerStatechart : public sc::timer::TimedInterface, public sc::Sta
 		{
 			Statechart_last_state,
 			main_region_First,
-			main_region_StateB,
+			main_region_Second,
 			main_region__final_
 		} StatechartStates;
 					
@@ -103,7 +104,7 @@ class AbstractTimerStatechart : public sc::timer::TimedInterface, public sc::Sta
 			public:
 				virtual ~OperationCallback() = 0;
 				
-				virtual void dump() = 0;
+				virtual void dump(sc_string text) = 0;
 				
 				
 		};
@@ -153,10 +154,10 @@ class AbstractTimerStatechart : public sc::timer::TimedInterface, public sc::Sta
 		sc_boolean isStateActive(StatechartStates state) const;
 		
 		//! number of time events used by the state machine.
-		static const sc_integer timeEventsCount = 3;
+		static const sc_integer timeEventsCount = 4;
 		
 		//! number of time events that can be active at once.
-		static const sc_integer parallelTimeEventsCount = 2;
+		static const sc_integer parallelTimeEventsCount = 3;
 		
 		
 	protected:
@@ -193,22 +194,22 @@ class AbstractTimerStatechart : public sc::timer::TimedInterface, public sc::Sta
 		void effect_main_region__choice_0_tr1();
 		void effect_main_region__choice_0_tr0();
 		void enact_main_region_First();
-		void enact_main_region_StateB();
+		void enact_main_region_Second();
 		void exact_main_region_First();
-		void exact_main_region_StateB();
+		void exact_main_region_Second();
 		void enseq_main_region_First_default();
-		void enseq_main_region_StateB_default();
+		void enseq_main_region_Second_default();
 		void enseq_main_region__final__default();
 		void enseq_main_region_default();
 		void exseq_main_region_First();
-		void exseq_main_region_StateB();
+		void exseq_main_region_Second();
 		void exseq_main_region__final_();
 		void exseq_main_region();
 		void react_main_region__choice_0();
 		void react_main_region__entry_Default();
 		sc_integer react(const sc_integer transitioned_before);
 		sc_integer main_region_First_react(const sc_integer transitioned_before);
-		sc_integer main_region_StateB_react(const sc_integer transitioned_before);
+		sc_integer main_region_Second_react(const sc_integer transitioned_before);
 		sc_integer main_region__final__react(const sc_integer transitioned_before);
 		void clearInEvents();
 		void microStep();

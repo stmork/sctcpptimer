@@ -12,15 +12,13 @@ GeneratorModel for yakindu::cpp
 			targetProject = PROJECT
 			targetFolder = SRCGEN
 			libraryTargetFolder = SRCLIB
-			
-			
 		}
-		
+
 		feature GeneralFeatures
 		{
 			timerService = false
 		}
-		
+
 		feature IdentifierSettings
 		{
 			headerFilenameExtension = "h"

@@ -5,6 +5,8 @@
 //  Created by Steffen A. Mork on 25.09.21.
 //
 
+#pragma once
+
 #ifndef SctCppTimerService_hpp
 #define SctCppTimerService_hpp
 

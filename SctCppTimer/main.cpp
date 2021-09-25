@@ -9,16 +9,21 @@
 #include <unistd.h>
 
 #include "CppTimer.h"
+#include "SctCppTimerService.h"
+#include "TimerStatechart.h"
 
 using namespace sc::timer;
 using namespace std::chrono;
 
 int main(int argc, const char * argv[])
 {
+    SctCppTimerService timer_service;
+    TimerStatechart    statechart(timer_service);
     CppTimer a;
     CppTimer b;
     CppTimer c;
     
+    statechart.enter();
     std::cout << "--------------------------" << std::endl << std::flush;
     a.start(2s);
     b.start(700ms, false);

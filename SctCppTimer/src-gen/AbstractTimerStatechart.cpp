@@ -58,9 +58,14 @@ void AbstractTimerStatechart::dispatch_event(SctEvent * event)
 			timeEvents[1] = true;
 			break;
 		}
-		case Statechart_main_region_StateB_time_event_0:
+		case Statechart_main_region_First_time_event_2:
 		{
 			timeEvents[2] = true;
+			break;
+		}
+		case Statechart_main_region_Second_time_event_0:
+		{
+			timeEvents[3] = true;
 			break;
 		}
 		default:
@@ -87,7 +92,10 @@ AbstractTimerStatechartEventName AbstractTimerStatechart::getTimedEventName(sc_e
 		return Statechart_main_region_First_time_event_1;
 	}
 	if (evid == (sc_eventid)(&timeEvents[2])) {
-		return Statechart_main_region_StateB_time_event_0;
+		return Statechart_main_region_First_time_event_2;
+	}
+	if (evid == (sc_eventid)(&timeEvents[3])) {
+		return Statechart_main_region_Second_time_event_0;
 	}
 	return invalid_event;
 }
@@ -146,8 +154,8 @@ sc_boolean AbstractTimerStatechart::isStateActive(StatechartStates state) const
 		case main_region_First : 
 			return (sc_boolean) (stateConfVector[SCVI_MAIN_REGION_FIRST] == main_region_First
 			);
-		case main_region_StateB : 
-			return (sc_boolean) (stateConfVector[SCVI_MAIN_REGION_STATEB] == main_region_StateB
+		case main_region_Second : 
+			return (sc_boolean) (stateConfVector[SCVI_MAIN_REGION_SECOND] == main_region_Second
 			);
 		case main_region__final_ : 
 			return (sc_boolean) (stateConfVector[SCVI_MAIN_REGION__FINAL_] == main_region__final_
@@ -185,6 +193,7 @@ sc_boolean AbstractTimerStatechart::check_main_region__choice_0_tr1_tr1()
 
 void AbstractTimerStatechart::effect_main_region__choice_0_tr1()
 {
+	ifaceOperationCallback->dump((sc_string) "Exit");
 	enseq_main_region__final__default();
 }
 
@@ -200,13 +209,16 @@ void AbstractTimerStatechart::enact_main_region_First()
 	/* Entry action for state 'First'. */
 	timerService->setTimer(this, (sc_eventid)(&timeEvents[0]), (10 * 1000), false);
 	timerService->setTimer(this, (sc_eventid)(&timeEvents[1]), 500, true);
+	timerService->setTimer(this, (sc_eventid)(&timeEvents[2]), 750, false);
+	ifaceOperationCallback->dump((sc_string) "Enter first state");
 }
 
-/* Entry action for state 'StateB'. */
-void AbstractTimerStatechart::enact_main_region_StateB()
+/* Entry action for state 'Second'. */
+void AbstractTimerStatechart::enact_main_region_Second()
 {
-	/* Entry action for state 'StateB'. */
-	timerService->setTimer(this, (sc_eventid)(&timeEvents[2]), 500, false);
+	/* Entry action for state 'Second'. */
+	timerService->setTimer(this, (sc_eventid)(&timeEvents[3]), 500, false);
+	ifaceOperationCallback->dump((sc_string) "Enter second state");
 }
 
 /* Exit action for state 'First'. */
@@ -215,13 +227,16 @@ void AbstractTimerStatechart::exact_main_region_First()
 	/* Exit action for state 'First'. */
 	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[0]));
 	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[1]));
+	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[2]));
+	ifaceOperationCallback->dump((sc_string) "Exit first state");
 }
 
-/* Exit action for state 'StateB'. */
-void AbstractTimerStatechart::exact_main_region_StateB()
+/* Exit action for state 'Second'. */
+void AbstractTimerStatechart::exact_main_region_Second()
 {
-	/* Exit action for state 'StateB'. */
-	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[2]));
+	/* Exit action for state 'Second'. */
+	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[3]));
+	ifaceOperationCallback->dump((sc_string) "Exit second state");
 }
 
 /* 'default' enter sequence for state First */
@@ -232,12 +247,12 @@ void AbstractTimerStatechart::enseq_main_region_First_default()
 	stateConfVector[0] = main_region_First;
 }
 
-/* 'default' enter sequence for state StateB */
-void AbstractTimerStatechart::enseq_main_region_StateB_default()
+/* 'default' enter sequence for state Second */
+void AbstractTimerStatechart::enseq_main_region_Second_default()
 {
-	/* 'default' enter sequence for state StateB */
-	enact_main_region_StateB();
-	stateConfVector[0] = main_region_StateB;
+	/* 'default' enter sequence for state Second */
+	enact_main_region_Second();
+	stateConfVector[0] = main_region_Second;
 }
 
 /* Default enter sequence for state null */
@@ -262,12 +277,12 @@ void AbstractTimerStatechart::exseq_main_region_First()
 	exact_main_region_First();
 }
 
-/* Default exit sequence for state StateB */
-void AbstractTimerStatechart::exseq_main_region_StateB()
+/* Default exit sequence for state Second */
+void AbstractTimerStatechart::exseq_main_region_Second()
 {
-	/* Default exit sequence for state StateB */
+	/* Default exit sequence for state Second */
 	stateConfVector[0] = Statechart_last_state;
-	exact_main_region_StateB();
+	exact_main_region_Second();
 }
 
 /* Default exit sequence for final state. */
@@ -289,9 +304,9 @@ void AbstractTimerStatechart::exseq_main_region()
 			exseq_main_region_First();
 			break;
 		}
-		case main_region_StateB :
+		case main_region_Second :
 		{
-			exseq_main_region_StateB();
+			exseq_main_region_Second();
 			break;
 		}
 		case main_region__final_ :
@@ -336,7 +351,7 @@ sc_integer AbstractTimerStatechart::main_region_First_react(const sc_integer tra
 		if (timeEvents[0])
 		{ 
 			exseq_main_region_First();
-			enseq_main_region_StateB_default();
+			enseq_main_region_Second_default();
 			react(0);
 			transitioned_after = 0;
 		} 
@@ -346,21 +361,25 @@ sc_integer AbstractTimerStatechart::main_region_First_react(const sc_integer tra
 	{ 
 		if (timeEvents[1])
 		{ 
-			ifaceOperationCallback->dump();
+			ifaceOperationCallback->dump((sc_string) "Timer 500ms");
+		} 
+		if (timeEvents[2])
+		{ 
+			ifaceOperationCallback->dump((sc_string) "Single shot");
 		} 
 		transitioned_after = react(transitioned_before);
 	} 
 	return transitioned_after;
 }
 
-sc_integer AbstractTimerStatechart::main_region_StateB_react(const sc_integer transitioned_before) {
-	/* The reactions of state StateB. */
+sc_integer AbstractTimerStatechart::main_region_Second_react(const sc_integer transitioned_before) {
+	/* The reactions of state Second. */
 	sc_integer transitioned_after = transitioned_before;
 	if ((transitioned_after) < (0))
 	{ 
-		if (timeEvents[2])
+		if (timeEvents[3])
 		{ 
-			exseq_main_region_StateB();
+			exseq_main_region_Second();
 			react_main_region__choice_0();
 			transitioned_after = 0;
 		} 
@@ -391,6 +410,7 @@ void AbstractTimerStatechart::clearInEvents() {
 	timeEvents[0] = false;
 	timeEvents[1] = false;
 	timeEvents[2] = false;
+	timeEvents[3] = false;
 }
 
 void AbstractTimerStatechart::microStep() {
@@ -401,9 +421,9 @@ void AbstractTimerStatechart::microStep() {
 			main_region_First_react(-1);
 			break;
 		}
-		case main_region_StateB :
+		case main_region_Second :
 		{
-			main_region_StateB_react(-1);
+			main_region_Second_react(-1);
 			break;
 		}
 		case main_region__final_ :
@@ -428,7 +448,7 @@ void AbstractTimerStatechart::runCycle() {
 		microStep();
 		clearInEvents();
 		dispatch_event(getNextEvent());
-	} while (((timeEvents[0]) || (timeEvents[1])) || (timeEvents[2]));
+	} while ((((timeEvents[0]) || (timeEvents[1])) || (timeEvents[2])) || (timeEvents[3]));
 	isExecuting = false;
 }
 

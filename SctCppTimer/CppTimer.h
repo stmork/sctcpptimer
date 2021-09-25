@@ -25,6 +25,7 @@ namespace sc::timer
         
         std::chrono::time_point<std::chrono::steady_clock> time_point;
         std::chrono::milliseconds                          duration;
+
     public:
         CppTimer();
         virtual ~CppTimer();

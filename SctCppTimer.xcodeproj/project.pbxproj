@@ -12,7 +12,6 @@
 		933696F126FF34DE0028E6A8 /* SctCppTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933696EF26FF34DE0028E6A8 /* SctCppTimer.cpp */; };
 		933696F526FF36940028E6A8 /* SctCppTimerService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933696F326FF36940028E6A8 /* SctCppTimerService.cpp */; };
 		933696FA26FF7DCB0028E6A8 /* TimerStatechart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933696F826FF7DCB0028E6A8 /* TimerStatechart.cpp */; };
-		933696FF26FF84F00028E6A8 /* AbstractTimerStatechart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933696FE26FF84F00028E6A8 /* AbstractTimerStatechart.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -40,7 +39,6 @@
 		933696F426FF36940028E6A8 /* SctCppTimerService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SctCppTimerService.h; sourceTree = "<group>"; };
 		933696F826FF7DCB0028E6A8 /* TimerStatechart.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TimerStatechart.cpp; sourceTree = "<group>"; };
 		933696F926FF7DCB0028E6A8 /* TimerStatechart.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimerStatechart.h; sourceTree = "<group>"; };
-		933696FE26FF84F00028E6A8 /* AbstractTimerStatechart.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AbstractTimerStatechart.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,7 +74,6 @@
 				933696ED26FF34650028E6A8 /* src-lib */,
 				933696EC26FF34570028E6A8 /* src-gen */,
 				933696DE26FDAAA80028E6A8 /* main.cpp */,
-				933696FE26FF84F00028E6A8 /* AbstractTimerStatechart.cpp */,
 				933696E626FDAADD0028E6A8 /* CppTimer.cpp */,
 				933696E726FDAADD0028E6A8 /* CppTimer.h */,
 				933696EF26FF34DE0028E6A8 /* SctCppTimer.cpp */,
@@ -145,7 +142,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				933696FF26FF84F00028E6A8 /* AbstractTimerStatechart.cpp in Sources */,
 				933696DF26FDAAA80028E6A8 /* main.cpp in Sources */,
 				933696E826FDAADD0028E6A8 /* CppTimer.cpp in Sources */,
 				933696F526FF36940028E6A8 /* SctCppTimerService.cpp in Sources */,
@@ -211,6 +207,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
+				NEW_SETTING = "";
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
@@ -264,6 +261,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				NEW_SETTING = "";
 				SDKROOT = macosx;
 			};
 			name = Release;

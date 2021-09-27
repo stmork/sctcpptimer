@@ -12,18 +12,22 @@
 
 #include <stdio.h>
 #include <unordered_map>
+#include <queue>
 
 #include "src-lib/sc_timer.h"
+#include "SctCppTimer.h"
 
 namespace sc::timer
 {
     class SctCppTimer;
+	class SctCppTimerInfo;
 
     class SctCppTimerService : public TimerServiceInterface
     {
         std::unordered_map<sc_eventid, SctCppTimer *> timer_map;
-        
-    public:
+		std::priority_queue<SctCppTimerInfo *, std::vector<SctCppTimerInfo *>, SctCppTimerInfo> queue;
+
+	public:
         virtual ~SctCppTimerService();
         
         virtual void setTimer(

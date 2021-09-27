@@ -11,5 +11,9 @@ using namespace sc::timer;
 
 void SctCppTimer::signal()
 {
+	static std::mutex raise_mutex;
+
+//	std::lock_guard<std::mutex> lock(raise_mutex);
+
     statemachine->raiseTimeEvent(event_id);
 }

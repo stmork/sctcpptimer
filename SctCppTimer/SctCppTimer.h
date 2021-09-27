@@ -20,6 +20,7 @@ namespace sc::timer
     {
         const sc_eventid event_id;
         TimedInterface * statemachine = nullptr;
+
     public:
         explicit inline SctCppTimer(
             TimedInterface * timed_interface,

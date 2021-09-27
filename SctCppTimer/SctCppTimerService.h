@@ -12,22 +12,28 @@
 
 #include <stdio.h>
 #include <unordered_map>
-#include <queue>
+#include <set>
+#include <thread>
 
 #include "src-lib/sc_timer.h"
 #include "SctCppTimer.h"
 
 namespace sc::timer
 {
-    class SctCppTimer;
 	class SctCppTimerInfo;
 
     class SctCppTimerService : public TimerServiceInterface
     {
-        std::unordered_map<sc_eventid, SctCppTimer *> timer_map;
-		std::priority_queue<SctCppTimerInfo *, std::vector<SctCppTimerInfo *>, SctCppTimerInfo> queue;
+        std::unordered_map<sc_eventid, SctCppTimerInfo *> timer_map;
+		std::set<SctCppTimerInfo *, SctCppTimerInfo>      queue;
+		std::mutex              mutex;
+		std::condition_variable wait;
+		std::thread             thread;
+
+		bool                    loop = true;
 
 	public:
+		SctCppTimerService();
         virtual ~SctCppTimerService();
         
         virtual void setTimer(
@@ -48,6 +54,8 @@ namespace sc::timer
         {
             // Intentionally do nothing!
         }
+
+		void eventLoop();
     };
 }
 #endif /* SctCppTimerService_hpp */

@@ -11,8 +11,10 @@
 #define SctCppTimer_hpp
 
 #include <stdio.h>
+#include <chrono>
+#include <mutex>
+
 #include "src-lib/sc_timer.h"
-#include "CppTimer.h"
 
 namespace sc::timer
 {
@@ -29,22 +31,13 @@ namespace sc::timer
 		{
 		}
 
-		explicit inline SctCppTimerInfo(
+		explicit SctCppTimerInfo(
 			TimedInterface * timed_interface,
-			const sc_eventid id) :
-		statemachine(timed_interface),
-		event_id(id)
-		{
-		}
+			const sc_eventid id);
 
-		inline void start(
-						  sc_integer time_ms,
-						  sc_boolean is_periodic)
-		{
-			duration   = std::chrono::milliseconds(time_ms);
-			repeating  = is_periodic;
-			time_point = std::chrono::steady_clock::now() + duration;
-		}
+		void start(
+			sc_integer time_ms,
+			sc_boolean is_periodic);
 
 		inline void add()
 		{
@@ -68,29 +61,11 @@ namespace sc::timer
 			return repeating;
 		}
 
-		inline operator const std::chrono::time_point<std::chrono::steady_clock> & () const
+		inline const std::chrono::time_point<std::chrono::steady_clock> & clock() const
 		{
 			return time_point;
 		}
 	};
-
-    class SctCppTimer : public CppTimer
-    {
-        const sc_eventid event_id;
-        TimedInterface * statemachine = nullptr;
-
-    public:
-        explicit inline SctCppTimer(
-            TimedInterface * timed_interface,
-            const sc_eventid id) :
-        statemachine(timed_interface),
-        event_id(id)
-        {
-        }
-        
-    protected:
-        virtual void signal() override;
-    };
 }
 
 #endif /* SctCppTimer_hpp */

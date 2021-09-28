@@ -6,7 +6,7 @@
 */
 
 
-const sc_integer AbstractTimerStatechart::max = 5;
+const sc_integer AbstractTimerStatechart::max = 2;
 
 
 
@@ -71,7 +71,7 @@ void AbstractTimerStatechart::dispatch_event(SctEvent * event)
 		default:
 			break;
 	}
-	delete event;
+//	delete event;
 }
 
 void AbstractTimerStatechart::iface_dispatch_event(SctEvent * event)
@@ -207,8 +207,8 @@ void AbstractTimerStatechart::effect_main_region__choice_0_tr0()
 void AbstractTimerStatechart::enact_main_region_First()
 {
 	/* Entry action for state 'First'. */
-	timerService->setTimer(this, (sc_eventid)(&timeEvents[0]), (10 * 1000), false);
-	timerService->setTimer(this, (sc_eventid)(&timeEvents[1]), 500, true);
+	timerService->setTimer(this, (sc_eventid)(&timeEvents[0]), (3 * 1000), false);
+	timerService->setTimer(this, (sc_eventid)(&timeEvents[1]), 300, true);
 	timerService->setTimer(this, (sc_eventid)(&timeEvents[2]), 750, false);
 	ifaceOperationCallback->dump((sc_string) "Enter first state");
 }
@@ -362,7 +362,7 @@ sc_integer AbstractTimerStatechart::main_region_First_react(const sc_integer tra
 	{ 
 		if (timeEvents[1])
 		{ 
-			ifaceOperationCallback->dump((sc_string) "Timer 500ms");
+			ifaceOperationCallback->dump((sc_string) "Timer 300ms");
 		} 
 		if (timeEvents[2])
 		{ 

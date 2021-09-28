@@ -10,39 +10,77 @@
 
 using namespace sc::timer;
 
+SctCppTimerService::SctCppTimerService() :
+	thread(&SctCppTimerService::eventLoop, this)
+{
+}
+
 SctCppTimerService::~SctCppTimerService()
 {
-	for (auto element : timer_map)
-	{
-		delete element.second;
-	}
+	loop = false;
+	wait.notify_all();
+	thread.join();
 }
 
 void SctCppTimerService::setTimer(
 	TimedInterface * statemachine,
-	sc_eventid event,
-	sc_integer time_ms,
-	sc_boolean isPeriodic)
+	sc_eventid       event,
+	sc_integer       time_ms,
+	sc_boolean       is_periodic)
 {
-	SctCppTimer * timer;
+	SctCppTimerInfo * timer;
 	auto it = timer_map.find(event);
 
 	if (it == timer_map.end())
 	{
-		timer = new SctCppTimer(statemachine, event);
+		timer = new SctCppTimerInfo(statemachine, event);
 		timer_map[event] = timer;
 	}
 	else
 	{
 		timer = it->second;
 	}
-	timer->start(std::chrono::milliseconds(time_ms), !isPeriodic);
+	timer->start(time_ms, is_periodic);
+	queue.insert(timer);
+	wait.notify_all();
 }
 
 void SctCppTimerService::unsetTimer(
-	TimedInterface * statemachine, sc_eventid event)
+	TimedInterface * statemachine,
+	sc_eventid       event)
 {
-	SctCppTimer * timer = timer_map[event];
+	SctCppTimerInfo * timer = timer_map[event];
 
-	timer->stop();
+	queue.erase(timer);
+	wait.notify_all();
+}
+
+void SctCppTimerService::eventLoop()
+{
+	do
+	{
+		if (queue.empty())
+		{
+			std::unique_lock<std::mutex> lock(mutex);
+
+			wait.wait(lock);
+		}
+		else
+		{
+			std::unique_lock<std::mutex> lock(mutex);
+			SctCppTimerInfo * info = *queue.begin();
+
+			if (wait.wait_until(lock, info->clock()) == std::cv_status::timeout)
+			{
+				info->call();
+				queue.erase(info);
+				if (*info)
+				{
+					info->add();
+					queue.insert(info);
+				}
+			}
+		}
+	}
+	while (loop);
 }

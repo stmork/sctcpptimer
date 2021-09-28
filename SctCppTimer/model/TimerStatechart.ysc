@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0">
-  <sgraph:Statechart xmi:id="_ISPYAB3rEeyyQoFjqZiZFg" specification="// Use the event driven execution model.&#xA;// Switch to cycle based behavior&#xA;// by specifying '@CycleBased(200)'.&#xA;@EventDriven&#xA;&#xA;// Use @SuperSteps(yes) to enable&#xA;// super step semantics.&#xA;@SuperSteps(no)&#xA;&#xA;interface:&#xA;var counter : integer = 0&#xA;const max : integer = 5&#xA;&#xA;operation dump(text : string)&#xA;" name="Statechart">
+  <sgraph:Statechart xmi:id="_ISPYAB3rEeyyQoFjqZiZFg" specification="// Use the event driven execution model.&#xA;// Switch to cycle based behavior&#xA;// by specifying '@CycleBased(200)'.&#xA;@EventDriven&#xA;&#xA;// Use @SuperSteps(yes) to enable&#xA;// super step semantics.&#xA;@SuperSteps(no)&#xA;&#xA;interface:&#xA;var counter : integer = 0&#xA;const max : integer = 2&#xA;&#xA;operation dump(text : string)&#xA;" name="Statechart">
     <regions xmi:id="_ISVeox3rEeyyQoFjqZiZFg" name="main region">
       <vertices xsi:type="sgraph:Entry" xmi:id="_ISVepB3rEeyyQoFjqZiZFg">
         <outgoingTransitions xmi:id="_ISVepR3rEeyyQoFjqZiZFg" target="_ISWFsB3rEeyyQoFjqZiZFg"/>
       </vertices>
-      <vertices xsi:type="sgraph:State" xmi:id="_ISWFsB3rEeyyQoFjqZiZFg" specification="entry / dump(&quot;Enter first state&quot;)&#xA;every 500 ms / dump(&quot;Timer 500ms&quot;)&#xA;after 750ms / dump(&quot;Single shot&quot;)&#xA;exit / dump(&quot;Exit first state&quot;)" name="First" incomingTransitions="_ISVepR3rEeyyQoFjqZiZFg _ISX64R3rEeyyQoFjqZiZFg">
-        <outgoingTransitions xmi:id="_ISWswR3rEeyyQoFjqZiZFg" specification="after 10s / dump(&quot;1 -> 2&quot;)" target="_ISXT0x3rEeyyQoFjqZiZFg"/>
+      <vertices xsi:type="sgraph:State" xmi:id="_ISWFsB3rEeyyQoFjqZiZFg" specification="entry / dump(&quot;Enter first state&quot;)&#xA;every 300 ms / dump(&quot;Timer 300ms&quot;)&#xA;after 750ms / dump(&quot;Single shot&quot;)&#xA;exit / dump(&quot;Exit first state&quot;)" name="First" incomingTransitions="_ISVepR3rEeyyQoFjqZiZFg _ISX64R3rEeyyQoFjqZiZFg">
+        <outgoingTransitions xmi:id="_ISWswR3rEeyyQoFjqZiZFg" specification="after 3s / dump(&quot;1 -> 2&quot;)" target="_ISXT0x3rEeyyQoFjqZiZFg"/>
       </vertices>
       <vertices xsi:type="sgraph:State" xmi:id="_ISXT0x3rEeyyQoFjqZiZFg" specification="entry / dump(&quot;Enter second state&quot;)&#xA;exit / dump(&quot;Exit second state&quot;)" name="Second" incomingTransitions="_ISWswR3rEeyyQoFjqZiZFg">
         <outgoingTransitions xmi:id="_q53TUB3rEeyyQoFjqZiZFg" specification="after 500ms / dump(&quot;2 -> choice&quot;)" target="_eJRVsB3rEeyyQoFjqZiZFg"/>

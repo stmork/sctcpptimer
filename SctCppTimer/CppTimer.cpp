@@ -41,7 +41,8 @@ void CppTimer::start(
 
 void CppTimer::stop()
 {
-	if (thread.joinable() && (std::this_thread::get_id() != thread.get_id()))
+	if (thread.joinable() &&
+		(std::this_thread::get_id() != thread.get_id()))
 	{
 		wait.notify_all();
 		thread.join();

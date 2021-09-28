@@ -38,14 +38,15 @@ namespace sc::timer
 
 		virtual void setTimer(
 			TimedInterface * statemachine,
-			sc_eventid event,
-			sc_integer time_ms,
-			sc_boolean isPeriodic) override;
+			sc_eventid       event,
+			sc_integer       time_ms,
+			sc_boolean       is_periodic) override;
 
 		/*! Unsets the given time event.
 		 */
 		virtual void unsetTimer(
-			TimedInterface * statemachine, sc_eventid event) override;
+			TimedInterface * statemachine,
+			sc_eventid       event) override;
 
 		/*! Cancel timer service. Use this to end possible timing threads and free
 		      memory resources.

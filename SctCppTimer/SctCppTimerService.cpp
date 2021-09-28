@@ -24,9 +24,9 @@ SctCppTimerService::~SctCppTimerService()
 
 void SctCppTimerService::setTimer(
 	TimedInterface * statemachine,
-	sc_eventid event,
-	sc_integer time_ms,
-	sc_boolean isPeriodic)
+	sc_eventid       event,
+	sc_integer       time_ms,
+	sc_boolean       is_periodic)
 {
 	SctCppTimerInfo * timer;
 	auto it = timer_map.find(event);
@@ -40,13 +40,14 @@ void SctCppTimerService::setTimer(
 	{
 		timer = it->second;
 	}
-	timer->start(time_ms, isPeriodic);
+	timer->start(time_ms, is_periodic);
 	queue.insert(timer);
 	wait.notify_all();
 }
 
 void SctCppTimerService::unsetTimer(
-	TimedInterface * statemachine, sc_eventid event)
+	TimedInterface * statemachine,
+	sc_eventid       event)
 {
 	SctCppTimerInfo * timer = timer_map[event];
 

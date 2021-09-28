@@ -11,5 +11,5 @@ using namespace sc::timer;
 
 void SctCppTimer::signal()
 {
-    statemachine->raiseTimeEvent(event_id);
+	statemachine->raiseTimeEvent(event_id);
 }

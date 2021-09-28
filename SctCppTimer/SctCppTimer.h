@@ -16,22 +16,22 @@
 
 namespace sc::timer
 {
-    class SctCppTimer : public CppTimer
-    {
-        const sc_eventid event_id;
-        TimedInterface * statemachine = nullptr;
-    public:
-        explicit inline SctCppTimer(
-            TimedInterface * timed_interface,
-            const sc_eventid id) :
-        statemachine(timed_interface),
-        event_id(id)
-        {
-        }
-        
-    protected:
-        virtual void signal() override;
-    };
+	class SctCppTimer : public CppTimer
+	{
+		const sc_eventid event_id;
+		TimedInterface * statemachine = nullptr;
+	public:
+		explicit inline SctCppTimer(
+			TimedInterface * timed_interface,
+			const sc_eventid id) :
+			statemachine(timed_interface),
+			event_id(id)
+		{
+		}
+
+	protected:
+		virtual void signal() override;
+	};
 }
 
 #endif /* SctCppTimer_hpp */

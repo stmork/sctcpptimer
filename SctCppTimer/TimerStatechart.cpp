@@ -15,10 +15,10 @@ using namespace sc::timer;
 using namespace std::chrono;
 
 TimerStatechart::TimerStatechart(SctCppTimerService & service) :
-    AbstractTimerStatechart()
+	AbstractTimerStatechart()
 {
-    setTimerService(&service);
-    setOperationCallback(this);
+	setTimerService(&service);
+	setOperationCallback(this);
 }
 
 void TimerStatechart::dump(sc_string text)
@@ -30,5 +30,5 @@ void TimerStatechart::dump(sc_string text)
 
 	std::cout.fill('0');
 	std::cout << this << ": " << seconds << "." << std::setw(3) << millies <<
-	" # " << text << std::endl << std::flush;
+		" # " << text << std::endl << std::flush;
 }

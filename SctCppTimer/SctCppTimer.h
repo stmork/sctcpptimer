@@ -24,7 +24,7 @@ namespace sc::timer
 		std::chrono::milliseconds                          duration;
 		bool                                               repeating;
 		const sc_eventid                                   event_id;
-		TimedInterface *                                   statemachine = nullptr;
+		TimedInterface                  *                  statemachine = nullptr;
 
 	public:
 		inline SctCppTimerInfo() : event_id(0)
@@ -50,8 +50,8 @@ namespace sc::timer
 		}
 
 		inline bool operator()(
-						const SctCppTimerInfo * left,
-						const SctCppTimerInfo * right) const
+			const SctCppTimerInfo * left,
+			const SctCppTimerInfo * right) const
 		{
 			return left->time_point < right->time_point;
 		}

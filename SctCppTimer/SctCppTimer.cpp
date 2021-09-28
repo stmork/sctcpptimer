@@ -12,8 +12,8 @@ using namespace sc::timer;
 SctCppTimerInfo::SctCppTimerInfo(
 	TimedInterface * timed_interface,
 	const sc_eventid id) :
-statemachine(timed_interface),
-event_id(id)
+	statemachine(timed_interface),
+	event_id(id)
 {
 }
 

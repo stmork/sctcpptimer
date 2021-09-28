@@ -23,30 +23,30 @@ SctCppTimerService::~SctCppTimerService()
 }
 
 void SctCppTimerService::setTimer(
-                      TimedInterface* statemachine,
-                      sc_eventid event,
-                      sc_integer time_ms,
-                      sc_boolean isPeriodic)
+	TimedInterface * statemachine,
+	sc_eventid event,
+	sc_integer time_ms,
+	sc_boolean isPeriodic)
 {
-    SctCppTimerInfo * timer;
-    auto it = timer_map.find(event);
-    
-    if (it == timer_map.end())
-    {
-        timer = new SctCppTimerInfo(statemachine, event);
+	SctCppTimerInfo * timer;
+	auto it = timer_map.find(event);
+
+	if (it == timer_map.end())
+	{
+		timer = new SctCppTimerInfo(statemachine, event);
 		timer_map[event] = timer;
-    }
-    else
-    {
-        timer = it->second;
-    }
+	}
+	else
+	{
+		timer = it->second;
+	}
 	timer->start(time_ms, isPeriodic);
 	queue.insert(timer);
 	wait.notify_all();
 }
 
 void SctCppTimerService::unsetTimer(
-                        TimedInterface* statemachine, sc_eventid event)
+	TimedInterface * statemachine, sc_eventid event)
 {
 	SctCppTimerInfo * timer = timer_map[event];
 
@@ -81,5 +81,5 @@ void SctCppTimerService::eventLoop()
 			}
 		}
 	}
-	while(loop);
+	while (loop);
 }

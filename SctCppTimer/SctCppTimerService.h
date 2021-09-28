@@ -22,9 +22,9 @@ namespace sc::timer
 {
 	class SctCppTimerInfo;
 
-    class SctCppTimerService : public TimerServiceInterface
-    {
-        std::unordered_map<sc_eventid, SctCppTimerInfo *> timer_map;
+	class SctCppTimerService : public TimerServiceInterface
+	{
+		std::unordered_map<sc_eventid, SctCppTimerInfo *> timer_map;
 		std::set<SctCppTimerInfo *, SctCppTimerInfo>      queue;
 		std::mutex              mutex;
 		std::condition_variable wait;
@@ -34,28 +34,28 @@ namespace sc::timer
 
 	public:
 		SctCppTimerService();
-        virtual ~SctCppTimerService();
-        
-        virtual void setTimer(
-                              TimedInterface* statemachine,
-                              sc_eventid event,
-                              sc_integer time_ms,
-                              sc_boolean isPeriodic) override;
-        
-        /*! Unsets the given time event.
-         */
-        virtual void unsetTimer(
-                                TimedInterface* statemachine, sc_eventid event) override;
-    
-        /*! Cancel timer service. Use this to end possible timing threads and free
-              memory resources.
-         */
-        virtual void cancel() override
-        {
-            // Intentionally do nothing!
-        }
+		virtual ~SctCppTimerService();
+
+		virtual void setTimer(
+			TimedInterface * statemachine,
+			sc_eventid event,
+			sc_integer time_ms,
+			sc_boolean isPeriodic) override;
+
+		/*! Unsets the given time event.
+		 */
+		virtual void unsetTimer(
+			TimedInterface * statemachine, sc_eventid event) override;
+
+		/*! Cancel timer service. Use this to end possible timing threads and free
+		      memory resources.
+		 */
+		virtual void cancel() override
+		{
+			// Intentionally do nothing!
+		}
 
 		void eventLoop();
-    };
+	};
 }
 #endif /* SctCppTimerService_hpp */

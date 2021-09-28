@@ -9,6 +9,7 @@
 #include "SctCppTimer.h"
 
 using namespace sc::timer;
+using namespace std::chrono;
 
 SctCppTimerService::SctCppTimerService() :
 	thread(&SctCppTimerService::eventLoop, this)
@@ -63,19 +64,30 @@ void SctCppTimerService::eventLoop()
 		{
 			std::unique_lock<std::mutex> lock(mutex);
 
+			// If no timer is in the queue simply wait
+			// for something.
 			wait.wait(lock);
 		}
 		else
 		{
 			std::unique_lock<std::mutex> lock(mutex);
-			SctCppTimerInfo * info = *queue.begin();
 
-			if (wait.wait_until(lock, info->clock()) == std::cv_status::timeout)
+			SctCppTimerInfo *                info = *queue.begin();
+			const time_point<steady_clock> & tp   = info->clock();
+
+			// If timer info is in the past or wait for
+			// nearest time point
+			if ((tp <= steady_clock::now()) ||
+				(wait.wait_until(lock, tp) == std::cv_status::timeout))
 			{
+				// Raise time event
 				info->call();
+
+				// Remove anyway
 				queue.erase(info);
 				if (*info)
 				{
+					// If periodic add duration and reschedule timer
 					info->add();
 					queue.insert(info);
 				}

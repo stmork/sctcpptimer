@@ -20,6 +20,8 @@ HEADERS += \
 	src-lib/sc_timer.h \
 	src-lib/sc_types.h
 
+QMAKE_CLEAN += cppcheck.xml
+
 #####################################################################
 #
 # Extra targets.

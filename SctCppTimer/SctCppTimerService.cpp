@@ -29,19 +29,19 @@ void SctCppTimerService::setTimer(
 	sc_integer       time_ms,
 	sc_boolean       is_periodic)
 {
-	SctCppTimerInfo * timer;
+	SctCppTimer * timer;
 	auto it = timer_map.find(event);
 
 	if (it == timer_map.end())
 	{
-		timer = new SctCppTimerInfo(statemachine, event);
+		timer = new SctCppTimer(event);
 		timer_map[event] = timer;
 	}
 	else
 	{
 		timer = it->second;
 	}
-	timer->start(time_ms, is_periodic);
+	timer->start(statemachine, time_ms, is_periodic);
 	queue.insert(timer);
 	wait.notify_all();
 }
@@ -50,8 +50,9 @@ void SctCppTimerService::unsetTimer(
 	TimedInterface * statemachine,
 	sc_eventid       event)
 {
-	SctCppTimerInfo * timer = timer_map[event];
+	SctCppTimer * timer = timer_map[event];
 
+	(void)statemachine;
 	queue.erase(timer);
 	wait.notify_all();
 }
@@ -72,7 +73,7 @@ void SctCppTimerService::eventLoop()
 		{
 			std::unique_lock<std::mutex> lock(mutex);
 
-			SctCppTimerInfo         *        info = *queue.begin();
+			SctCppTimer         *        info = *queue.begin();
 			const time_point<steady_clock> & tp   = info->clock();
 
 			// If timer info is in the past or wait for

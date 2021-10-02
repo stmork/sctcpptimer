@@ -28,6 +28,7 @@ void TimerStatechart::dump(sc_string text)
 	auto seconds = ms / 1000;
 	auto millies = ms % 1000;
 
+	std::cout.setf(std::ios::dec);
 	std::cout.fill('0');
 	std::cout << this << ": " << seconds << "." << std::setw(3) << millies <<
 		" # " << text << std::endl << std::flush;

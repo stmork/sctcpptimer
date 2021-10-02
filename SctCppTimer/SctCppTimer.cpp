@@ -9,20 +9,18 @@
 
 using namespace sc::timer;
 
-SctCppTimerInfo::SctCppTimerInfo(
-	TimedInterface * timed_interface,
-	const sc_eventid id) :
-	statemachine(timed_interface),
-	event_id(id)
+SctCppTimer::SctCppTimer(const sc_eventid id) : event_id(id)
 {
 }
 
-void SctCppTimerInfo::start(
-	sc_integer time_ms,
-	sc_boolean is_periodic)
+void SctCppTimer::start(
+	TimedInterface * timed_interface,
+	sc_integer       time_ms,
+	sc_boolean       is_periodic)
 
 {
-	duration   = std::chrono::milliseconds(time_ms);
-	repeating  = is_periodic;
-	time_point = std::chrono::steady_clock::now() + duration;
+	statemachine = timed_interface;
+	duration     = std::chrono::milliseconds(time_ms);
+	repeating    = is_periodic;
+	time_point   = std::chrono::steady_clock::now() + duration;
 }

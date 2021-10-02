@@ -7,8 +7,8 @@
 
 #pragma once
 
-#ifndef sc__timer__CppTimer_hpp
-#define sc__timer__CppTimer_hpp
+#ifndef CPPTIMER_H
+#define CPPTIMER_H
 
 #include <thread>
 #include <mutex>
@@ -17,6 +17,12 @@
 
 namespace sc::timer
 {
+	/**
+	 * This class implements a timer which is not usable for Yakindu SCT since
+	 * the generated statemachine code is not thread safe. One instance of this
+	 * class starts its own thread for signalling timer events. Which causes
+	 * recursive race condition inside the statemachine.
+	 */
 	class CppTimer
 	{
 		std::thread             thread;

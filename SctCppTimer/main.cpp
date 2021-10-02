@@ -15,7 +15,7 @@
 using namespace sc::timer;
 using namespace std::chrono;
 
-int main(int argc, const char * argv[])
+int main()
 {
 	SctCppTimerService timer_service;
 	TimerStatechart    statechart(timer_service);

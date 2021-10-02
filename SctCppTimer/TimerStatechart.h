@@ -7,8 +7,8 @@
 
 #pragma once
 
-#ifndef TimerStatechart_hpp
-#define TimerStatechart_hpp
+#ifndef TIMERSTATECHART_H
+#define TIMERSTATECHART_H
 
 #include <stdio.h>
 
@@ -19,6 +19,10 @@ namespace sc::timer
 	class SctCppTimerService;
 }
 
+/**
+ * This class simply implements an example statemachine for testing the
+ * C++ timer service.
+ */
 class TimerStatechart :
 	public AbstractTimerStatechart,
 	protected AbstractTimerStatechart::OperationCallback

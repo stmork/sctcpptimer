@@ -14,6 +14,7 @@
 #include <unordered_map>
 #include <set>
 #include <thread>
+#include <condition_variable>
 
 #include "src-lib/sc_timer.h"
 #include "SctCppTimer.h"

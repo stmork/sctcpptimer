@@ -72,7 +72,7 @@ void SctCppTimerService::eventLoop()
 		{
 			std::unique_lock<std::mutex> lock(mutex);
 
-			SctCppTimerInfo *                info = *queue.begin();
+			SctCppTimerInfo         *        info = *queue.begin();
 			const time_point<steady_clock> & tp   = info->clock();
 
 			// If timer info is in the past or wait for

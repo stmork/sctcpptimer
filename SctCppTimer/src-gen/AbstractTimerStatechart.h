@@ -31,7 +31,10 @@ typedef enum  {
 	Statechart_main_region_First_time_event_0,
 	Statechart_main_region_First_time_event_1,
 	Statechart_main_region_First_time_event_2,
-	Statechart_main_region_Second_time_event_0
+	Statechart_main_region_Second_time_event_0,
+	Statechart_main_region_Second_time_event_1,
+	Statechart_main_region_Second_time_event_2,
+	Statechart_main_region_Second_time_event_3
 } AbstractTimerStatechartEventName;
 
 class SctEvent
@@ -98,6 +101,42 @@ class AbstractTimerStatechart : public sc::timer::TimedInterface, public sc::Sta
 		/*! Gets the value of the variable 'max' that is defined in the default interface scope. */
 		sc_integer getMax() const;
 		
+		/*! Gets the value of the variable 'exit12' that is defined in the default interface scope. */
+		sc_integer getExit12() const;
+		
+		/*! Gets the value of the variable 'exit21' that is defined in the default interface scope. */
+		sc_integer getExit21() const;
+		
+		/*! Gets the value of the variable 'a1' that is defined in the default interface scope. */
+		sc_integer getA1() const;
+		
+		/*! Sets the value of the variable 'a1' that is defined in the default interface scope. */
+		void setA1(sc_integer value);
+		
+		/*! Gets the value of the variable 'b1' that is defined in the default interface scope. */
+		sc_integer getB1() const;
+		
+		/*! Sets the value of the variable 'b1' that is defined in the default interface scope. */
+		void setB1(sc_integer value);
+		
+		/*! Gets the value of the variable 'a2' that is defined in the default interface scope. */
+		sc_integer getA2() const;
+		
+		/*! Sets the value of the variable 'a2' that is defined in the default interface scope. */
+		void setA2(sc_integer value);
+		
+		/*! Gets the value of the variable 'b2' that is defined in the default interface scope. */
+		sc_integer getB2() const;
+		
+		/*! Sets the value of the variable 'b2' that is defined in the default interface scope. */
+		void setB2(sc_integer value);
+		
+		/*! Gets the value of the variable 'c2' that is defined in the default interface scope. */
+		sc_integer getC2() const;
+		
+		/*! Sets the value of the variable 'c2' that is defined in the default interface scope. */
+		void setC2(sc_integer value);
+		
 		//! Inner class for default interface scope operation callbacks.
 		class OperationCallback
 		{
@@ -154,10 +193,10 @@ class AbstractTimerStatechart : public sc::timer::TimedInterface, public sc::Sta
 		sc_boolean isStateActive(StatechartStates state) const;
 		
 		//! number of time events used by the state machine.
-		static const sc_integer timeEventsCount = 4;
+		static const sc_integer timeEventsCount = 7;
 		
 		//! number of time events that can be active at once.
-		static const sc_integer parallelTimeEventsCount = 3;
+		static const sc_integer parallelTimeEventsCount = 4;
 		
 		
 	protected:
@@ -169,6 +208,13 @@ class AbstractTimerStatechart : public sc::timer::TimedInterface, public sc::Sta
 		
 		sc_integer counter;
 		static const sc_integer max;
+		static const sc_integer exit12;
+		static const sc_integer exit21;
+		sc_integer a1;
+		sc_integer b1;
+		sc_integer a2;
+		sc_integer b2;
+		sc_integer c2;
 		void iface_dispatch_event(statechart_events::SctEvent * event);
 		
 		

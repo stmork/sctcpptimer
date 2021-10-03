@@ -7,11 +7,18 @@
 
 
 const sc_integer AbstractTimerStatechart::max = 2;
+const sc_integer AbstractTimerStatechart::exit12 = 3100;
+const sc_integer AbstractTimerStatechart::exit21 = 2600;
 
 
 
 AbstractTimerStatechart::AbstractTimerStatechart()  :
-counter(0),
+counter(1),
+a1(0),
+b1(0),
+a2(0),
+b2(0),
+c2(0),
 timerService(sc_null),
 ifaceOperationCallback(sc_null),
 isExecuting(false)
@@ -68,10 +75,25 @@ void AbstractTimerStatechart::dispatch_event(SctEvent * event)
 			timeEvents[3] = true;
 			break;
 		}
+		case Statechart_main_region_Second_time_event_1:
+		{
+			timeEvents[4] = true;
+			break;
+		}
+		case Statechart_main_region_Second_time_event_2:
+		{
+			timeEvents[5] = true;
+			break;
+		}
+		case Statechart_main_region_Second_time_event_3:
+		{
+			timeEvents[6] = true;
+			break;
+		}
 		default:
 			break;
 	}
-//	delete event;
+	delete event;
 }
 
 void AbstractTimerStatechart::iface_dispatch_event(SctEvent * event)
@@ -96,6 +118,15 @@ AbstractTimerStatechartEventName AbstractTimerStatechart::getTimedEventName(sc_e
 	}
 	if (evid == (sc_eventid)(&timeEvents[3])) {
 		return Statechart_main_region_Second_time_event_0;
+	}
+	if (evid == (sc_eventid)(&timeEvents[4])) {
+		return Statechart_main_region_Second_time_event_1;
+	}
+	if (evid == (sc_eventid)(&timeEvents[5])) {
+		return Statechart_main_region_Second_time_event_2;
+	}
+	if (evid == (sc_eventid)(&timeEvents[6])) {
+		return Statechart_main_region_Second_time_event_3;
 	}
 	return invalid_event;
 }
@@ -179,6 +210,66 @@ sc_integer AbstractTimerStatechart::getMax() const
 	return max;
 }
 
+sc_integer AbstractTimerStatechart::getExit12() const
+{
+	return exit12;
+}
+
+sc_integer AbstractTimerStatechart::getExit21() const
+{
+	return exit21;
+}
+
+sc_integer AbstractTimerStatechart::getA1() const
+{
+	return a1;
+}
+
+void AbstractTimerStatechart::setA1(sc_integer value)
+{
+	this->a1 = value;
+}
+
+sc_integer AbstractTimerStatechart::getB1() const
+{
+	return b1;
+}
+
+void AbstractTimerStatechart::setB1(sc_integer value)
+{
+	this->b1 = value;
+}
+
+sc_integer AbstractTimerStatechart::getA2() const
+{
+	return a2;
+}
+
+void AbstractTimerStatechart::setA2(sc_integer value)
+{
+	this->a2 = value;
+}
+
+sc_integer AbstractTimerStatechart::getB2() const
+{
+	return b2;
+}
+
+void AbstractTimerStatechart::setB2(sc_integer value)
+{
+	this->b2 = value;
+}
+
+sc_integer AbstractTimerStatechart::getC2() const
+{
+	return c2;
+}
+
+void AbstractTimerStatechart::setC2(sc_integer value)
+{
+	this->c2 = value;
+}
+
 void AbstractTimerStatechart::setOperationCallback(OperationCallback* operationCallback)
 {
 	ifaceOperationCallback = operationCallback;
@@ -207,9 +298,9 @@ void AbstractTimerStatechart::effect_main_region__choice_0_tr0()
 void AbstractTimerStatechart::enact_main_region_First()
 {
 	/* Entry action for state 'First'. */
-	timerService->setTimer(this, (sc_eventid)(&timeEvents[0]), (3 * 1000), false);
-	timerService->setTimer(this, (sc_eventid)(&timeEvents[1]), 300, true);
-	timerService->setTimer(this, (sc_eventid)(&timeEvents[2]), 750, false);
+	timerService->setTimer(this, (sc_eventid)(&timeEvents[0]), AbstractTimerStatechart::exit12, false);
+	timerService->setTimer(this, (sc_eventid)(&timeEvents[1]), 301, true);
+	timerService->setTimer(this, (sc_eventid)(&timeEvents[2]), 749, false);
 	ifaceOperationCallback->dump((sc_string) "Enter first state");
 }
 
@@ -217,7 +308,10 @@ void AbstractTimerStatechart::enact_main_region_First()
 void AbstractTimerStatechart::enact_main_region_Second()
 {
 	/* Entry action for state 'Second'. */
-	timerService->setTimer(this, (sc_eventid)(&timeEvents[3]), 500, false);
+	timerService->setTimer(this, (sc_eventid)(&timeEvents[3]), AbstractTimerStatechart::exit21, false);
+	timerService->setTimer(this, (sc_eventid)(&timeEvents[4]), 250, true);
+	timerService->setTimer(this, (sc_eventid)(&timeEvents[5]), 150, true);
+	timerService->setTimer(this, (sc_eventid)(&timeEvents[6]), 350, false);
 	ifaceOperationCallback->dump((sc_string) "Enter second state");
 }
 
@@ -236,6 +330,9 @@ void AbstractTimerStatechart::exact_main_region_Second()
 {
 	/* Exit action for state 'Second'. */
 	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[3]));
+	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[4]));
+	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[5]));
+	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[6]));
 	ifaceOperationCallback->dump((sc_string) "Exit second state");
 }
 
@@ -335,6 +432,7 @@ void AbstractTimerStatechart::react_main_region__choice_0()
 void AbstractTimerStatechart::react_main_region__entry_Default()
 {
 	/* Default react sequence for initial entry  */
+	ifaceOperationCallback->dump((sc_string) "Start");
 	enseq_main_region_First_default();
 }
 
@@ -362,10 +460,12 @@ sc_integer AbstractTimerStatechart::main_region_First_react(const sc_integer tra
 	{ 
 		if (timeEvents[1])
 		{ 
-			ifaceOperationCallback->dump((sc_string) "Timer 300ms");
+			a1++;
+			ifaceOperationCallback->dump((sc_string) "Timer 301ms");
 		} 
 		if (timeEvents[2])
 		{ 
+			b1++;
 			ifaceOperationCallback->dump((sc_string) "Single shot");
 		} 
 		transitioned_after = react(transitioned_before);
@@ -389,6 +489,18 @@ sc_integer AbstractTimerStatechart::main_region_Second_react(const sc_integer tr
 	/* If no transition was taken then execute local reactions */
 	if ((transitioned_after) == (transitioned_before))
 	{ 
+		if (timeEvents[4])
+		{ 
+			a2++;
+		} 
+		if (timeEvents[5])
+		{ 
+			b2++;
+		} 
+		if (timeEvents[6])
+		{ 
+			c2++;
+		} 
 		transitioned_after = react(transitioned_before);
 	} 
 	return transitioned_after;
@@ -413,6 +525,9 @@ void AbstractTimerStatechart::clearInEvents() {
 	timeEvents[1] = false;
 	timeEvents[2] = false;
 	timeEvents[3] = false;
+	timeEvents[4] = false;
+	timeEvents[5] = false;
+	timeEvents[6] = false;
 }
 
 void AbstractTimerStatechart::microStep() {
@@ -450,7 +565,7 @@ void AbstractTimerStatechart::runCycle() {
 		microStep();
 		clearInEvents();
 		dispatch_event(getNextEvent());
-	} while ((((timeEvents[0]) || (timeEvents[1])) || (timeEvents[2])) || (timeEvents[3]));
+	} while (((((((timeEvents[0]) || (timeEvents[1])) || (timeEvents[2])) || (timeEvents[3])) || (timeEvents[4])) || (timeEvents[5])) || (timeEvents[6]));
 	isExecuting = false;
 }
 

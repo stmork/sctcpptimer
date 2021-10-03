@@ -27,20 +27,21 @@ namespace sc::timer
 	 * This class implements the sc::timer::TimerServiceInterface class
 	 * generated from the Yakindu SCT. It uses standard C++11 classes to
 	 * implement a full fletched timer service. It uses its own thread to
-	 * signal a time event. The timer themself are SctCppTimer classes
-	 * which hold the information of one single SCT timer.
+	 * signal a time event. The timer themself are SctCppTimer classes which
+	 * hold the information of one single SCT timer.
 	 *
 	 * The timer service uses the std::chrono::steady_clock since it is not
-	 * adjusted during lifetime which is good enough for our purposes. We need
-	 * only durations which are added to the actual time point. So even the
-	 * normal clock is adjusted this timer is always accurate.
+	 * adjusted during lifetime from the OS which is good enough for our
+	 * purposes. We need only durations which are added to the actual time
+	 * point. So even if the normal clock is adjusted this timer keeps always
+	 * accurate.
 	 *
 	 * The timer service computes for each timer the next time point to wait
 	 * until. The SctCppTimer class holds this time point for a single
 	 * SCT timer. A sorted set keeps pointers to these active SctCppTimer
 	 * instances. So the set acts as a priority queue. Since there may timers
 	 * removed from this queue a sorted set is chosen aqainst a priority queue
-	 * because a set allows the removal from elements other than front or back.
+	 * because a set allows the removal of mid elements from inside the set.
 	 *
 	 * The timer service thread waits for changes and time points. Changes may
 	 * be adding or removing timer by using the setTimer() unsetTimer() methods.
@@ -48,8 +49,8 @@ namespace sc::timer
 	 * to another timer earlier in the queue.
 	 *
 	 * There is not need to map event IDs to statemachines since all event IDs
-	 * are under the hood pointers inside the common address space. So there
-	 * is only a need to map event IDs to SctCppTimer class instances.
+	 * are under the hood pointers inside the common process address space. So
+	 * there is only a need to map event IDs to SctCppTimer class instances.
 	 */
 	class SctCppTimerService : public TimerServiceInterface
 	{

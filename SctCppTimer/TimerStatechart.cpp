@@ -23,10 +23,10 @@ TimerStatechart::TimerStatechart(SctCppTimerService & service) :
 
 void TimerStatechart::dump(sc_string text)
 {
-	const time_point now = steady_clock::now();
-	const unsigned   ms      = duration_cast<milliseconds>(now.time_since_epoch()).count();
-	const unsigned   seconds = ms / 1000;
-	const unsigned   millies = ms % 1000;
+	const time_point    now     = steady_clock::now();
+	const unsigned long ms      = duration_cast<milliseconds>(now.time_since_epoch()).count();
+	const unsigned long seconds = ms / 1000;
+	const unsigned long millies = ms % 1000;
 
 	std::cout.setf(std::ios::dec);
 	std::cout.fill('0');

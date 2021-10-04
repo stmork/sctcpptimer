@@ -54,8 +54,20 @@ namespace sc::timer
 	 */
 	class SctCppTimerService : public TimerServiceInterface
 	{
-		std::unordered_map<sc_eventid, SctCppTimer *> timer_map;
-		std::set<SctCppTimer *, SctCppTimer>          queue;
+		/**
+		 * This typedef declares a mapping from the event ID to the
+		 * SctCppTimer instance.
+		 */
+		typedef std::unordered_map<sc_eventid, SctCppTimer *> TimerMap;
+
+		/**
+		 * This typedef declares the ordered set of active SctCppTimer
+		 * instances.
+		 */
+		typedef std::set<SctCppTimer *, SctCppTimer>          TimerSet;
+
+		TimerMap                timer_map;
+		TimerSet                queue;
 
 		std::mutex              mutex;
 		std::condition_variable wait;
@@ -81,16 +93,11 @@ namespace sc::timer
 			sc_integer       time_ms,
 			sc_boolean       is_periodic) override;
 
-		/*! Unsets the given time event.
-		 */
 		virtual void unsetTimer(
 			TimedInterface * statemachine,
 			sc_eventid       event) override;
 
-		/*! Cancel timer service. Use this to end possible timing threads and free
-		      memory resources.
-		 */
-		virtual void cancel() override
+		virtual inline void cancel() override
 		{
 			// Intentionally do nothing!
 		}

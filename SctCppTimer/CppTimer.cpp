@@ -51,7 +51,7 @@ void CppTimer::stop()
 
 void CppTimer::signal()
 {
-	auto ms = duration_cast<milliseconds>(time_point.time_since_epoch()).count();
+	const auto ms = duration_cast<milliseconds>(time_point.time_since_epoch()).count();
 
 	std::cout.fill('0');
 	std::cout << this << ": " << ms / 1000 << "." << std::setw(3) << ms % 1000 << std::endl << std::flush;

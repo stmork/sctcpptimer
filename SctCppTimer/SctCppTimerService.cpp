@@ -29,8 +29,8 @@ void SctCppTimerService::setTimer(
 	sc_integer       time_ms,
 	sc_boolean       is_periodic)
 {
-	SctCppTimer * timer;
-	auto it = timer_map.find(event);
+	SctCppTimer    *   timer;
+	TimerMap::iterator it = timer_map.find(event);
 
 	if (it == timer_map.end())
 	{

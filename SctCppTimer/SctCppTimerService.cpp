@@ -21,6 +21,11 @@ SctCppTimerService::~SctCppTimerService()
 	loop = false;
 	wait.notify_all();
 	thread.join();
+
+	for (auto it : chart_map)
+	{
+		delete it.second;
+	}
 }
 
 void SctCppTimerService::setTimer(
@@ -29,18 +34,8 @@ void SctCppTimerService::setTimer(
 	sc_integer       time_ms,
 	sc_boolean       is_periodic)
 {
-	SctCppTimer    *   timer;
-	TimerMap::iterator it = timer_map.find(event);
+	SctCppTimer * timer = findTimer(statemachine, event);
 
-	if (it == timer_map.end())
-	{
-		timer = new SctCppTimer(event);
-		timer_map[event] = timer;
-	}
-	else
-	{
-		timer = it->second;
-	}
 	timer->start(statemachine, time_ms, is_periodic);
 	queue.insert(timer);
 	wait.notify_all();
@@ -50,11 +45,45 @@ void SctCppTimerService::unsetTimer(
 	TimedInterface * statemachine,
 	sc_eventid       event)
 {
-	SctCppTimer * timer = timer_map[event];
+	SctCppTimer * timer = findTimer(statemachine, event);
 
 	(void)statemachine;
 	queue.erase(timer);
 	wait.notify_all();
+}
+
+SctCppTimer * SctCppTimerService::findTimer(
+		TimedInterface * statemachine,
+		sc_eventid       event) const
+{
+	ChartMap::iterator chart_it = chart_map.find(statemachine);
+	TimerMap *         timer_map;
+
+	if (chart_it == chart_map.end())
+	{
+		timer_map = new TimerMap();
+
+		chart_map.emplace(statemachine, timer_map);
+	}
+	else
+	{
+		timer_map = chart_it->second;
+	}
+
+	TimerMap::iterator timer_it = timer_map->find(event);
+	SctCppTimer *      timer;
+
+	if (timer_it == timer_map->end())
+	{
+		timer = new SctCppTimer(event);
+
+		timer_map->emplace(event, timer);
+	}
+	else
+	{
+		timer = timer_it->second;
+	}
+	return timer;
 }
 
 void SctCppTimerService::eventLoop()

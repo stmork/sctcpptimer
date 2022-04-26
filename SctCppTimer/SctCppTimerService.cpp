@@ -54,7 +54,7 @@ void SctCppTimerService::unsetTimer(
 
 SctCppTimer * SctCppTimerService::findTimer(
 		TimedInterface * statemachine,
-		sc_eventid       event) const
+		sc_eventid       event)
 {
 	ChartMap::iterator chart_it = chart_map.find(statemachine);
 	TimerMap *         timer_map;

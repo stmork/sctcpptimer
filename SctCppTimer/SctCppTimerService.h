@@ -55,11 +55,15 @@ namespace sc::timer
 	class SctCppTimerService : public TimerServiceInterface
 	{
 		/**
-		 * This typedef declares a mapping from the event ID to the
+		 * This map represents the mapping from an event ID to a unique
 		 * SctCppTimer instance.
 		 */
 		typedef std::unordered_map<sc_eventid, SctCppTimer *>    TimerMap;
 
+		/**
+		 * This map represents the mapping from a specific statechart
+		 * instance to a TimerMap.
+		 */
 		typedef std::unordered_map<TimedInterface *, TimerMap *> ChartMap;
 
 		/**
@@ -68,7 +72,7 @@ namespace sc::timer
 		 */
 		typedef std::set<SctCppTimer *, SctCppTimer>          TimerSet;
 
-		mutable ChartMap                chart_map;
+		ChartMap                chart_map;
 		TimerSet                queue;
 
 		std::mutex              mutex;
@@ -105,9 +109,17 @@ namespace sc::timer
 		}
 
 	protected:
+		/**
+		 * This method finds a specific SctCppTimer instance depending on
+		 * the statemachine instance and its event ID.
+		 *
+		 * @param statechart The statemachine
+		 * @param event The event ID of the given statemachine.
+		 * @return The found SctCppTimer instance
+		 */
 		SctCppTimer * findTimer(
-				TimedInterface * chart,
-				sc_eventid       event) const;
+				TimedInterface * statechart,
+				sc_eventid       event);
 
 	private:
 		/**

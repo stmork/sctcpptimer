@@ -23,13 +23,9 @@ SctCppTimerService::~SctCppTimerService()
 	thread.join();
 
 	queue.clear();
-	for (auto chart_it : chart_map)
+	for (auto it : chart_map)
 	{
-		for (auto timer_it : chart_it.second)
-		{
-			delete timer_it.second;
-		}
-		chart_it.second.clear();
+		delete it.second;
 	}
 	chart_map.clear();
 }
@@ -53,7 +49,6 @@ void SctCppTimerService::unsetTimer(
 {
 	SctCppTimer * timer = findTimer(statemachine, event);
 
-	(void)statemachine;
 	queue.erase(timer);
 	wait.notify_all();
 }
@@ -62,32 +57,19 @@ SctCppTimer * SctCppTimerService::findTimer(
 		TimedInterface * statemachine,
 		sc_eventid       event)
 {
-	ChartMap::iterator chart_it = chart_map.find(statemachine);
-	TimerMap *         timer_map;
-
-	if (chart_it == chart_map.end())
-	{
-		chart_map.emplace(statemachine, TimerMap());
-
-		timer_map = &chart_map[statemachine];
-	}
-	else
-	{
-		timer_map = &chart_it->second;
-	}
-
-	TimerMap::iterator timer_it = timer_map->find(event);
 	SctCppTimer *      timer;
+	TimerKey           key(statemachine, event);
+	TimerMap::iterator it = chart_map.find(key);
 
-	if (timer_it == timer_map->end())
+	if (it == chart_map.end())
 	{
 		timer = new SctCppTimer(event);
 
-		timer_map->emplace(event, timer);
+		chart_map.emplace(key, timer);
 	}
 	else
 	{
-		timer = timer_it->second;
+		timer = it->second;
 	}
 	return timer;
 }

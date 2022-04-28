@@ -23,6 +23,28 @@ namespace sc::timer
 {
 	class SctCppTimer;
 
+	typedef std::pair<TimedInterface *, sc_eventid>        TimerKey;
+
+	/**
+	 * This typedef declares the ordered set of active SctCppTimer
+	 * instances.
+	 */
+	typedef std::set<SctCppTimer *, SctCppTimer>           TimerSet;
+
+	struct TimerHash
+	{
+		inline size_t operator()(const TimerKey & key) const
+		{
+			return (size_t(key.first) << 4) | (key.second & 0xf);
+		}
+	};
+
+	/**
+	 * This map represents the mapping from an event ID to a unique
+	 * SctCppTimer instance.
+	 */
+	typedef std::unordered_map<TimerKey, SctCppTimer *, TimerHash>    TimerMap;
+
 	/**
 	 * This class implements the sc::timer::TimerServiceInterface class
 	 * generated from the Yakindu SCT. It uses standard C++11 classes to
@@ -54,25 +76,7 @@ namespace sc::timer
 	 */
 	class SctCppTimerService : public TimerServiceInterface
 	{
-		/**
-		 * This map represents the mapping from an event ID to a unique
-		 * SctCppTimer instance.
-		 */
-		typedef std::unordered_map<sc_eventid, SctCppTimer *>  TimerMap;
-
-		/**
-		 * This map represents the mapping from a specific statechart
-		 * instance to a TimerMap.
-		 */
-		typedef std::unordered_map<TimedInterface *, TimerMap> ChartMap;
-
-		/**
-		 * This typedef declares the ordered set of active SctCppTimer
-		 * instances.
-		 */
-		typedef std::set<SctCppTimer *, SctCppTimer>           TimerSet;
-
-		ChartMap                chart_map;
+		TimerMap                chart_map;
 		TimerSet                queue;
 
 		std::mutex              mutex;

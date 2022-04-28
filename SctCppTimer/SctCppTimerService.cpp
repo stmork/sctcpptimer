@@ -22,10 +22,16 @@ SctCppTimerService::~SctCppTimerService()
 	wait.notify_all();
 	thread.join();
 
-	for (auto it : chart_map)
+	queue.clear();
+	for (auto chart_it : chart_map)
 	{
-		delete it.second;
+		for (auto timer_it : chart_it.second)
+		{
+			delete timer_it.second;
+		}
+		chart_it.second.clear();
 	}
+	chart_map.clear();
 }
 
 void SctCppTimerService::setTimer(
@@ -61,13 +67,13 @@ SctCppTimer * SctCppTimerService::findTimer(
 
 	if (chart_it == chart_map.end())
 	{
-		timer_map = new TimerMap();
+		chart_map.emplace(statemachine, TimerMap());
 
-		chart_map.emplace(statemachine, timer_map);
+		timer_map = &chart_map[statemachine];
 	}
 	else
 	{
-		timer_map = chart_it->second;
+		timer_map = &chart_it->second;
 	}
 
 	TimerMap::iterator timer_it = timer_map->find(event);

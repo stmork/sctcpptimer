@@ -58,19 +58,19 @@ namespace sc::timer
 		 * This map represents the mapping from an event ID to a unique
 		 * SctCppTimer instance.
 		 */
-		typedef std::unordered_map<sc_eventid, SctCppTimer *>    TimerMap;
+		typedef std::unordered_map<sc_eventid, SctCppTimer *>  TimerMap;
 
 		/**
 		 * This map represents the mapping from a specific statechart
 		 * instance to a TimerMap.
 		 */
-		typedef std::unordered_map<TimedInterface *, TimerMap *> ChartMap;
+		typedef std::unordered_map<TimedInterface *, TimerMap> ChartMap;
 
 		/**
 		 * This typedef declares the ordered set of active SctCppTimer
 		 * instances.
 		 */
-		typedef std::set<SctCppTimer *, SctCppTimer>          TimerSet;
+		typedef std::set<SctCppTimer *, SctCppTimer>           TimerSet;
 
 		ChartMap                chart_map;
 		TimerSet                queue;

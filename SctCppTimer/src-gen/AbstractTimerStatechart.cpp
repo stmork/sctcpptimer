@@ -2,29 +2,30 @@
 
 #include "AbstractTimerStatechart.h"
 
-/*! \file Implementation of the state machine 'Statechart'
+/*! \file
+Implementation of the state machine 'AbstractTimerStatechart'
 */
 
 
-const sc_integer AbstractTimerStatechart::max = 2;
-const sc_integer AbstractTimerStatechart::exit12 = 3100;
-const sc_integer AbstractTimerStatechart::exit21 = 2600;
+const sc::integer AbstractTimerStatechart::max = 2;
+const sc::integer AbstractTimerStatechart::exit12 = 3100;
+const sc::integer AbstractTimerStatechart::exit21 = 2600;
 
 
 
-AbstractTimerStatechart::AbstractTimerStatechart()  :
-counter(1),
-a1(0),
-b1(0),
-a2(0),
-b2(0),
-c2(0),
-timerService(sc_null),
-ifaceOperationCallback(sc_null),
-isExecuting(false)
+AbstractTimerStatechart::AbstractTimerStatechart() :
+	counter(1),
+	a1(0),
+	b1(0),
+	a2(0),
+	b2(0),
+	c2(0),
+	timerService(nullptr),
+	ifaceOperationCallback(nullptr),
+	isExecuting(false)
 {
-	for (sc_ushort i = 0; i < maxOrthogonalStates; ++i)
-		stateConfVector[i] = Statechart_last_state;
+	for (sc::ushort i = 0; i < maxOrthogonalStates; ++i)
+		stateConfVector[i] = AbstractTimerStatechart::State::NO_STATE;
 	
 	clearInEvents();
 }
@@ -34,60 +35,40 @@ AbstractTimerStatechart::~AbstractTimerStatechart()
 }
 
 
-using namespace statechart_events;
 
-SctEvent* AbstractTimerStatechart::getNextEvent()
+AbstractTimerStatechart::EventInstance* AbstractTimerStatechart::getNextEvent()
 {
-	SctEvent* nextEvent = 0;
-	
-	if(!inEventQueue.empty()) {
-		nextEvent = inEventQueue.front();
-		inEventQueue.pop_front();
+	AbstractTimerStatechart::EventInstance* nextEvent = 0;
+
+	if(!incomingEventQueue.empty()) {
+		nextEvent = incomingEventQueue.front();
+		incomingEventQueue.pop_front();
 	}
 	
 	return nextEvent;
-}
+	
+}					
 
-void AbstractTimerStatechart::dispatch_event(SctEvent * event)
+
+void AbstractTimerStatechart::dispatchEvent(AbstractTimerStatechart::EventInstance * event)
 {
-	if(event == 0) {
+	if(event == nullptr) {
 		return;
 	}
-	switch(event->name)
+								
+	switch(event->eventId)
 	{
-		case Statechart_main_region_First_time_event_0:
+		
+		
+		case AbstractTimerStatechart::Event::_te0_main_region_First_:
+		case AbstractTimerStatechart::Event::_te1_main_region_First_:
+		case AbstractTimerStatechart::Event::_te2_main_region_First_:
+		case AbstractTimerStatechart::Event::_te3_main_region_Second_:
+		case AbstractTimerStatechart::Event::_te4_main_region_Second_:
+		case AbstractTimerStatechart::Event::_te5_main_region_Second_:
+		case AbstractTimerStatechart::Event::_te6_main_region_Second_:
 		{
-			timeEvents[0] = true;
-			break;
-		}
-		case Statechart_main_region_First_time_event_1:
-		{
-			timeEvents[1] = true;
-			break;
-		}
-		case Statechart_main_region_First_time_event_2:
-		{
-			timeEvents[2] = true;
-			break;
-		}
-		case Statechart_main_region_Second_time_event_0:
-		{
-			timeEvents[3] = true;
-			break;
-		}
-		case Statechart_main_region_Second_time_event_1:
-		{
-			timeEvents[4] = true;
-			break;
-		}
-		case Statechart_main_region_Second_time_event_2:
-		{
-			timeEvents[5] = true;
-			break;
-		}
-		case Statechart_main_region_Second_time_event_3:
-		{
-			timeEvents[6] = true;
+			timeEvents[static_cast<sc::integer>(event->eventId) - static_cast<sc::integer>(AbstractTimerStatechart::Event::_te0_main_region_First_)] = true;
 			break;
 		}
 		default:
@@ -96,58 +77,29 @@ void AbstractTimerStatechart::dispatch_event(SctEvent * event)
 	delete event;
 }
 
-void AbstractTimerStatechart::iface_dispatch_event(SctEvent * event)
-{
-	switch(event->name)
-	{
-		default:
-			break;
-	}
-}
 
-AbstractTimerStatechartEventName AbstractTimerStatechart::getTimedEventName(sc_eventid evid)
-{
-	if (evid == (sc_eventid)(&timeEvents[0])) {
-		return Statechart_main_region_First_time_event_0;
-	}
-	if (evid == (sc_eventid)(&timeEvents[1])) {
-		return Statechart_main_region_First_time_event_1;
-	}
-	if (evid == (sc_eventid)(&timeEvents[2])) {
-		return Statechart_main_region_First_time_event_2;
-	}
-	if (evid == (sc_eventid)(&timeEvents[3])) {
-		return Statechart_main_region_Second_time_event_0;
-	}
-	if (evid == (sc_eventid)(&timeEvents[4])) {
-		return Statechart_main_region_Second_time_event_1;
-	}
-	if (evid == (sc_eventid)(&timeEvents[5])) {
-		return Statechart_main_region_Second_time_event_2;
-	}
-	if (evid == (sc_eventid)(&timeEvents[6])) {
-		return Statechart_main_region_Second_time_event_3;
-	}
-	return invalid_event;
+/*! Can be used by the client code to trigger a run to completion step without raising an event. */
+void AbstractTimerStatechart::triggerWithoutEvent() {
+	runCycle();
 }
 
 
 
-sc_boolean AbstractTimerStatechart::isActive() const
+bool AbstractTimerStatechart::isActive() const
 {
-	return stateConfVector[0] != Statechart_last_state;
+	return stateConfVector[0] != AbstractTimerStatechart::State::NO_STATE;
 }
 
-sc_boolean AbstractTimerStatechart::isFinal() const
+bool AbstractTimerStatechart::isFinal() const
 {
-	return (stateConfVector[0] == main_region__final_);
+	return (stateConfVector[0] == AbstractTimerStatechart::State::main_region__final_);
 }
 
-sc_boolean AbstractTimerStatechart::check() {
-	if(timerService == sc_null) {
+bool AbstractTimerStatechart::check() const {
+	if(timerService == nullptr) {
 		return false;
 	}
-	if (this->ifaceOperationCallback == sc_null) {
+	if (this->ifaceOperationCallback == nullptr) {
 		return false;
 	}
 	return true;
@@ -164,108 +116,118 @@ sc::timer::TimerServiceInterface* AbstractTimerStatechart::getTimerService()
 	return timerService;
 }
 
-sc_integer AbstractTimerStatechart::getNumberOfParallelTimeEvents() {
+sc::integer AbstractTimerStatechart::getNumberOfParallelTimeEvents() {
 	return parallelTimeEventsCount;
 }
 
-void AbstractTimerStatechart::raiseTimeEvent(sc_eventid evid)
+void AbstractTimerStatechart::raiseTimeEvent(sc::eventid evid)
 {
-	if ((evid >= (sc_eventid)timeEvents) && (evid < (sc_eventid)(&timeEvents[timeEventsCount])))
+	if (evid < timeEventsCount)
 	{
-		inEventQueue.push_back(new TimedSctEvent(getTimedEventName(evid)));
+		incomingEventQueue.push_back(new EventInstance(static_cast<AbstractTimerStatechart::Event>(evid + static_cast<sc::integer>(AbstractTimerStatechart::Event::_te0_main_region_First_))));
 		runCycle();
 	}
 }
 
 
-sc_boolean AbstractTimerStatechart::isStateActive(StatechartStates state) const
+bool AbstractTimerStatechart::isStateActive(State state) const
 {
 	switch (state)
 	{
-		case main_region_First : 
-			return (sc_boolean) (stateConfVector[SCVI_MAIN_REGION_FIRST] == main_region_First
-			);
-		case main_region_Second : 
-			return (sc_boolean) (stateConfVector[SCVI_MAIN_REGION_SECOND] == main_region_Second
-			);
-		case main_region__final_ : 
-			return (sc_boolean) (stateConfVector[SCVI_MAIN_REGION__FINAL_] == main_region__final_
-			);
-		default: return false;
+		case AbstractTimerStatechart::State::main_region_First :
+		{
+			return  (stateConfVector[scvi_main_region_First] == AbstractTimerStatechart::State::main_region_First);
+			break;
+		}
+		case AbstractTimerStatechart::State::main_region_Second :
+		{
+			return  (stateConfVector[scvi_main_region_Second] == AbstractTimerStatechart::State::main_region_Second);
+			break;
+		}
+		case AbstractTimerStatechart::State::main_region__final_ :
+		{
+			return  (stateConfVector[scvi_main_region__final_] == AbstractTimerStatechart::State::main_region__final_);
+			break;
+		}
+		default:
+		{
+			return false;
+			break;
+		}
 	}
 }
 
-sc_integer AbstractTimerStatechart::getCounter() const
+sc::integer AbstractTimerStatechart::getCounter() const
 {
 	return counter;
 }
 
-void AbstractTimerStatechart::setCounter(sc_integer value)
+void AbstractTimerStatechart::setCounter(sc::integer value)
 {
 	this->counter = value;
 }
 
-sc_integer AbstractTimerStatechart::getMax() const
+sc::integer AbstractTimerStatechart::getMax() const
 {
 	return max;
 }
 
-sc_integer AbstractTimerStatechart::getExit12() const
+sc::integer AbstractTimerStatechart::getExit12() const
 {
 	return exit12;
 }
 
-sc_integer AbstractTimerStatechart::getExit21() const
+sc::integer AbstractTimerStatechart::getExit21() const
 {
 	return exit21;
 }
 
-sc_integer AbstractTimerStatechart::getA1() const
+sc::integer AbstractTimerStatechart::getA1() const
 {
 	return a1;
 }
 
-void AbstractTimerStatechart::setA1(sc_integer value)
+void AbstractTimerStatechart::setA1(sc::integer value)
 {
 	this->a1 = value;
 }
 
-sc_integer AbstractTimerStatechart::getB1() const
+sc::integer AbstractTimerStatechart::getB1() const
 {
 	return b1;
 }
 
-void AbstractTimerStatechart::setB1(sc_integer value)
+void AbstractTimerStatechart::setB1(sc::integer value)
 {
 	this->b1 = value;
 }
 
-sc_integer AbstractTimerStatechart::getA2() const
+sc::integer AbstractTimerStatechart::getA2() const
 {
 	return a2;
 }
 
-void AbstractTimerStatechart::setA2(sc_integer value)
+void AbstractTimerStatechart::setA2(sc::integer value)
 {
 	this->a2 = value;
 }
 
-sc_integer AbstractTimerStatechart::getB2() const
+sc::integer AbstractTimerStatechart::getB2() const
 {
 	return b2;
 }
 
-void AbstractTimerStatechart::setB2(sc_integer value)
+void AbstractTimerStatechart::setB2(sc::integer value)
 {
 	this->b2 = value;
 }
 
-sc_integer AbstractTimerStatechart::getC2() const
+sc::integer AbstractTimerStatechart::getC2() const
 {
 	return c2;
 }
 
-void AbstractTimerStatechart::setC2(sc_integer value)
+void AbstractTimerStatechart::setC2(sc::integer value)
 {
 	this->c2 = value;
 }
@@ -277,63 +239,46 @@ void AbstractTimerStatechart::setOperationCallback(OperationCallback* operationC
 
 // implementations of all internal functions
 
-sc_boolean AbstractTimerStatechart::check_main_region__choice_0_tr1_tr1()
-{
-	return (counter) >= (AbstractTimerStatechart::max);
-}
-
-void AbstractTimerStatechart::effect_main_region__choice_0_tr1()
-{
-	ifaceOperationCallback->dump((sc_string) "Exit");
-	enseq_main_region__final__default();
-}
-
-void AbstractTimerStatechart::effect_main_region__choice_0_tr0()
-{
-	counter++;
-	enseq_main_region_First_default();
-}
-
 /* Entry action for state 'First'. */
 void AbstractTimerStatechart::enact_main_region_First()
 {
 	/* Entry action for state 'First'. */
-	timerService->setTimer(this, (sc_eventid)(&timeEvents[0]), AbstractTimerStatechart::exit12, false);
-	timerService->setTimer(this, (sc_eventid)(&timeEvents[1]), 301, true);
-	timerService->setTimer(this, (sc_eventid)(&timeEvents[2]), 749, false);
-	ifaceOperationCallback->dump((sc_string) "Enter first state");
+	timerService->setTimer(this, 0, AbstractTimerStatechart::exit12, false);
+	timerService->setTimer(this, 1, 301, true);
+	timerService->setTimer(this, 2, 749, false);
+	ifaceOperationCallback->dump("Enter first state");
 }
 
 /* Entry action for state 'Second'. */
 void AbstractTimerStatechart::enact_main_region_Second()
 {
 	/* Entry action for state 'Second'. */
-	timerService->setTimer(this, (sc_eventid)(&timeEvents[3]), AbstractTimerStatechart::exit21, false);
-	timerService->setTimer(this, (sc_eventid)(&timeEvents[4]), 250, true);
-	timerService->setTimer(this, (sc_eventid)(&timeEvents[5]), 150, true);
-	timerService->setTimer(this, (sc_eventid)(&timeEvents[6]), 350, false);
-	ifaceOperationCallback->dump((sc_string) "Enter second state");
+	timerService->setTimer(this, 3, AbstractTimerStatechart::exit21, false);
+	timerService->setTimer(this, 4, 250, true);
+	timerService->setTimer(this, 5, 150, true);
+	timerService->setTimer(this, 6, 350, false);
+	ifaceOperationCallback->dump("Enter second state");
 }
 
 /* Exit action for state 'First'. */
 void AbstractTimerStatechart::exact_main_region_First()
 {
 	/* Exit action for state 'First'. */
-	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[0]));
-	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[1]));
-	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[2]));
-	ifaceOperationCallback->dump((sc_string) "Exit first state");
+	timerService->unsetTimer(this, 0);
+	timerService->unsetTimer(this, 1);
+	timerService->unsetTimer(this, 2);
+	ifaceOperationCallback->dump("Exit first state");
 }
 
 /* Exit action for state 'Second'. */
 void AbstractTimerStatechart::exact_main_region_Second()
 {
 	/* Exit action for state 'Second'. */
-	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[3]));
-	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[4]));
-	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[5]));
-	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[6]));
-	ifaceOperationCallback->dump((sc_string) "Exit second state");
+	timerService->unsetTimer(this, 3);
+	timerService->unsetTimer(this, 4);
+	timerService->unsetTimer(this, 5);
+	timerService->unsetTimer(this, 6);
+	ifaceOperationCallback->dump("Exit second state");
 }
 
 /* 'default' enter sequence for state First */
@@ -341,7 +286,7 @@ void AbstractTimerStatechart::enseq_main_region_First_default()
 {
 	/* 'default' enter sequence for state First */
 	enact_main_region_First();
-	stateConfVector[0] = main_region_First;
+	stateConfVector[0] = AbstractTimerStatechart::State::main_region_First;
 }
 
 /* 'default' enter sequence for state Second */
@@ -349,14 +294,14 @@ void AbstractTimerStatechart::enseq_main_region_Second_default()
 {
 	/* 'default' enter sequence for state Second */
 	enact_main_region_Second();
-	stateConfVector[0] = main_region_Second;
+	stateConfVector[0] = AbstractTimerStatechart::State::main_region_Second;
 }
 
-/* Default enter sequence for state null */
+/* Default enter sequence for final state */
 void AbstractTimerStatechart::enseq_main_region__final__default()
 {
-	/* Default enter sequence for state null */
-	stateConfVector[0] = main_region__final_;
+	/* Default enter sequence for final state */
+	stateConfVector[0] = AbstractTimerStatechart::State::main_region__final_;
 }
 
 /* 'default' enter sequence for region main region */
@@ -370,7 +315,7 @@ void AbstractTimerStatechart::enseq_main_region_default()
 void AbstractTimerStatechart::exseq_main_region_First()
 {
 	/* Default exit sequence for state First */
-	stateConfVector[0] = Statechart_last_state;
+	stateConfVector[0] = AbstractTimerStatechart::State::NO_STATE;
 	exact_main_region_First();
 }
 
@@ -378,7 +323,7 @@ void AbstractTimerStatechart::exseq_main_region_First()
 void AbstractTimerStatechart::exseq_main_region_Second()
 {
 	/* Default exit sequence for state Second */
-	stateConfVector[0] = Statechart_last_state;
+	stateConfVector[0] = AbstractTimerStatechart::State::NO_STATE;
 	exact_main_region_Second();
 }
 
@@ -386,27 +331,27 @@ void AbstractTimerStatechart::exseq_main_region_Second()
 void AbstractTimerStatechart::exseq_main_region__final_()
 {
 	/* Default exit sequence for final state. */
-	stateConfVector[0] = Statechart_last_state;
+	stateConfVector[0] = AbstractTimerStatechart::State::NO_STATE;
 }
 
 /* Default exit sequence for region main region */
 void AbstractTimerStatechart::exseq_main_region()
 {
 	/* Default exit sequence for region main region */
-	/* Handle exit of all possible states (of Statechart.main_region) at position 0... */
+	/* Handle exit of all possible states (of AbstractTimerStatechart.main_region) at position 0... */
 	switch(stateConfVector[ 0 ])
 	{
-		case main_region_First :
+		case AbstractTimerStatechart::State::main_region_First :
 		{
 			exseq_main_region_First();
 			break;
 		}
-		case main_region_Second :
+		case AbstractTimerStatechart::State::main_region_Second :
 		{
 			exseq_main_region_Second();
 			break;
 		}
-		case main_region__final_ :
+		case AbstractTimerStatechart::State::main_region__final_ :
 		{
 			exseq_main_region__final_();
 			break;
@@ -419,12 +364,14 @@ void AbstractTimerStatechart::exseq_main_region()
 void AbstractTimerStatechart::react_main_region__choice_0()
 {
 	/* The reactions of state null. */
-	if (check_main_region__choice_0_tr1_tr1())
+	if ((counter) >= (AbstractTimerStatechart::max))
 	{ 
-		effect_main_region__choice_0_tr1();
+		ifaceOperationCallback->dump("Exit");
+		enseq_main_region__final__default();
 	}  else
 	{
-		effect_main_region__choice_0_tr0();
+		counter++;
+		enseq_main_region_First_default();
 	}
 }
 
@@ -432,24 +379,25 @@ void AbstractTimerStatechart::react_main_region__choice_0()
 void AbstractTimerStatechart::react_main_region__entry_Default()
 {
 	/* Default react sequence for initial entry  */
-	ifaceOperationCallback->dump((sc_string) "Start");
+	ifaceOperationCallback->dump("Start");
 	enseq_main_region_First_default();
 }
 
-sc_integer AbstractTimerStatechart::react(const sc_integer transitioned_before) {
+sc::integer AbstractTimerStatechart::react(const sc::integer transitioned_before) {
 	/* State machine reactions. */
 	return transitioned_before;
 }
 
-sc_integer AbstractTimerStatechart::main_region_First_react(const sc_integer transitioned_before) {
+sc::integer AbstractTimerStatechart::main_region_First_react(const sc::integer transitioned_before) {
 	/* The reactions of state First. */
-	sc_integer transitioned_after = transitioned_before;
+	sc::integer transitioned_after = transitioned_before;
 	if ((transitioned_after) < (0))
 	{ 
 		if (timeEvents[0])
 		{ 
 			exseq_main_region_First();
-			ifaceOperationCallback->dump((sc_string) "1 -> 2");
+			ifaceOperationCallback->dump("1 -> 2");
+			timeEvents[0] = false;
 			enseq_main_region_Second_default();
 			react(0);
 			transitioned_after = 0;
@@ -461,27 +409,28 @@ sc_integer AbstractTimerStatechart::main_region_First_react(const sc_integer tra
 		if (timeEvents[1])
 		{ 
 			a1++;
-			ifaceOperationCallback->dump((sc_string) "Timer 301ms");
+			ifaceOperationCallback->dump("Timer 301ms");
 		} 
 		if (timeEvents[2])
 		{ 
 			b1++;
-			ifaceOperationCallback->dump((sc_string) "Single shot");
+			ifaceOperationCallback->dump("Single shot");
 		} 
 		transitioned_after = react(transitioned_before);
 	} 
 	return transitioned_after;
 }
 
-sc_integer AbstractTimerStatechart::main_region_Second_react(const sc_integer transitioned_before) {
+sc::integer AbstractTimerStatechart::main_region_Second_react(const sc::integer transitioned_before) {
 	/* The reactions of state Second. */
-	sc_integer transitioned_after = transitioned_before;
+	sc::integer transitioned_after = transitioned_before;
 	if ((transitioned_after) < (0))
 	{ 
 		if (timeEvents[3])
 		{ 
 			exseq_main_region_Second();
-			ifaceOperationCallback->dump((sc_string) "2 -> choice");
+			ifaceOperationCallback->dump("2 -> choice");
+			timeEvents[3] = false;
 			react_main_region__choice_0();
 			transitioned_after = 0;
 		} 
@@ -506,9 +455,9 @@ sc_integer AbstractTimerStatechart::main_region_Second_react(const sc_integer tr
 	return transitioned_after;
 }
 
-sc_integer AbstractTimerStatechart::main_region__final__react(const sc_integer transitioned_before) {
+sc::integer AbstractTimerStatechart::main_region__final__react(const sc::integer transitioned_before) {
 	/* The reactions of state null. */
-	sc_integer transitioned_after = transitioned_before;
+	sc::integer transitioned_after = transitioned_before;
 	if ((transitioned_after) < (0))
 	{ 
 	} 
@@ -533,17 +482,17 @@ void AbstractTimerStatechart::clearInEvents() {
 void AbstractTimerStatechart::microStep() {
 	switch(stateConfVector[ 0 ])
 	{
-		case main_region_First :
+		case AbstractTimerStatechart::State::main_region_First :
 		{
 			main_region_First_react(-1);
 			break;
 		}
-		case main_region_Second :
+		case AbstractTimerStatechart::State::main_region_Second :
 		{
 			main_region_Second_react(-1);
 			break;
 		}
-		case main_region__final_ :
+		case AbstractTimerStatechart::State::main_region__final_ :
 		{
 			main_region__final__react(-1);
 			break;
@@ -559,12 +508,12 @@ void AbstractTimerStatechart::runCycle() {
 		return;
 	} 
 	isExecuting = true;
-	dispatch_event(getNextEvent());
+	dispatchEvent(getNextEvent());
 	do
 	{ 
 		microStep();
 		clearInEvents();
-		dispatch_event(getNextEvent());
+		dispatchEvent(getNextEvent());
 	} while (((((((timeEvents[0]) || (timeEvents[1])) || (timeEvents[2])) || (timeEvents[3])) || (timeEvents[4])) || (timeEvents[5])) || (timeEvents[6]));
 	isExecuting = false;
 }
@@ -576,7 +525,7 @@ void AbstractTimerStatechart::enter() {
 		return;
 	} 
 	isExecuting = true;
-	/* Default enter sequence for statechart Statechart */
+	/* Default enter sequence for statechart AbstractTimerStatechart */
 	enseq_main_region_default();
 	isExecuting = false;
 }
@@ -588,7 +537,7 @@ void AbstractTimerStatechart::exit() {
 		return;
 	} 
 	isExecuting = true;
-	/* Default exit sequence for statechart Statechart */
+	/* Default exit sequence for statechart AbstractTimerStatechart */
 	exseq_main_region();
 	isExecuting = false;
 }

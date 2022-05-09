@@ -4,9 +4,9 @@
 #define ABSTRACTTIMERSTATECHART_H_
 
 /*!
- * Forward declaration for the AbstractTimerStatechart state machine.
- */
- class AbstractTimerStatechart;
+Forward declaration for the AbstractTimerStatechart state machine.
+*/
+class AbstractTimerStatechart;
 
 
 #include <deque>
@@ -14,64 +14,9 @@
 #include "../src-lib/sc_statemachine.h"
 #include "../src-lib/sc_timer.h"
 
-/*! \file Header of the state machine 'Statechart'.
+/*! \file
+Header of the state machine 'AbstractTimerStatechart'.
 */
-
-
-#ifndef SCT_EVENTS_STATECHART_H
-#define SCT_EVENTS_STATECHART_H
-#ifndef SC_INVALID_EVENT_VALUE
-#define SC_INVALID_EVENT_VALUE 0
-#endif
-
-namespace statechart_events
-{
-typedef enum  {
-	invalid_event = SC_INVALID_EVENT_VALUE,
-	Statechart_main_region_First_time_event_0,
-	Statechart_main_region_First_time_event_1,
-	Statechart_main_region_First_time_event_2,
-	Statechart_main_region_Second_time_event_0,
-	Statechart_main_region_Second_time_event_1,
-	Statechart_main_region_Second_time_event_2,
-	Statechart_main_region_Second_time_event_3
-} AbstractTimerStatechartEventName;
-
-class SctEvent
-{
-	public:
-		SctEvent(AbstractTimerStatechartEventName name) : name(name){}
-		virtual ~SctEvent(){}
-		const AbstractTimerStatechartEventName name;
-		
-};
-		
-template <typename T>
-class TypedSctEvent : public SctEvent
-{
-	public:
-		TypedSctEvent(AbstractTimerStatechartEventName name, T value) :
-			SctEvent(name),
-			value(value)
-			{}
-		virtual ~TypedSctEvent(){}
-		const T value;
-};
-
-class TimedSctEvent : public SctEvent
-{
-	public:
-		TimedSctEvent(AbstractTimerStatechartEventName name) : SctEvent(name){};
-};
-
-}
-#endif /* SCT_EVENTS_STATECHART_H */
-
-
-/*! Define indices of states in the StateConfVector */
-#define SCVI_MAIN_REGION_FIRST 0
-#define SCVI_MAIN_REGION_SECOND 0
-#define SCVI_MAIN_REGION__FINAL_ 0
 
 
 class AbstractTimerStatechart : public sc::timer::TimedInterface, public sc::StatemachineInterface
@@ -81,61 +26,91 @@ class AbstractTimerStatechart : public sc::timer::TimedInterface, public sc::Sta
 		
 		virtual ~AbstractTimerStatechart();
 		
-		/*! Enumeration of all states */ 
-		typedef enum
+		
+		
+		/*! Enumeration of all states. */
+		enum class State
 		{
-			Statechart_last_state,
+			NO_STATE,
 			main_region_First,
 			main_region_Second,
 			main_region__final_
-		} StatechartStates;
-					
-		static const sc_integer numStates = 3;
+		};
+		
+		/*! The number of states. */
+		static const sc::integer numStates = 3;
+		static const sc::integer scvi_main_region_First = 0;
+		static const sc::integer scvi_main_region_Second = 0;
+		static const sc::integer scvi_main_region__final_ = 0;
+		
+		/*! Enumeration of all events which are consumed. */
+		enum class Event
+		{
+			NO_EVENT,
+			_te0_main_region_First_,
+			_te1_main_region_First_,
+			_te2_main_region_First_,
+			_te3_main_region_Second_,
+			_te4_main_region_Second_,
+			_te5_main_region_Second_,
+			_te6_main_region_Second_
+		};
+		
+		class EventInstance
+		{
+			public:
+				explicit EventInstance(Event id) : eventId(id){}
+				virtual ~EventInstance() = default;
+				const Event eventId;
+		};
+		
+		/*! Can be used by the client code to trigger a run to completion step without raising an event. */
+		void triggerWithoutEvent();
 		
 		/*! Gets the value of the variable 'counter' that is defined in the default interface scope. */
-		sc_integer getCounter() const;
+		sc::integer getCounter() const;
 		
 		/*! Sets the value of the variable 'counter' that is defined in the default interface scope. */
-		void setCounter(sc_integer value);
+		void setCounter(sc::integer value);
 		
 		/*! Gets the value of the variable 'max' that is defined in the default interface scope. */
-		sc_integer getMax() const;
+		sc::integer getMax() const;
 		
 		/*! Gets the value of the variable 'exit12' that is defined in the default interface scope. */
-		sc_integer getExit12() const;
+		sc::integer getExit12() const;
 		
 		/*! Gets the value of the variable 'exit21' that is defined in the default interface scope. */
-		sc_integer getExit21() const;
+		sc::integer getExit21() const;
 		
 		/*! Gets the value of the variable 'a1' that is defined in the default interface scope. */
-		sc_integer getA1() const;
+		sc::integer getA1() const;
 		
 		/*! Sets the value of the variable 'a1' that is defined in the default interface scope. */
-		void setA1(sc_integer value);
+		void setA1(sc::integer value);
 		
 		/*! Gets the value of the variable 'b1' that is defined in the default interface scope. */
-		sc_integer getB1() const;
+		sc::integer getB1() const;
 		
 		/*! Sets the value of the variable 'b1' that is defined in the default interface scope. */
-		void setB1(sc_integer value);
+		void setB1(sc::integer value);
 		
 		/*! Gets the value of the variable 'a2' that is defined in the default interface scope. */
-		sc_integer getA2() const;
+		sc::integer getA2() const;
 		
 		/*! Sets the value of the variable 'a2' that is defined in the default interface scope. */
-		void setA2(sc_integer value);
+		void setA2(sc::integer value);
 		
 		/*! Gets the value of the variable 'b2' that is defined in the default interface scope. */
-		sc_integer getB2() const;
+		sc::integer getB2() const;
 		
 		/*! Sets the value of the variable 'b2' that is defined in the default interface scope. */
-		void setB2(sc_integer value);
+		void setB2(sc::integer value);
 		
 		/*! Gets the value of the variable 'c2' that is defined in the default interface scope. */
-		sc_integer getC2() const;
+		sc::integer getC2() const;
 		
 		/*! Sets the value of the variable 'c2' that is defined in the default interface scope. */
-		void setC2(sc_integer value);
+		void setC2(sc::integer value);
 		
 		//! Inner class for default interface scope operation callbacks.
 		class OperationCallback
@@ -143,7 +118,7 @@ class AbstractTimerStatechart : public sc::timer::TimedInterface, public sc::Sta
 			public:
 				virtual ~OperationCallback() = 0;
 				
-				virtual void dump(sc_string text) = 0;
+				virtual void dump(std::string text) = 0;
 				
 				
 		};
@@ -154,91 +129,95 @@ class AbstractTimerStatechart : public sc::timer::TimedInterface, public sc::Sta
 		/*
 		 * Functions inherited from StatemachineInterface
 		 */
-		virtual void enter();
+		void enter() override;
 		
-		virtual void exit();
+		void exit() override;
 		
 		/*!
 		 * Checks if the state machine is active (until 2.4.1 this method was used for states).
 		 * A state machine is active if it has been entered. It is inactive if it has not been entered at all or if it has been exited.
 		 */
-		virtual sc_boolean isActive() const;
+		bool isActive() const override;
 		
 		
 		/*!
 		* Checks if all active states are final. 
 		* If there are no active states then the state machine is considered being inactive. In this case this method returns false.
 		*/
-		virtual sc_boolean isFinal() const;
+		bool isFinal() const override;
 		
 		/*! 
 		 * Checks if member of the state machine must be set. For example an operation callback.
 		 */
-		sc_boolean check();
+		bool check() const;
 		
 		/*
 		 * Functions inherited from TimedStatemachineInterface
 		 */
-		virtual void setTimerService(sc::timer::TimerServiceInterface* timerService);
+		void setTimerService(sc::timer::TimerServiceInterface* timerService) override;
 		
-		virtual sc::timer::TimerServiceInterface* getTimerService();
+		sc::timer::TimerServiceInterface* getTimerService() override;
 		
-		virtual void raiseTimeEvent(sc_eventid event);
+		void raiseTimeEvent(sc::eventid event) override;
 		
-		virtual sc_integer getNumberOfParallelTimeEvents();
+		sc::integer getNumberOfParallelTimeEvents() override;
 		
 		
 		
 		/*! Checks if the specified state is active (until 2.4.1 the used method for states was calles isActive()). */
-		sc_boolean isStateActive(StatechartStates state) const;
+		bool isStateActive(State state) const;
 		
 		//! number of time events used by the state machine.
-		static const sc_integer timeEventsCount = 7;
+		static const sc::integer timeEventsCount = 7;
 		
 		//! number of time events that can be active at once.
-		static const sc_integer parallelTimeEventsCount = 4;
+		static const sc::integer parallelTimeEventsCount = 4;
 		
 		
 	protected:
+		
+		
+		std::deque<EventInstance*> incomingEventQueue;
+		
+		EventInstance* getNextEvent();
+		
+		void dispatchEvent(EventInstance* event);
+		
 		
 		
 	private:
 		AbstractTimerStatechart(const AbstractTimerStatechart &rhs);
 		AbstractTimerStatechart& operator=(const AbstractTimerStatechart&);
 		
-		sc_integer counter;
-		static const sc_integer max;
-		static const sc_integer exit12;
-		static const sc_integer exit21;
-		sc_integer a1;
-		sc_integer b1;
-		sc_integer a2;
-		sc_integer b2;
-		sc_integer c2;
-		void iface_dispatch_event(statechart_events::SctEvent * event);
+		sc::integer counter;
+		static const sc::integer max;
+		static const sc::integer exit12;
+		static const sc::integer exit21;
+		sc::integer a1;
+		sc::integer b1;
+		sc::integer a2;
+		sc::integer b2;
+		sc::integer c2;
 		
 		
 		//! the maximum number of orthogonal states defines the dimension of the state configuration vector.
-		static const sc_ushort maxOrthogonalStates = 1;
+		static const sc::ushort maxOrthogonalStates = 1;
 		
 		sc::timer::TimerServiceInterface* timerService;
-		sc_boolean timeEvents[timeEventsCount];
+		bool timeEvents[timeEventsCount];
 		
 		
-		StatechartStates stateConfVector[maxOrthogonalStates];
+		State stateConfVector[maxOrthogonalStates];
 		
 		
 		OperationCallback* ifaceOperationCallback;
 		
 		
-		sc_boolean isExecuting;
+		bool isExecuting;
 		
 		
 		// prototypes of all internal functions
 		
-		sc_boolean check_main_region__choice_0_tr1_tr1();
-		void effect_main_region__choice_0_tr1();
-		void effect_main_region__choice_0_tr0();
 		void enact_main_region_First();
 		void enact_main_region_Second();
 		void exact_main_region_First();
@@ -253,19 +232,17 @@ class AbstractTimerStatechart : public sc::timer::TimedInterface, public sc::Sta
 		void exseq_main_region();
 		void react_main_region__choice_0();
 		void react_main_region__entry_Default();
-		sc_integer react(const sc_integer transitioned_before);
-		sc_integer main_region_First_react(const sc_integer transitioned_before);
-		sc_integer main_region_Second_react(const sc_integer transitioned_before);
-		sc_integer main_region__final__react(const sc_integer transitioned_before);
+		sc::integer react(const sc::integer transitioned_before);
+		sc::integer main_region_First_react(const sc::integer transitioned_before);
+		sc::integer main_region_Second_react(const sc::integer transitioned_before);
+		sc::integer main_region__final__react(const sc::integer transitioned_before);
 		void clearInEvents();
 		void microStep();
 		void runCycle();
 		
 		
-		statechart_events::SctEvent* getNextEvent();
-		void dispatch_event(statechart_events::SctEvent * event);
-		statechart_events::AbstractTimerStatechartEventName getTimedEventName(sc_eventid evid);
-		std::deque<statechart_events::SctEvent*> inEventQueue;
+		
+		
 		
 		
 };

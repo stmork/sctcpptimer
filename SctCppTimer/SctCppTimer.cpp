@@ -9,14 +9,14 @@
 
 using namespace sc::timer;
 
-SctCppTimer::SctCppTimer(const sc_eventid id) : event_id(id)
+SctCppTimer::SctCppTimer(const eventid id) : event_id(id)
 {
 }
 
 void SctCppTimer::start(
 	TimedInterface * timed_interface,
-	sc_integer       time_ms,
-	sc_boolean       is_periodic)
+	integer          time_ms,
+	bool             is_periodic)
 
 {
 	statemachine = timed_interface;

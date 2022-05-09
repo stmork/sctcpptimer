@@ -1,11 +1,11 @@
-GeneratorModel for yakindu::cpp
+GeneratorModel for yakindu::cpp11
 {
 	const PROJECT : string = "SctCppTimer"
 
 	const SRCGEN : string = "src-gen"
 	const SRCLIB : string = "src-lib"
 
-	statechart Statechart
+	statechart AbstractTimerStatechart
 	{
 		feature Outlet
 		{

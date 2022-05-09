@@ -23,7 +23,7 @@ namespace sc::timer
 {
 	class SctCppTimer;
 
-	typedef std::pair<TimedInterface *, sc_eventid>        TimerKey;
+	typedef std::pair<TimedInterface *, sc::eventid>       TimerKey;
 
 	/**
 	 * This typedef declares the ordered set of active SctCppTimer
@@ -35,7 +35,7 @@ namespace sc::timer
 	{
 		inline size_t operator()(const TimerKey & key) const
 		{
-			return (size_t(key.first) << 4) | (key.second & 0xf);
+			return (size_t(key.first)  & 0xfff0) | (key.second & 0xf);
 		}
 	};
 
@@ -99,18 +99,13 @@ namespace sc::timer
 
 		virtual void setTimer(
 			TimedInterface * statemachine,
-			sc_eventid       event,
-			sc_integer       time_ms,
-			sc_boolean       is_periodic) override;
+			sc::eventid      event,
+			sc::integer      time_ms,
+			bool             is_periodic) override;
 
 		virtual void unsetTimer(
 			TimedInterface * statemachine,
-			sc_eventid       event) override;
-
-		virtual inline void cancel() override
-		{
-			// Intentionally do nothing!
-		}
+			sc::eventid      event) override;
 
 	protected:
 		/**
@@ -122,8 +117,8 @@ namespace sc::timer
 		 * @return The found SctCppTimer instance
 		 */
 		SctCppTimer * findTimer(
-				TimedInterface * statechart,
-				sc_eventid       event);
+			TimedInterface * statechart,
+			sc::eventid      event);
 
 	private:
 		/**

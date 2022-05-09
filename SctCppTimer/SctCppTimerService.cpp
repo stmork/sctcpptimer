@@ -32,9 +32,9 @@ SctCppTimerService::~SctCppTimerService()
 
 void SctCppTimerService::setTimer(
 	TimedInterface * statemachine,
-	sc_eventid       event,
-	sc_integer       time_ms,
-	sc_boolean       is_periodic)
+	sc::eventid      event,
+	sc::integer      time_ms,
+	bool             is_periodic)
 {
 	SctCppTimer * timer = findTimer(statemachine, event);
 
@@ -45,7 +45,7 @@ void SctCppTimerService::setTimer(
 
 void SctCppTimerService::unsetTimer(
 	TimedInterface * statemachine,
-	sc_eventid       event)
+	sc::eventid      event)
 {
 	SctCppTimer * timer = findTimer(statemachine, event);
 
@@ -54,10 +54,10 @@ void SctCppTimerService::unsetTimer(
 }
 
 SctCppTimer * SctCppTimerService::findTimer(
-		TimedInterface * statemachine,
-		sc_eventid       event)
+	TimedInterface * statemachine,
+	sc::eventid      event)
 {
-	SctCppTimer *      timer;
+	SctCppTimer    *   timer;
 	TimerKey           key(statemachine, event);
 	TimerMap::iterator it = chart_map.find(key);
 

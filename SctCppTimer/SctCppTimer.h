@@ -29,11 +29,11 @@ namespace sc::timer
 		std::chrono::time_point<std::chrono::steady_clock> time_point;
 		std::chrono::milliseconds                          duration;
 		bool                                               repeating;
-		const sc_eventid                                   event_id;
+		const sc::eventid                                  event_id;
 		TimedInterface                  *                  statemachine = nullptr;
 
 	public:
-		explicit SctCppTimer(const sc_eventid id = 0);
+		explicit SctCppTimer(const sc::eventid id = 0);
 
 		/**
 		 * This method starts a timer by taking the actual time point and
@@ -47,8 +47,8 @@ namespace sc::timer
 		 */
 		void start(
 			TimedInterface * timed_interface,
-			sc_integer       time_ms,
-			sc_boolean       is_periodic);
+			sc::integer      time_ms,
+			bool             is_periodic);
 
 		/**
 		 * This method adds the timer duration to the waiting time point. So

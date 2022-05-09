@@ -32,7 +32,7 @@ public:
 	virtual ~TimerStatechart() = default;
 
 private:
-	void dump(sc_string text) override;
+	void dump(std::string text) override;
 };
 
 #endif /* TimerStatechart_hpp */

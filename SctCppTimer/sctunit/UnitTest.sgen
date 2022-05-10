@@ -1,0 +1,14 @@
+GeneratorModel for sctunit::cpp11 {
+
+	const PROJECT : string = "SctCppTimer"
+	const FOLDER : string = "src-test"
+
+	test StatechartTest
+	{
+		feature Outlet
+		{
+			targetProject = PROJECT
+			targetFolder  = FOLDER
+		}
+	}
+}

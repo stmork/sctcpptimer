@@ -1,12 +1,13 @@
 TEMPLATE = subdirs
 SUBDIRS  = \
-   SctCppTimer \
-   SctCppUnit
+	SctCppTimer \
+	SctCppUnit
 
 SctCppTimer.file = SctCppTimer/SctCppTimer.pro
 SctCppUnit.file  = SctCppTimer/SctCppUnit.pro
 
 QMAKE_CLEAN += cppcheck.xml
+QMAKE_CLEAN += gtest-results.xml
 
 #####################################################################
 #

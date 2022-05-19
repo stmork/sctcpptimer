@@ -7,8 +7,9 @@ jobs:
       steps:
          - uses: actions/checkout@v3
          - run: sudo apt update -y
-         - run: sudo apt install -y libgtest-dev qt5-qmake qt5-default cppcheck
+         - name: Install needed components
+           run: sudo apt install -y libgtest-dev qt5-qmake qt5-default cppcheck
          - name: Install Google Test
            run: sudo bin/install-gtest.sh
-         - run: ls -l
-         - run: bin/jenkins.sh
+         - name: Build
+           run: bin/jenkins.sh

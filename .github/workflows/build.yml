@@ -7,10 +7,9 @@ jobs:
       steps:
          - uses: actions/checkout@v3
          - name: Prepare
-           run: sudo apt update -y
-           run: sudo apt install -y qt5-qmake
+         - run: sudo apt update -y
+         - run: sudo apt install -y qt5-qmake
          - name: Show
-           run: echo "Hi!"
-           run: ls -l
+         - run: ls -l
          - name: Build
-           run: bin/jenkins.sh
+         - run: bin/jenkins.sh

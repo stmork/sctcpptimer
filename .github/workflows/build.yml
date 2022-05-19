@@ -1,0 +1,9 @@
+name: Yakindu SCT C++11 Timer Service.
+on: [push]
+
+jobs:
+   CPP-Check:
+      runs-on: ubuntu-latest
+      steps:
+         - run: echo "Hi!"
+

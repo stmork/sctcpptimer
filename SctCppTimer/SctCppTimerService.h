@@ -21,29 +21,17 @@
 
 namespace sc::timer
 {
-	class SctCppTimer;
-
-	typedef std::pair<TimedInterface *, sc::eventid>       TimerKey;
-
 	/**
 	 * This typedef declares the ordered set of active SctCppTimer
 	 * instances.
 	 */
 	typedef std::set<SctCppTimer *, SctCppTimer>           TimerSet;
 
-	struct TimerHash
-	{
-		inline size_t operator()(const TimerKey & key) const
-		{
-			return (size_t(key.first)  & 0xfff0) | (key.second & 0xf);
-		}
-	};
-
 	/**
 	 * This map represents the mapping from an event ID to a unique
 	 * SctCppTimer instance.
 	 */
-	typedef std::unordered_map<TimerKey, SctCppTimer *, TimerHash>    TimerMap;
+	typedef std::unordered_map<TimerKey, SctCppTimer *, SctCppTimer>  TimerMap;
 
 	/**
 	 * This class implements the sc::timer::TimerServiceInterface class
@@ -76,7 +64,7 @@ namespace sc::timer
 	 */
 	class SctCppTimerService : public TimerServiceInterface
 	{
-		TimerMap                chart_map;
+		TimerMap                timer_map;
 		TimerSet                queue;
 
 		std::mutex              mutex;

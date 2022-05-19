@@ -15,4 +15,4 @@ QMAKE_CXXFLAGS    += -Wextra -fstack-protector-strong
 
 INCLUDEPATH += src-gen/ src-lib/
 LIBS        += -lgtest -lgtest_main
-QMAKE_CLEAN += $$TARGET gtest-*-results.xml
+QMAKE_CLEAN += $$TARGET gtest-results.xml

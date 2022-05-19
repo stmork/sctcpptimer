@@ -8,6 +8,7 @@
 #include "SctCppTimer.h"
 
 using namespace sc::timer;
+using namespace std::chrono;
 
 SctCppTimer::SctCppTimer(const eventid id) : event_id(id)
 {
@@ -20,7 +21,7 @@ void SctCppTimer::start(
 
 {
 	statemachine = timed_interface;
-	duration     = std::chrono::milliseconds(time_ms);
+	duration     = milliseconds(time_ms);
 	repeating    = is_periodic;
-	time_point   = std::chrono::steady_clock::now() + duration;
+	time_point   = steady_clock::now() + duration;
 }

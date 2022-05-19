@@ -5,9 +5,12 @@ jobs:
    CPP-Check:
       runs-on: ubuntu-latest
       steps:
-         - run: sudo apt update -y
-         - run: sudo apt install -y qt5-qmake
-         - run: echo "Hi!"
-         - run: ls -l
-         
-
+         - uses: actions/checkout@v3
+         - name: Prepare
+           run: sudo apt update -y
+           run: sudo apt install -y qt5-qmake
+         - name: Show
+           run: echo "Hi!"
+           run: ls -l
+         - name: Build
+           run: bin/jenkins.sh

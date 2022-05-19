@@ -5,5 +5,9 @@ jobs:
    CPP-Check:
       runs-on: ubuntu-latest
       steps:
+         - run: sudo apt update -y
+         - run: sudo apt install -y qt5-qmake
          - run: echo "Hi!"
+         - run: qmake -r
+         
 

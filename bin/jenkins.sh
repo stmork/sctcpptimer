@@ -9,4 +9,4 @@ qmake -r
 make -j 4
 make cppcheck
 
-SctCppTimer
+./SctCppTimer

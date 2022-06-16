@@ -21,7 +21,7 @@ HEADERS += \
 	src-lib/sc_types.h
 
 QMAKE_CXXFLAGS += -Wextra -fstack-protector-strong
-#QMAKE_CXXFLAGS += -Wshadow
+QMAKE_CXXFLAGS += -Wshadow
 QMAKE_CXXFLAGS += -Wsuggest-override
 
 QMAKE_CLEAN    += $$TARGET

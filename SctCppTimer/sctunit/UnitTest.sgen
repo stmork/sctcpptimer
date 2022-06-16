@@ -1,7 +1,9 @@
 GeneratorModel for sctunit::cpp11 {
 
 	const PROJECT : string = "SctCppTimer"
+
 	const FOLDER : string = "src-test"
+	const SRCLIB : string = "src-lib"
 
 	test StatechartTest
 	{
@@ -9,6 +11,7 @@ GeneratorModel for sctunit::cpp11 {
 		{
 			targetProject = PROJECT
 			targetFolder  = FOLDER
+			libraryTargetFolder = SRCLIB
 		}
 	}
 }

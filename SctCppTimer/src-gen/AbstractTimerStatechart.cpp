@@ -3,7 +3,7 @@
 #include "AbstractTimerStatechart.h"
 
 /*! \file
-Implementation of the state machine 'AbstractTimerStatechart'
+Implementation of the state machine 'Statechart'
 */
 
 
@@ -24,8 +24,8 @@ AbstractTimerStatechart::AbstractTimerStatechart() :
 	ifaceOperationCallback(nullptr),
 	isExecuting(false)
 {
-	for (sc::ushort i = 0; i < maxOrthogonalStates; ++i)
-		stateConfVector[i] = AbstractTimerStatechart::State::NO_STATE;
+	for (sc::ushort state_vec_pos = 0; state_vec_pos < maxOrthogonalStates; ++state_vec_pos)
+		stateConfVector[state_vec_pos] = AbstractTimerStatechart::State::NO_STATE;
 	
 	clearInEvents();
 }
@@ -72,15 +72,10 @@ void AbstractTimerStatechart::dispatchEvent(AbstractTimerStatechart::EventInstan
 			break;
 		}
 		default:
+			/* do nothing */
 			break;
 	}
 	delete event;
-}
-
-
-/*! Can be used by the client code to trigger a run to completion step without raising an event. */
-void AbstractTimerStatechart::triggerWithoutEvent() {
-	runCycle();
 }
 
 
@@ -106,9 +101,9 @@ bool AbstractTimerStatechart::check() const {
 }
 
 
-void AbstractTimerStatechart::setTimerService(sc::timer::TimerServiceInterface* timerService)
+void AbstractTimerStatechart::setTimerService(sc::timer::TimerServiceInterface* timerService_)
 {
-	this->timerService = timerService;
+	this->timerService = timerService_;
 }
 
 sc::timer::TimerServiceInterface* AbstractTimerStatechart::getTimerService()
@@ -151,6 +146,7 @@ bool AbstractTimerStatechart::isStateActive(State state) const
 		}
 		default:
 		{
+			/* State is not active*/
 			return false;
 			break;
 		}
@@ -162,22 +158,22 @@ sc::integer AbstractTimerStatechart::getCounter() const
 	return counter;
 }
 
-void AbstractTimerStatechart::setCounter(sc::integer value)
+void AbstractTimerStatechart::setCounter(sc::integer counter_)
 {
-	this->counter = value;
+	this->counter = counter_;
 }
 
-sc::integer AbstractTimerStatechart::getMax() const
+sc::integer AbstractTimerStatechart::getMax() 
 {
 	return max;
 }
 
-sc::integer AbstractTimerStatechart::getExit12() const
+sc::integer AbstractTimerStatechart::getExit12() 
 {
 	return exit12;
 }
 
-sc::integer AbstractTimerStatechart::getExit21() const
+sc::integer AbstractTimerStatechart::getExit21() 
 {
 	return exit21;
 }
@@ -187,9 +183,9 @@ sc::integer AbstractTimerStatechart::getA1() const
 	return a1;
 }
 
-void AbstractTimerStatechart::setA1(sc::integer value)
+void AbstractTimerStatechart::setA1(sc::integer a1_)
 {
-	this->a1 = value;
+	this->a1 = a1_;
 }
 
 sc::integer AbstractTimerStatechart::getB1() const
@@ -197,9 +193,9 @@ sc::integer AbstractTimerStatechart::getB1() const
 	return b1;
 }
 
-void AbstractTimerStatechart::setB1(sc::integer value)
+void AbstractTimerStatechart::setB1(sc::integer b1_)
 {
-	this->b1 = value;
+	this->b1 = b1_;
 }
 
 sc::integer AbstractTimerStatechart::getA2() const
@@ -207,9 +203,9 @@ sc::integer AbstractTimerStatechart::getA2() const
 	return a2;
 }
 
-void AbstractTimerStatechart::setA2(sc::integer value)
+void AbstractTimerStatechart::setA2(sc::integer a2_)
 {
-	this->a2 = value;
+	this->a2 = a2_;
 }
 
 sc::integer AbstractTimerStatechart::getB2() const
@@ -217,9 +213,9 @@ sc::integer AbstractTimerStatechart::getB2() const
 	return b2;
 }
 
-void AbstractTimerStatechart::setB2(sc::integer value)
+void AbstractTimerStatechart::setB2(sc::integer b2_)
 {
-	this->b2 = value;
+	this->b2 = b2_;
 }
 
 sc::integer AbstractTimerStatechart::getC2() const
@@ -227,9 +223,9 @@ sc::integer AbstractTimerStatechart::getC2() const
 	return c2;
 }
 
-void AbstractTimerStatechart::setC2(sc::integer value)
+void AbstractTimerStatechart::setC2(sc::integer c2_)
 {
-	this->c2 = value;
+	this->c2 = c2_;
 }
 
 void AbstractTimerStatechart::setOperationCallback(OperationCallback* operationCallback)
@@ -238,7 +234,6 @@ void AbstractTimerStatechart::setOperationCallback(OperationCallback* operationC
 }
 
 // implementations of all internal functions
-
 /* Entry action for state 'First'. */
 void AbstractTimerStatechart::enact_main_region_First()
 {
@@ -338,7 +333,7 @@ void AbstractTimerStatechart::exseq_main_region__final_()
 void AbstractTimerStatechart::exseq_main_region()
 {
 	/* Default exit sequence for region main region */
-	/* Handle exit of all possible states (of AbstractTimerStatechart.main_region) at position 0... */
+	/* Handle exit of all possible states (of Statechart.main_region) at position 0... */
 	switch(stateConfVector[ 0 ])
 	{
 		case AbstractTimerStatechart::State::main_region_First :
@@ -356,7 +351,9 @@ void AbstractTimerStatechart::exseq_main_region()
 			exseq_main_region__final_();
 			break;
 		}
-		default: break;
+		default:
+			/* do nothing */
+			break;
 	}
 }
 
@@ -497,7 +494,9 @@ void AbstractTimerStatechart::microStep() {
 			main_region__final__react(-1);
 			break;
 		}
-		default: break;
+		default:
+			/* do nothing */
+			break;
 	}
 }
 
@@ -525,7 +524,7 @@ void AbstractTimerStatechart::enter() {
 		return;
 	} 
 	isExecuting = true;
-	/* Default enter sequence for statechart AbstractTimerStatechart */
+	/* Default enter sequence for statechart Statechart */
 	enseq_main_region_default();
 	isExecuting = false;
 }
@@ -537,10 +536,13 @@ void AbstractTimerStatechart::exit() {
 		return;
 	} 
 	isExecuting = true;
-	/* Default exit sequence for statechart AbstractTimerStatechart */
+	/* Default exit sequence for statechart Statechart */
 	exseq_main_region();
 	isExecuting = false;
 }
 
-
+/* Can be used by the client code to trigger a run to completion step without raising an event. */
+void AbstractTimerStatechart::triggerWithoutEvent() {
+	runCycle();
+}
 

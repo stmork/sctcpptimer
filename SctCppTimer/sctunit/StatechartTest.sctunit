@@ -1,4 +1,4 @@
-testclass StatechartTest for statechart AbstractTimerStatechart
+testclass StatechartTest for statechart Statechart
 {
 	@Test
 	operation testFirst()

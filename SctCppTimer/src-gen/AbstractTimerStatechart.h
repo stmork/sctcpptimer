@@ -15,7 +15,7 @@ class AbstractTimerStatechart;
 #include "../src-lib/sc_timer.h"
 
 /*! \file
-Header of the state machine 'AbstractTimerStatechart'.
+Header of the state machine 'Statechart'.
 */
 
 
@@ -71,46 +71,46 @@ class AbstractTimerStatechart : public sc::timer::TimedInterface, public sc::Sta
 		sc::integer getCounter() const;
 		
 		/*! Sets the value of the variable 'counter' that is defined in the default interface scope. */
-		void setCounter(sc::integer value);
+		void setCounter(sc::integer counter);
 		
 		/*! Gets the value of the variable 'max' that is defined in the default interface scope. */
-		sc::integer getMax() const;
+		static sc::integer getMax() ;
 		
 		/*! Gets the value of the variable 'exit12' that is defined in the default interface scope. */
-		sc::integer getExit12() const;
+		static sc::integer getExit12() ;
 		
 		/*! Gets the value of the variable 'exit21' that is defined in the default interface scope. */
-		sc::integer getExit21() const;
+		static sc::integer getExit21() ;
 		
 		/*! Gets the value of the variable 'a1' that is defined in the default interface scope. */
 		sc::integer getA1() const;
 		
 		/*! Sets the value of the variable 'a1' that is defined in the default interface scope. */
-		void setA1(sc::integer value);
+		void setA1(sc::integer a1);
 		
 		/*! Gets the value of the variable 'b1' that is defined in the default interface scope. */
 		sc::integer getB1() const;
 		
 		/*! Sets the value of the variable 'b1' that is defined in the default interface scope. */
-		void setB1(sc::integer value);
+		void setB1(sc::integer b1);
 		
 		/*! Gets the value of the variable 'a2' that is defined in the default interface scope. */
 		sc::integer getA2() const;
 		
 		/*! Sets the value of the variable 'a2' that is defined in the default interface scope. */
-		void setA2(sc::integer value);
+		void setA2(sc::integer a2);
 		
 		/*! Gets the value of the variable 'b2' that is defined in the default interface scope. */
 		sc::integer getB2() const;
 		
 		/*! Sets the value of the variable 'b2' that is defined in the default interface scope. */
-		void setB2(sc::integer value);
+		void setB2(sc::integer b2);
 		
 		/*! Gets the value of the variable 'c2' that is defined in the default interface scope. */
 		sc::integer getC2() const;
 		
 		/*! Sets the value of the variable 'c2' that is defined in the default interface scope. */
-		void setC2(sc::integer value);
+		void setC2(sc::integer c2);
 		
 		//! Inner class for default interface scope operation callbacks.
 		class OperationCallback
@@ -154,7 +154,7 @@ class AbstractTimerStatechart : public sc::timer::TimedInterface, public sc::Sta
 		/*
 		 * Functions inherited from TimedStatemachineInterface
 		 */
-		void setTimerService(sc::timer::TimerServiceInterface* timerService) override;
+		void setTimerService(sc::timer::TimerServiceInterface* timerService_) override;
 		
 		sc::timer::TimerServiceInterface* getTimerService() override;
 		

@@ -3,7 +3,7 @@ GeneratorModel for yakindu::images
 	const PROJECT : string = "SctCppTimer"
 	const FOLDER  : string = "images"
 
-	statechart AbstractTimerStatechart
+	statechart Statechart
 	{
 		feature Outlet
 		{

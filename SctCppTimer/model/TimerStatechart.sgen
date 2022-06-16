@@ -5,7 +5,7 @@ GeneratorModel for yakindu::cpp11
 	const SRCGEN : string = "src-gen"
 	const SRCLIB : string = "src-lib"
 
-	statechart AbstractTimerStatechart
+	statechart Statechart
 	{
 		feature Outlet
 		{

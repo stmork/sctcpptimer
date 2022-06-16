@@ -13,12 +13,12 @@
 
 class TimedSctUnitRunner : public sc::timer::TimerServiceInterface {
 	public:
-		TimedSctUnitRunner(sc::StatemachineInterface * statemachine, bool event_driven, sc::integer cycle_period);
+		TimedSctUnitRunner(sc::StatemachineInterface * statemachine_, bool event_driven_, sc::integer cycle_period_);
 		virtual ~TimedSctUnitRunner(){};
 		void proceed_time(sc::integer time_ms);
 		void proceed_cycles(sc::integer cycles);
-		virtual void setTimer(sc::timer::TimedInterface* statemachine, sc::eventid event, sc::integer time_ms, bool isPeriodic);
-		virtual void unsetTimer(sc::timer::TimedInterface* statemachine, sc::eventid event);
+		virtual void setTimer(sc::timer::TimedInterface* statemachine_, sc::eventid event, sc::integer time_ms, bool isPeriodic) override;
+		virtual void unsetTimer(sc::timer::TimedInterface* statemachine_, sc::eventid event) override;
 		virtual void cancel();
 	private:
 		class SctTimer;
@@ -35,7 +35,7 @@ class TimedSctUnitRunner : public sc::timer::TimerServiceInterface {
 class TimedSctUnitRunner::SctTimer {
 	friend class TimedSctUnitRunner;
 	public:
-		SctTimer(sc::timer::TimedInterface * tsi, sc::integer time_ms, bool periodic, sc::eventid evid, sc::integer priority, bool is_runcycle);
+		SctTimer(sc::timer::TimedInterface * tsi_, sc::integer time_ms, bool periodic_, sc::eventid evid, sc::integer priority_, bool is_runcycle_);
 		~SctTimer(){}
 		
 		sc::integer compare(SctTimer * other);

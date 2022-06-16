@@ -1,0 +1,10 @@
+<project name="SCT generator" default="generate">
+	<property file="${user.home}/.sct.properties" />
+	<property name="eclipse.home" value="/opt/eclipse/neon-jee"/>
+
+	<target name="generate">
+		<exec executable="${eclipse.home}/eclipse" dir=".">
+			<arg value="--launcher.ini"/><arg value="${eclipse.home}/headless.ini"/>
+		</exec>
+	</target>
+</project>

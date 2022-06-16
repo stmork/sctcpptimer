@@ -10,13 +10,13 @@
  */
 
 TimedSctUnitRunner::TimedSctUnitRunner(
-		sc::StatemachineInterface * statemachine,
-		bool event_driven,
-		sc::integer cycle_period
+		sc::StatemachineInterface * statemachine_,
+		bool event_driven_,
+		sc::integer cycle_period_
 		) :
-		statemachine(statemachine),
-		event_driven(event_driven),
-		cycle_period(event_driven ? -1 : cycle_period),
+		statemachine(statemachine_),
+		event_driven(event_driven_),
+		cycle_period(event_driven_ ? -1 : cycle_period_),
 		current_time_ms(0),
 		timer_queue()
 {
@@ -89,16 +89,16 @@ void TimedSctUnitRunner::proceed_cycles(sc::integer cycles)
 		next.tsi->raiseTimeEvent(next.pt_evid);
 	}
 }
-void TimedSctUnitRunner::setTimer(sc::timer::TimedInterface* statemachine, sc::eventid event, sc::integer time_ms, bool isPeriodic)
+void TimedSctUnitRunner::setTimer(sc::timer::TimedInterface* statemachine_, sc::eventid event, sc::integer time_ms, bool isPeriodic)
 {
-	SctTimer timer(statemachine, time_ms, isPeriodic, event, 0, false);
+	SctTimer timer(statemachine_, time_ms, isPeriodic, event, 0, false);
 	insert_timer(timer);
 }
 
-void TimedSctUnitRunner::unsetTimer(sc::timer::TimedInterface* statemachine, sc::eventid event)
+void TimedSctUnitRunner::unsetTimer(sc::timer::TimedInterface* statemachine_, sc::eventid event)
 {
 	std::list<SctTimer>::iterator i_timer = timer_queue.begin();
-	while(i_timer != timer_queue.end() && i_timer->tsi == statemachine) {
+	while(i_timer != timer_queue.end() && i_timer->tsi == statemachine_) {
 		if(i_timer->pt_evid == event) {
 			timer_queue.erase(i_timer);
 			return;
@@ -140,20 +140,20 @@ void TimedSctUnitRunner::insert_timer(SctTimer timer)
 }
 
 TimedSctUnitRunner::SctTimer::SctTimer(
-		sc::timer::TimedInterface * tsi,
+		sc::timer::TimedInterface * tsi_,
 		sc::integer time_ms,
-		bool periodic,
+		bool timer_periodic,
 		sc::eventid evid,
-		sc::integer priority,
-		bool is_runcycle
+		sc::integer timer_priority,
+		bool timer_is_runcycle
 		) :
-		tsi(tsi),
+		tsi(tsi_),
 		rel_time_ms(time_ms),
 		abs_time_ms(0),
-		periodic(periodic),
+		periodic(timer_periodic),
 		pt_evid(evid),
-		priority(priority),
-		is_runcycle(is_runcycle)
+		priority(timer_priority),
+		is_runcycle(timer_is_runcycle)
 {}
 
 sc::integer TimedSctUnitRunner::SctTimer::compare(SctTimer * other)

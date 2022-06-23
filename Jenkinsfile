@@ -25,7 +25,7 @@ pipeline {
 			steps
 			{
 				publishCppcheck pattern: 'cppcheck.xml'
-				xunit([GoogleTest(excludesPattern: '', pattern: 'test-results.xml', stopProcessingIfError: true)])
+				xunit([GoogleTest(pattern: '*/gtest-results.xml', stopProcessingIfError: true)])
 			}
 		}
 	}

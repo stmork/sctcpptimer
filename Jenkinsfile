@@ -2,8 +2,10 @@ pipeline {
 	agent any
 
 	stages {
-		stage('Build') {
-			steps {
+		stage('Build')
+		{
+			steps
+			{
 				sh """
 				cd SctCppTimer
 				qmake -r
@@ -11,19 +13,35 @@ pipeline {
 				"""
 			}
 		}
-		stage('Test') {
-			steps {
+
+		stage('CppCheck)
+		{
+			steps
+			{
 				sh """
 				cd SctCppTimer
 				make cppcheck
+				publishCppcheck pattern: 'cppcheck.xml'
+				"""
+			}
+		}
+		
+		stage('Test')
+		{
+			steps
+			{
+				sh """
+				cd SctCppTimer
 				./SctCppTimer
 				"""
 			}
 		}
 	}
 
-	post {
-		always {
+	post
+	{
+		always
+		{
 			chuckNorris()
 		}
 	}

@@ -1,10 +1,8 @@
 pipeline {
 	agent any
-	options {
-		skipStagesAfterUnstable()
-	}
+
 	stages {
-		stage ('Build') {
+		stage('Build') {
 			steps {
 				sh """
 				cd SctCppTimer
@@ -13,7 +11,7 @@ pipeline {
 				"""
 			}
 		}
-		stage ('Test') {
+		stage('Test') {
 			steps {
 				sh """
 				cd SctCppTimer
@@ -22,5 +20,9 @@ pipeline {
 				"""
 			}
 		}
+	}
+
+	post {
+		chuckNorris()
 	}
 }

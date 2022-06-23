@@ -23,6 +23,8 @@ pipeline {
 	}
 
 	post {
-		chuckNorris()
+		always {
+			chuckNorris()
+		}
 	}
 }

@@ -1,21 +1,29 @@
-pipeline {
+pipeline
+{
 	agent any
 
-	stages {
-		stage('Build') {
-			steps {
+	stages
+	{
+		stage('Build')
+		{
+			steps
+			{
 				sh """
 				qmake -r
 				make -j
 				"""
 			}
 		}
-		stage('CppCheck') {
-			steps {
+
+		stage('CppCheck')
+		{
+			steps
+			{
 				sh 'make cppcheck'
 				publishCppcheck pattern: 'cppcheck.xml'
 			}
 		}
+
 		stage('Test')
 		{
 			steps
@@ -30,8 +38,10 @@ pipeline {
 		}
 	}
 
-	post {
-		always {
+	post
+	{
+		always
+		{
 			chuckNorris()
 		}
 	}

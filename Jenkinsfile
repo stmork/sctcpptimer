@@ -3,7 +3,7 @@ pipeline
 	agent any
 	options
 	{
-		skipStagesAfterUnstable
+		skipStagesAfterUnstable()
 	}
 	stages
 	{
@@ -11,14 +11,18 @@ pipeline
 		{
 			steps
 			{
-				sh 'make'
+				cd SctCppTimer
+				sh 'qmake -r'
+				sh 'make -j'
 			}
 		}
 		stage ('Test')
 		{
 			steps
 			{
+				cd SctCppTimer
 				sh 'make cppcheck'
+				sh ./SctCppTimer
 			}
 		}
 	}

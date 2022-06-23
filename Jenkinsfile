@@ -1,16 +1,11 @@
-pipeline
-{
+pipeline {
 	agent any
-	options
-	{
+	options {
 		skipStagesAfterUnstable()
 	}
-	stages
-	{
-		stage ('Build')
-		{
-			steps
-			{
+	stages {
+		stage ('Build') {
+			steps {
 				sh """
 				cd SctCppTimer
 				qmake -r
@@ -18,10 +13,8 @@ pipeline
 				"""
 			}
 		}
-		stage ('Test')
-		{
-			steps
-			{
+		stage ('Test') {
+			steps {
 				sh """
 				cd SctCppTimer
 				make cppcheck

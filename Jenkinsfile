@@ -10,21 +10,21 @@ pipeline {
 				"""
 			}
 		}
-		stage('Test') {
+		stage('CppCheck') {
 			steps {
-				sh """
-				make cppcheck
-				cd SctCppTimer
-				./SctCppUnit --gtest_output="xml:gtest-results.xml"
-				./SctCppTimer
-				"""
+				sh 'make cppcheck'
+				publishCppcheck pattern: 'cppcheck.xml'
 			}
 		}
-		stage('Reports')
+		stage('Test')
 		{
 			steps
 			{
-				publishCppcheck pattern: 'cppcheck.xml'
+				sh """
+				cd SctCppTimer
+				./SctCppTimer
+				./SctCppUnit --gtest_output="xml:gtest-results.xml"
+				"""
 				xunit([GoogleTest(pattern: '*/gtest-results.xml', stopProcessingIfError: true)])
 			}
 		}

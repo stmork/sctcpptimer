@@ -11,18 +11,22 @@ pipeline
 		{
 			steps
 			{
+				sh """
 				cd SctCppTimer
-				sh 'qmake -r'
-				sh 'make -j'
+				qmake -r
+				make -j
+				"""
 			}
 		}
 		stage ('Test')
 		{
 			steps
 			{
+				sh """
 				cd SctCppTimer
-				sh 'make cppcheck'
-				sh ./SctCppTimer
+				make cppcheck
+				./SctCppTimer
+				"""
 			}
 		}
 	}

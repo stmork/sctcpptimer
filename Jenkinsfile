@@ -5,7 +5,6 @@ pipeline {
 		stage('Build') {
 			steps {
 				sh """
-				cd SctCppTimer
 				qmake -r
 				make -j
 				"""
@@ -14,8 +13,8 @@ pipeline {
 		stage('Test') {
 			steps {
 				sh """
-				cd SctCppTimer
 				make cppcheck
+				cd SctCppTimer
 				./SctCppUnit --gtest_output="xml:gtest-results.xml"
 				./SctCppTimer
 				"""

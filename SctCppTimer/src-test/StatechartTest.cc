@@ -79,7 +79,7 @@ class DumpMock{
 };
 static DumpMock* dumpMock;
 
-class MockDefault : public AbstractTimerStatechart::OperationCallback {
+class MockDefault : public Statechart::OperationCallback {
 	public:
 	void dump(std::string text) override
 	{

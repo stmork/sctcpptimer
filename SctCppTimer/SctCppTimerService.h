@@ -1,8 +1,6 @@
 //
-//  SctCppTimerService.hpp
-//  SctCppTimer
-//
-//  Created by Steffen A. Mork on 25.09.21.
+//  SPDX-License-Identifier: MIT
+//  SPDX-FileCopyrightText: Copyright (C) 2021 Steffen A. Mork
 //
 
 #pragma once
@@ -21,29 +19,17 @@
 
 namespace sc::timer
 {
-	class SctCppTimer;
-
-	typedef std::pair<TimedInterface *, sc_eventid>        TimerKey;
-
 	/**
 	 * This typedef declares the ordered set of active SctCppTimer
 	 * instances.
 	 */
 	typedef std::set<SctCppTimer *, SctCppTimer>           TimerSet;
 
-	struct TimerHash
-	{
-		inline size_t operator()(const TimerKey & key) const
-		{
-			return (size_t(key.first) << 4) | (key.second & 0xf);
-		}
-	};
-
 	/**
 	 * This map represents the mapping from an event ID to a unique
 	 * SctCppTimer instance.
 	 */
-	typedef std::unordered_map<TimerKey, SctCppTimer *, TimerHash>    TimerMap;
+	typedef std::unordered_map<TimerKey, SctCppTimer *, SctCppTimer>  TimerMap;
 
 	/**
 	 * This class implements the sc::timer::TimerServiceInterface class
@@ -76,7 +62,7 @@ namespace sc::timer
 	 */
 	class SctCppTimerService : public TimerServiceInterface
 	{
-		TimerMap                chart_map;
+		TimerMap                timer_map;
 		TimerSet                queue;
 
 		std::mutex              mutex;
@@ -99,18 +85,13 @@ namespace sc::timer
 
 		virtual void setTimer(
 			TimedInterface * statemachine,
-			sc_eventid       event,
-			sc_integer       time_ms,
-			sc_boolean       is_periodic) override;
+			sc::eventid      event,
+			sc::integer      time_ms,
+			bool             is_periodic) override;
 
 		virtual void unsetTimer(
 			TimedInterface * statemachine,
-			sc_eventid       event) override;
-
-		virtual inline void cancel() override
-		{
-			// Intentionally do nothing!
-		}
+			sc::eventid      event) override;
 
 	protected:
 		/**
@@ -122,8 +103,8 @@ namespace sc::timer
 		 * @return The found SctCppTimer instance
 		 */
 		SctCppTimer * findTimer(
-				TimedInterface * statechart,
-				sc_eventid       event);
+			TimedInterface * statechart,
+			sc::eventid      event);
 
 	private:
 		/**

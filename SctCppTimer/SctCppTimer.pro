@@ -20,18 +20,8 @@ HEADERS += \
 	src-lib/sc_timer.h \
 	src-lib/sc_types.h
 
-QMAKE_CLEAN += cppcheck.xml
+QMAKE_CXXFLAGS += -Wextra -fstack-protector-strong
+QMAKE_CXXFLAGS += -Wshadow
+QMAKE_CXXFLAGS += -Wsuggest-override
 
-#####################################################################
-#
-# Extra targets.
-#
-#####################################################################
-
-QMAKE_EXTRA_TARGETS += astyle cppcheck
-
-astyle.commands = astyle *.cpp *.h
-cppcheck.commands = cppcheck \
-	--language=c++ --std=c++14 \
-	--xml-version=2 --force -q -j 3 \
-	*.cpp *.h 2>cppcheck.xml
+QMAKE_CLEAN    += $$TARGET

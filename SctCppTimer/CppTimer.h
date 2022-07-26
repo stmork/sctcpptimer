@@ -1,8 +1,6 @@
 //
-//  sc::timer::CppTimer.hpp
-//  SctCppTimer
-//
-//  Created by Steffen A. Mork on 24.09.21.
+//  SPDX-License-Identifier: MIT
+//  SPDX-FileCopyrightText: Copyright (C) 2021 Steffen A. Mork
 //
 
 #pragma once

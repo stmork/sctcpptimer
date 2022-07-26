@@ -1,8 +1,6 @@
 //
-//  SctCppTimer.hpp
-//  SctCppTimer
-//
-//  Created by Steffen A. Mork on 25.09.21.
+//  SPDX-License-Identifier: MIT
+//  SPDX-FileCopyrightText: Copyright (C) 2021 Steffen A. Mork
 //
 
 #pragma once
@@ -18,6 +16,8 @@
 
 namespace sc::timer
 {
+	typedef std::pair<TimedInterface *, sc::eventid>       TimerKey;
+
 	/**
 	 * This class represents one single Yakindu SCT timer. It contains
 	 * information about the causing statemachine, its duration and if the
@@ -29,11 +29,16 @@ namespace sc::timer
 		std::chrono::time_point<std::chrono::steady_clock> time_point;
 		std::chrono::milliseconds                          duration;
 		bool                                               repeating;
-		const sc_eventid                                   event_id;
+		const sc::eventid                                  event_id     = 0;
 		TimedInterface                  *                  statemachine = nullptr;
 
+		static constexpr unsigned    KEY_PTR_SHIFT = 5;
+		static constexpr std::size_t KEY_IDX_MASK  = (1 << KEY_PTR_SHIFT) - 1;
+
 	public:
-		explicit SctCppTimer(const sc_eventid id = 0);
+		SctCppTimer() = default;
+
+		explicit SctCppTimer(const sc::eventid id);
 
 		/**
 		 * This method starts a timer by taking the actual time point and
@@ -47,8 +52,8 @@ namespace sc::timer
 		 */
 		void start(
 			TimedInterface * timed_interface,
-			sc_integer       time_ms,
-			sc_boolean       is_periodic);
+			sc::integer      time_ms,
+			bool             is_periodic);
 
 		/**
 		 * This method adds the timer duration to the waiting time point. So
@@ -82,6 +87,11 @@ namespace sc::timer
 			const SctCppTimer * right) const
 		{
 			return left->time_point < right->time_point;
+		}
+
+		inline size_t operator()(const TimerKey & key) const
+		{
+			return (size_t(key.first)  << KEY_PTR_SHIFT) | (key.second & KEY_IDX_MASK);
 		}
 
 		/**

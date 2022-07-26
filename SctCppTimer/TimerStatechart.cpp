@@ -1,8 +1,6 @@
 //
-//  TimerStatechart.cpp
-//  SctCppTimer
-//
-//  Created by Steffen A. Mork on 25.09.21.
+//  SPDX-License-Identifier: MIT
+//  SPDX-FileCopyrightText: Copyright (C) 2021 Steffen A. Mork
 //
 
 #include <iostream>
@@ -21,7 +19,7 @@ TimerStatechart::TimerStatechart(SctCppTimerService & service) :
 	setOperationCallback(this);
 }
 
-void TimerStatechart::dump(sc_string text)
+void TimerStatechart::dump(std::string text)
 {
 	const time_point    now     = steady_clock::now();
 	const unsigned long ms      = duration_cast<milliseconds>(now.time_since_epoch()).count();

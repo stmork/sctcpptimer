@@ -1,31 +1,29 @@
-pipeline {
+pipeline
+{
 	agent any
 
-	stages {
+	stages
+	{
 		stage('Build')
 		{
 			steps
 			{
 				sh """
-				cd SctCppTimer
 				qmake -r
 				make -j
 				"""
 			}
 		}
 
-		stage('CppCheck)
+		stage('CppCheck')
 		{
 			steps
 			{
-				sh """
-				cd SctCppTimer
-				make cppcheck
+				sh 'make cppcheck'
 				publishCppcheck pattern: 'cppcheck.xml'
-				"""
 			}
 		}
-		
+
 		stage('Test')
 		{
 			steps
@@ -33,7 +31,9 @@ pipeline {
 				sh """
 				cd SctCppTimer
 				./SctCppTimer
+				./SctCppUnit --gtest_output="xml:gtest-results.xml"
 				"""
+				xunit([GoogleTest(pattern: '*/gtest-results.xml', stopProcessingIfError: true)])
 			}
 		}
 	}
@@ -43,6 +43,7 @@ pipeline {
 		always
 		{
 			chuckNorris()
+			step([$class: 'Mailer', recipients: 'linux-dev@morknet.de'])
 		}
 	}
 }

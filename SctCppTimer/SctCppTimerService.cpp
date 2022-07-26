@@ -1,8 +1,6 @@
 //
-//  SctCppTimerService.cpp
-//  SctCppTimer
-//
-//  Created by Steffen A. Mork on 25.09.21.
+//  SPDX-License-Identifier: MIT
+//  SPDX-FileCopyrightText: Copyright (C) 2021 Steffen A. Mork
 //
 
 #include "SctCppTimerService.h"
@@ -23,18 +21,18 @@ SctCppTimerService::~SctCppTimerService()
 	thread.join();
 
 	queue.clear();
-	for (auto it : chart_map)
+	for (auto it : timer_map)
 	{
 		delete it.second;
 	}
-	chart_map.clear();
+	timer_map.clear();
 }
 
 void SctCppTimerService::setTimer(
 	TimedInterface * statemachine,
-	sc_eventid       event,
-	sc_integer       time_ms,
-	sc_boolean       is_periodic)
+	sc::eventid      event,
+	sc::integer      time_ms,
+	bool             is_periodic)
 {
 	SctCppTimer * timer = findTimer(statemachine, event);
 
@@ -45,7 +43,7 @@ void SctCppTimerService::setTimer(
 
 void SctCppTimerService::unsetTimer(
 	TimedInterface * statemachine,
-	sc_eventid       event)
+	sc::eventid      event)
 {
 	SctCppTimer * timer = findTimer(statemachine, event);
 
@@ -54,18 +52,18 @@ void SctCppTimerService::unsetTimer(
 }
 
 SctCppTimer * SctCppTimerService::findTimer(
-		TimedInterface * statemachine,
-		sc_eventid       event)
+	TimedInterface * statemachine,
+	sc::eventid      event)
 {
-	SctCppTimer *      timer;
+	SctCppTimer    *   timer;
 	TimerKey           key(statemachine, event);
-	TimerMap::iterator it = chart_map.find(key);
+	TimerMap::iterator it = timer_map.find(key);
 
-	if (it == chart_map.end())
+	if (it == timer_map.end())
 	{
 		timer = new SctCppTimer(event);
 
-		chart_map.emplace(key, timer);
+		timer_map.emplace(key, timer);
 	}
 	else
 	{

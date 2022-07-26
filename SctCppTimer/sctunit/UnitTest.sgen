@@ -1,0 +1,22 @@
+GeneratorModel for sctunit::cpp11 {
+
+	const PROJECT : string = "SctCppTimer"
+
+	const FOLDER : string = "src-test"
+	const SRCLIB : string = "src-lib"
+
+	test StatechartTest
+	{
+		feature Outlet
+		{
+			targetProject = PROJECT
+			targetFolder  = FOLDER
+			libraryTargetFolder = SRCLIB
+		}
+
+		feature LicenseHeader
+		{
+			licenseText = "#\n# SPDX-License-Identifier: MIT\n# SPDX-FileCopyrightText: Copyright (C) 2021 Steffen A. Mork\n#"
+		}
+	}
+}

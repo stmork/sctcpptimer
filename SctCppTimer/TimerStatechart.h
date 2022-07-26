@@ -1,8 +1,6 @@
 //
-//  TimerStatechart.hpp
-//  SctCppTimer
-//
-//  Created by Steffen A. Mork on 25.09.21.
+//  SPDX-License-Identifier: MIT
+//  SPDX-FileCopyrightText: Copyright (C) 2021 Steffen A. Mork
 //
 
 #pragma once
@@ -32,7 +30,7 @@ public:
 	virtual ~TimerStatechart() = default;
 
 private:
-	void dump(sc_string text) override;
+	void dump(std::string text) override;
 };
 
 #endif /* TimerStatechart_hpp */

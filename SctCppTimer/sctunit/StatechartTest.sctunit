@@ -1,0 +1,80 @@
+testclass StatechartTest for statechart Statechart
+{
+	@Test
+	operation testFirst()
+	{
+		enter
+
+		assert called dump
+		assert active (main_region.First)
+
+		proceed 400 ms
+		assert a1 == 1
+		assert b1 == 0
+
+		proceed 400 ms
+		assert a1 == 2
+		assert b1 == 1
+	}
+
+	@Test
+	operation testSecond()
+	{
+		enter
+
+		assert called dump
+		assert active (main_region.First)
+
+		proceed exit12 ms
+		assert active (main_region.Second)
+
+		proceed 300ms
+		assert a2 == 1
+		assert b2 == 2
+		assert c2 == 0
+	}
+
+	@Test
+	operation testReenterFirst()
+	{
+		enter
+
+		assert called dump
+		assert active (main_region.First)
+
+		proceed exit12 ms
+		assert active (main_region.Second)
+		enter
+
+		proceed exit21 ms
+		assert active (main_region.First)
+
+		assert counter == 1
+	}
+
+	@Test
+	operation testLeave()
+	{
+		enter
+
+		var i = counter
+		while (i <= max)
+		{
+			assert counter == i
+			assert active (main_region.First)
+			proceed exit12 ms
+
+			assert active (main_region.Second)
+			proceed exit21 ms
+			i++
+		}
+
+		assert a1 == exit12 / 301 * max
+		assert b1 == max
+
+		assert a2 == exit21 / 250 * max
+		assert b2 == exit21 / 150 * max
+		assert c2 == max
+		assert counter == max
+	}
+}

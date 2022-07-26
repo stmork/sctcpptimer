@@ -14,6 +14,11 @@ GeneratorModel for yakindu::cpp11
 			libraryTargetFolder = SRCLIB
 		}
 
+		feature LicenseHeader
+		{
+			licenseText = "#\n# SPDX-License-Identifier: MIT\n# SPDX-FileCopyrightText: Copyright (C) 2021 Steffen A. Mork\n#"
+		}
+
 		feature GeneralFeatures
 		{
 			timerService = false

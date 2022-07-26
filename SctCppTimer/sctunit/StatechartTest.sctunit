@@ -58,7 +58,7 @@ testclass StatechartTest for statechart Statechart
 		enter
 
 		var i = counter
-		while(i <= max)
+		while (i <= max)
 		{
 			assert counter == i
 			assert active (main_region.First)

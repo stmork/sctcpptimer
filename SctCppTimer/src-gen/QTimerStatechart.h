@@ -3,31 +3,34 @@
 # SPDX-FileCopyrightText: Copyright (C) 2022 Steffen A. Mork
 # */
 
-#ifndef ABSTRACTTIMERSTATECHART_H_
-#define ABSTRACTTIMERSTATECHART_H_
+#ifndef QTIMERSTATECHART_H_
+#define QTIMERSTATECHART_H_
 
 /*!
-Forward declaration for the AbstractTimerStatechart state machine.
+Forward declaration for the QTimerStatechart state machine.
 */
-class AbstractTimerStatechart;
+class QTimerStatechart;
 
 
 #include <deque>
 #include "../src-lib/sc_types.h"
 #include "../src-lib/sc_statemachine.h"
 #include "../src-lib/sc_timer.h"
+#include <QObject>
 
 /*! \file
 Header of the state machine 'Statechart'.
 */
 
 
-class AbstractTimerStatechart : public sc::timer::TimedInterface, public sc::StatemachineInterface
+class QTimerStatechart : public QObject, public sc::timer::TimedInterface, public sc::StatemachineInterface
 {
+	Q_OBJECT
+	
 	public:
-		AbstractTimerStatechart();
+		QTimerStatechart(QObject *parent);
 		
-		virtual ~AbstractTimerStatechart();
+		virtual ~QTimerStatechart();
 		
 		
 		
@@ -189,8 +192,8 @@ class AbstractTimerStatechart : public sc::timer::TimedInterface, public sc::Sta
 		
 		
 	private:
-		AbstractTimerStatechart(const AbstractTimerStatechart &rhs);
-		AbstractTimerStatechart& operator=(const AbstractTimerStatechart&);
+		QTimerStatechart(const QTimerStatechart &rhs);
+		QTimerStatechart& operator=(const QTimerStatechart&);
 		
 		sc::integer counter;
 		static const sc::integer max;
@@ -251,7 +254,7 @@ class AbstractTimerStatechart : public sc::timer::TimedInterface, public sc::Sta
 };
 
 
-inline AbstractTimerStatechart::OperationCallback::~OperationCallback() {}
+inline QTimerStatechart::OperationCallback::~OperationCallback() {}
 
 
-#endif /* ABSTRACTTIMERSTATECHART_H_ */
+#endif /* QTIMERSTATECHART_H_ */

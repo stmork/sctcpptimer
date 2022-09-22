@@ -9,6 +9,7 @@ pipeline
 			steps
 			{
 				sh """
+				test -f Makefile && make clean distclean
 				qmake -r
 				make -j
 				"""

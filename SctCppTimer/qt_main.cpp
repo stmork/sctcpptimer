@@ -5,6 +5,7 @@
 
 #include <stdlib.h>
 #include <iostream>
+#include <iomanip>
 
 #include <QCoreApplication>
 #include <QTimer>
@@ -13,13 +14,23 @@
 #include "src-lib/sc_qt_timerservice.h"
 
 using sc::qt::SCTimerService;
+using namespace sc::timer;
+using namespace std::chrono;
 
 class Dump : public QTimerStatechart::OperationCallback
 {
 public:
-	inline void dump(std::string message) override
+	inline void dump(std::string text) override
 	{
-		std::cout << message << std::endl;
+		const time_point    now     = steady_clock::now();
+		const unsigned long ms      = duration_cast<milliseconds>(now.time_since_epoch()).count();
+		const unsigned long seconds = ms / 1000;
+		const unsigned long millies = ms % 1000;
+
+		std::cout.setf(std::ios::dec);
+		std::cout.fill('0');
+		std::cout << this << ": " << seconds << "." << std::setw(3) << millies <<
+			" # " << text << std::endl << std::flush;
 	}
 };
 
@@ -34,9 +45,8 @@ int main(int argc, char * argv[])
 	statechart.setOperationCallback(&dumper);
 	statechart.enter();
 
-	QTimer::singleShot(20000, []
+	QTimer::singleShot(12000, []
 	{
-		std::terminate();
 		QCoreApplication::quit();
 	});
 

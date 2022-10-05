@@ -1,1 +1,7 @@
 /.metadata/
+*.pro.user
+*.o
+*.bak
+moc_*.*
+ui_*.*
+qrc_*.*

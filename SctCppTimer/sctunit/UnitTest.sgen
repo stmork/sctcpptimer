@@ -16,7 +16,7 @@ GeneratorModel for sctunit::cpp11 {
 
 		feature LicenseHeader
 		{
-			licenseText = "#\n# SPDX-License-Identifier: MIT\n# SPDX-FileCopyrightText: Copyright (C) 2021 Steffen A. Mork\n#"
+			licenseText = "*\n//\n// SPDX-License-Identifier: MIT\n// SPDX-FileCopyrightText: Copyright (C) 2022 Steffen A. Mork\n//\n*"
 		}
 	}
 }

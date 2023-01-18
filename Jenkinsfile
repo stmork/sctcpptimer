@@ -34,7 +34,6 @@ pipeline
 				./SctCppTimer
 				./SctUnitTimer --gtest_output="xml:gtest-results.xml"
 				"""
-				xunit([GoogleTest(pattern: '*/gtest-results.xml', stopProcessingIfError: true)])
 			}
 		}
 	}

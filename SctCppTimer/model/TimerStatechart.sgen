@@ -16,7 +16,7 @@ GeneratorModel for yakindu::cpp11
 
 		feature LicenseHeader
 		{
-			licenseText = "#\n# SPDX-License-Identifier: MIT\n# SPDX-FileCopyrightText: Copyright (C) 2022 Steffen A. Mork\n#"
+			licenseText = "#\n# SPDX-License-Identifier: MIT\n# SPDX-FileCopyrightText: Copyright (C) 2022-2023 Steffen A. Mork\n#"
 		}
 
 		feature GeneralFeatures

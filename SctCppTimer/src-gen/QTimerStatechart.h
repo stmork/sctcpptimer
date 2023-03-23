@@ -1,6 +1,6 @@
 /* #
 # SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2022 Steffen A. Mork
+# SPDX-FileCopyrightText: Copyright (C) 2022-2023 Steffen A. Mork
 # */
 
 #ifndef QTIMERSTATECHART_H_

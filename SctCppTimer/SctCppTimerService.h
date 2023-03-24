@@ -1,6 +1,6 @@
 //
 //  SPDX-License-Identifier: MIT
-//  SPDX-FileCopyrightText: Copyright (C) 2021 Steffen A. Mork
+//  SPDX-FileCopyrightText: Copyright (C) 2021-2023 Steffen A. Mork
 //
 
 #pragma once

@@ -8,5 +8,6 @@ qmake -r
 make -j 4
 make cppcheck
 
-SctCppTimer/SctCppUnit --gtest_output="xml:gtest-results.xml"
+SctCppTimer/SctUnitTimer --gtest_output="xml:gtest-results.xml"
 SctCppTimer/SctCppTimer
+SctCppTimer/SctQtTimer

@@ -1,7 +1,9 @@
-/** #
-# SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2021 Steffen A. Mork
-# */
+/** *
+//
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: Copyright (C) 2021-2023 Steffen A. Mork
+//
+* */
 #include <string>
 #include "gtest/gtest.h"
 #include "Statechart.h"

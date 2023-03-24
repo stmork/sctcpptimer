@@ -9,6 +9,7 @@ pipeline
 			steps
 			{
 				sh """
+				test -f Makefile && make clean distclean
 				qmake -r
 				make -j
 				"""
@@ -31,9 +32,8 @@ pipeline
 				sh """
 				cd SctCppTimer
 				./SctCppTimer
-				./SctCppUnit --gtest_output="xml:gtest-results.xml"
+				./SctUnitTimer --gtest_output="xml:gtest-results.xml"
 				"""
-				xunit([GoogleTest(pattern: '*/gtest-results.xml', stopProcessingIfError: true)])
 			}
 		}
 	}

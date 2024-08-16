@@ -84,14 +84,14 @@ namespace sc::timer
 		virtual ~SctCppTimerService();
 
 		virtual void setTimer(
-			TimedInterface * statemachine,
-			sc::eventid      event,
-			sc::integer      time_ms,
-			bool             is_periodic) override;
+			std::shared_ptr<TimedInterface> statemachine,
+			sc::eventid                     event,
+			sc::time                        time_ms,
+			bool                            is_periodic) override;
 
 		virtual void unsetTimer(
-			TimedInterface * statemachine,
-			sc::eventid      event) override;
+			std::shared_ptr<TimedInterface> statemachine,
+			sc::eventid                     event) override;
 
 	protected:
 		/**
@@ -103,8 +103,8 @@ namespace sc::timer
 		 * @return The found SctCppTimer instance
 		 */
 		SctCppTimer * findTimer(
-			TimedInterface * statechart,
-			sc::eventid      event);
+			std::shared_ptr<TimedInterface> & statechart,
+			sc::eventid                       event);
 
 	private:
 		/**

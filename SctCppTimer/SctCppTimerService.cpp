@@ -29,21 +29,21 @@ SctCppTimerService::~SctCppTimerService()
 }
 
 void SctCppTimerService::setTimer(
-	TimedInterface * statemachine,
-	sc::eventid      event,
-	sc::integer      time_ms,
-	bool             is_periodic)
+	std::shared_ptr<TimedInterface> statemachine,
+	sc::eventid                     event,
+	sc::time                        time_ms,
+	bool                            is_periodic)
 {
 	SctCppTimer * timer = findTimer(statemachine, event);
 
-	timer->start(statemachine, time_ms, is_periodic);
+	timer->start(statemachine.get(), time_ms, is_periodic);
 	queue.insert(timer);
 	wait.notify_all();
 }
 
 void SctCppTimerService::unsetTimer(
-	TimedInterface * statemachine,
-	sc::eventid      event)
+	std::shared_ptr<TimedInterface> statemachine,
+	sc::eventid                     event)
 {
 	SctCppTimer * timer = findTimer(statemachine, event);
 
@@ -52,11 +52,11 @@ void SctCppTimerService::unsetTimer(
 }
 
 SctCppTimer * SctCppTimerService::findTimer(
-	TimedInterface * statemachine,
-	sc::eventid      event)
+	std::shared_ptr<TimedInterface> & statemachine,
+	sc::eventid                       event)
 {
 	SctCppTimer    *   timer;
-	TimerKey           key(statemachine, event);
+	TimerKey           key(statemachine.get(), event);
 	TimerMap::iterator it = timer_map.find(key);
 
 	if (it == timer_map.end())

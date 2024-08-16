@@ -1,10 +1,12 @@
 //
 //  SPDX-License-Identifier: MIT
-//  SPDX-FileCopyrightText: Copyright (C) 2021-2023 Steffen A. Mork
+//  SPDX-FileCopyrightText: Copyright (C) 2021-2024 Steffen A. Mork
 //
 
 #include <iostream>
 #include <iomanip>
+#include <memory>
+
 #include <unistd.h>
 
 #include "CppTimer.h"
@@ -28,13 +30,16 @@ static void dump(
 
 int main()
 {
-	SctCppTimerService timer_service;
-	TimerStatechart    statechart(timer_service);
+	std::shared_ptr<SctCppTimerService> timer_service = std::make_shared<SctCppTimerService>();
+	std::shared_ptr<TimerStatechart>    statechart    = std::make_shared<TimerStatechart>();
 	CppTimer a;
 	CppTimer b;
 	CppTimer c;
 
-	statechart.enter();
+	statechart->setTimerService(timer_service);
+	statechart->setOperationCallback(statechart);
+
+	statechart->enter();
 	std::cout << "--------------------------" << std::endl << std::flush;
 	a.start(2s);
 	b.start(700ms, false);
@@ -49,21 +54,21 @@ int main()
 	a.stop();
 	b.stop();
 
-	const int max    = statechart.getMax();
-	const int exit12 = statechart.getExit12();
-	const int exit21 = statechart.getExit21();
+	const int max    = statechart->getMax();
+	const int exit12 = statechart->getExit12();
+	const int exit21 = statechart->getExit21();
 
 	sleep((exit12 + exit21) / 1000 * max + 3);
-	std::cout << "final: " << statechart.isFinal() << std::endl << std::flush;
-	statechart.exit();
+	std::cout << "final: " << statechart->isFinal() << std::endl << std::flush;
+	statechart->exit();
 
-	dump("counter", max, statechart.getCounter());
-	dump("a1", exit12 / 301 * max, statechart.getA1());
-	dump("b1", max, statechart.getB1());
+	dump("counter", max, statechart->getCounter());
+	dump("a1", exit12 / 301 * max, statechart->getA1());
+	dump("b1", max, statechart->getB1());
 
-	dump("a2", exit21 / 250 * max, statechart.getA2());
-	dump("b2", exit21 / 150 * max, statechart.getB2());
-	dump("c2", max, statechart.getC2());
+	dump("a2", exit21 / 250 * max, statechart->getA2());
+	dump("b2", exit21 / 150 * max, statechart->getB2());
+	dump("c2", max, statechart->getC2());
 
 	return 0;
 }

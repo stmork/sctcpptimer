@@ -1,6 +1,6 @@
 //
 //  SPDX-License-Identifier: MIT
-//  SPDX-FileCopyrightText: Copyright (C) 2021-2023 Steffen A. Mork
+//  SPDX-FileCopyrightText: Copyright (C) 2021-2024 Steffen A. Mork
 //
 
 #include <iostream>
@@ -12,11 +12,8 @@
 using namespace sc::timer;
 using namespace std::chrono;
 
-TimerStatechart::TimerStatechart(SctCppTimerService & service) :
-	AbstractTimerStatechart()
+TimerStatechart::TimerStatechart() : AbstractTimerStatechart()
 {
-	setTimerService(&service);
-	setOperationCallback(this);
 }
 
 void TimerStatechart::dump(std::string text)

@@ -1,6 +1,6 @@
 /* #
 # SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2022-2023 Steffen A. Mork
+# SPDX-FileCopyrightText: Copyright (C) 2022-2024 Steffen A. Mork
 # */
 
 #include "QTimerStatechart.h"
@@ -10,14 +10,9 @@ Implementation of the state machine 'Statechart'
 */
 
 
-const sc::integer QTimerStatechart::max = 2;
-const sc::integer QTimerStatechart::exit12 = 3100;
-const sc::integer QTimerStatechart::exit21 = 2600;
 
 
-
-QTimerStatechart::QTimerStatechart(QObject *parent) :
-	QObject(parent),
+QTimerStatechart::QTimerStatechart(QObject *parent) noexcept :
 	counter(1),
 	a1(0),
 	b1(0),
@@ -40,12 +35,12 @@ QTimerStatechart::~QTimerStatechart()
 
 
 
-QTimerStatechart::EventInstance* QTimerStatechart::getNextEvent()
+std::unique_ptr<QTimerStatechart::EventInstance> QTimerStatechart::getNextEvent() noexcept
 {
-	QTimerStatechart::EventInstance* nextEvent = 0;
+	std::unique_ptr<QTimerStatechart::EventInstance> nextEvent = 0;
 
 	if(!incomingEventQueue.empty()) {
-		nextEvent = incomingEventQueue.front();
+		nextEvent = std::move(incomingEventQueue.front());
 		incomingEventQueue.pop_front();
 	}
 	
@@ -54,10 +49,15 @@ QTimerStatechart::EventInstance* QTimerStatechart::getNextEvent()
 }					
 
 
-void QTimerStatechart::dispatchEvent(QTimerStatechart::EventInstance * event)
+template<typename EWV, typename EV>
+std::unique_ptr<EWV> cast_event_pointer_type (std::unique_ptr<EV>&& event){
+    return std::unique_ptr<EWV>{static_cast<EWV*>(event.release())};
+}
+	
+bool QTimerStatechart::dispatchEvent(std::unique_ptr<QTimerStatechart::EventInstance> event) noexcept
 {
 	if(event == nullptr) {
-		return;
+		return false;
 	}
 								
 	switch(event->eventId)
@@ -76,25 +76,26 @@ void QTimerStatechart::dispatchEvent(QTimerStatechart::EventInstance * event)
 			break;
 		}
 		default:
-			/* do nothing */
-			break;
+			//pointer got out of scope
+			return false;
 	}
-	delete event;
+	//pointer got out of scope
+	return true;
 }
 
 
 
-bool QTimerStatechart::isActive() const
+bool QTimerStatechart::isActive() const noexcept
 {
 	return stateConfVector[0] != QTimerStatechart::State::NO_STATE;
 }
 
-bool QTimerStatechart::isFinal() const
+bool QTimerStatechart::isFinal() const noexcept
 {
-	return (stateConfVector[0] == QTimerStatechart::State::main_region__final_);
+		return (stateConfVector[0] == QTimerStatechart::State::main_region__final_);
 }
 
-bool QTimerStatechart::check() const {
+bool QTimerStatechart::check() const noexcept{
 	if(timerService == nullptr) {
 		return false;
 	}
@@ -105,17 +106,17 @@ bool QTimerStatechart::check() const {
 }
 
 
-void QTimerStatechart::setTimerService(sc::timer::TimerServiceInterface* timerService_)
+void QTimerStatechart::setTimerService(std::shared_ptr<sc::timer::TimerServiceInterface> timerService_) noexcept
 {
 	this->timerService = timerService_;
 }
 
-sc::timer::TimerServiceInterface* QTimerStatechart::getTimerService()
+std::shared_ptr<sc::timer::TimerServiceInterface> QTimerStatechart::getTimerService() noexcept
 {
 	return timerService;
 }
 
-sc::integer QTimerStatechart::getNumberOfParallelTimeEvents() {
+sc::integer QTimerStatechart::getNumberOfParallelTimeEvents() noexcept {
 	return parallelTimeEventsCount;
 }
 
@@ -123,13 +124,13 @@ void QTimerStatechart::raiseTimeEvent(sc::eventid evid)
 {
 	if (evid < timeEventsCount)
 	{
-		incomingEventQueue.push_back(new EventInstance(static_cast<QTimerStatechart::Event>(evid + static_cast<sc::integer>(QTimerStatechart::Event::_te0_main_region_First_))));
+		incomingEventQueue.push_back(std::unique_ptr< EventInstance>(new EventInstance(static_cast<QTimerStatechart::Event>(evid + static_cast<sc::integer>(QTimerStatechart::Event::_te0_main_region_First_)))));
 		runCycle();
 	}
 }
 
 
-bool QTimerStatechart::isStateActive(State state) const
+bool QTimerStatechart::isStateActive(State state) const noexcept
 {
 	switch (state)
 	{
@@ -157,82 +158,85 @@ bool QTimerStatechart::isStateActive(State state) const
 	}
 }
 
-sc::integer QTimerStatechart::getCounter() const
+sc::integer QTimerStatechart::getCounter() const noexcept
 {
-	return counter;
+	return counter
+	;
 }
 
-void QTimerStatechart::setCounter(sc::integer counter_)
+void QTimerStatechart::setCounter(sc::integer counter_) noexcept
 {
 	this->counter = counter_;
 }
-
-sc::integer QTimerStatechart::getMax() 
+sc::integer QTimerStatechart::getMax() noexcept
 {
-	return max;
+	return max
+	;
 }
 
-sc::integer QTimerStatechart::getExit12() 
+sc::integer QTimerStatechart::getExit12() noexcept
 {
-	return exit12;
+	return exit12
+	;
 }
 
-sc::integer QTimerStatechart::getExit21() 
+sc::integer QTimerStatechart::getExit21() noexcept
 {
-	return exit21;
+	return exit21
+	;
 }
 
-sc::integer QTimerStatechart::getA1() const
+sc::integer QTimerStatechart::getA1() const noexcept
 {
-	return a1;
+	return a1
+	;
 }
 
-void QTimerStatechart::setA1(sc::integer a1_)
+void QTimerStatechart::setA1(sc::integer a1_) noexcept
 {
 	this->a1 = a1_;
 }
-
-sc::integer QTimerStatechart::getB1() const
+sc::integer QTimerStatechart::getB1() const noexcept
 {
-	return b1;
+	return b1
+	;
 }
 
-void QTimerStatechart::setB1(sc::integer b1_)
+void QTimerStatechart::setB1(sc::integer b1_) noexcept
 {
 	this->b1 = b1_;
 }
-
-sc::integer QTimerStatechart::getA2() const
+sc::integer QTimerStatechart::getA2() const noexcept
 {
-	return a2;
+	return a2
+	;
 }
 
-void QTimerStatechart::setA2(sc::integer a2_)
+void QTimerStatechart::setA2(sc::integer a2_) noexcept
 {
 	this->a2 = a2_;
 }
-
-sc::integer QTimerStatechart::getB2() const
+sc::integer QTimerStatechart::getB2() const noexcept
 {
-	return b2;
+	return b2
+	;
 }
 
-void QTimerStatechart::setB2(sc::integer b2_)
+void QTimerStatechart::setB2(sc::integer b2_) noexcept
 {
 	this->b2 = b2_;
 }
-
-sc::integer QTimerStatechart::getC2() const
+sc::integer QTimerStatechart::getC2() const noexcept
 {
-	return c2;
+	return c2
+	;
 }
 
-void QTimerStatechart::setC2(sc::integer c2_)
+void QTimerStatechart::setC2(sc::integer c2_) noexcept
 {
 	this->c2 = c2_;
 }
-
-void QTimerStatechart::setOperationCallback(OperationCallback* operationCallback)
+void QTimerStatechart::setOperationCallback(std::shared_ptr<OperationCallback> operationCallback) noexcept
 {
 	ifaceOperationCallback = operationCallback;
 }
@@ -242,9 +246,9 @@ void QTimerStatechart::setOperationCallback(OperationCallback* operationCallback
 void QTimerStatechart::enact_main_region_First()
 {
 	/* Entry action for state 'First'. */
-	timerService->setTimer(this, 0, QTimerStatechart::exit12, false);
-	timerService->setTimer(this, 1, 301, true);
-	timerService->setTimer(this, 2, 749, false);
+	timerService->setTimer(shared_from_this(), 0, (static_cast<sc::time> (QTimerStatechart::exit12)), false);
+	timerService->setTimer(shared_from_this(), 1, (static_cast<sc::time> (301)), true);
+	timerService->setTimer(shared_from_this(), 2, (static_cast<sc::time> (749)), false);
 	ifaceOperationCallback->dump("Enter first state");
 }
 
@@ -252,10 +256,10 @@ void QTimerStatechart::enact_main_region_First()
 void QTimerStatechart::enact_main_region_Second()
 {
 	/* Entry action for state 'Second'. */
-	timerService->setTimer(this, 3, QTimerStatechart::exit21, false);
-	timerService->setTimer(this, 4, 250, true);
-	timerService->setTimer(this, 5, 150, true);
-	timerService->setTimer(this, 6, 350, false);
+	timerService->setTimer(shared_from_this(), 3, (static_cast<sc::time> (QTimerStatechart::exit21)), false);
+	timerService->setTimer(shared_from_this(), 4, (static_cast<sc::time> (250)), true);
+	timerService->setTimer(shared_from_this(), 5, (static_cast<sc::time> (150)), true);
+	timerService->setTimer(shared_from_this(), 6, (static_cast<sc::time> (350)), false);
 	ifaceOperationCallback->dump("Enter second state");
 }
 
@@ -263,9 +267,9 @@ void QTimerStatechart::enact_main_region_Second()
 void QTimerStatechart::exact_main_region_First()
 {
 	/* Exit action for state 'First'. */
-	timerService->unsetTimer(this, 0);
-	timerService->unsetTimer(this, 1);
-	timerService->unsetTimer(this, 2);
+	timerService->unsetTimer(shared_from_this(), 0);
+	timerService->unsetTimer(shared_from_this(), 1);
+	timerService->unsetTimer(shared_from_this(), 2);
 	ifaceOperationCallback->dump("Exit first state");
 }
 
@@ -273,10 +277,10 @@ void QTimerStatechart::exact_main_region_First()
 void QTimerStatechart::exact_main_region_Second()
 {
 	/* Exit action for state 'Second'. */
-	timerService->unsetTimer(this, 3);
-	timerService->unsetTimer(this, 4);
-	timerService->unsetTimer(this, 5);
-	timerService->unsetTimer(this, 6);
+	timerService->unsetTimer(shared_from_this(), 3);
+	timerService->unsetTimer(shared_from_this(), 4);
+	timerService->unsetTimer(shared_from_this(), 5);
+	timerService->unsetTimer(shared_from_this(), 6);
 	ifaceOperationCallback->dump("Exit second state");
 }
 
@@ -404,9 +408,10 @@ sc::integer QTimerStatechart::main_region_First_react(const sc::integer transiti
 			transitioned_after = 0;
 		} 
 	} 
-	/* If no transition was taken then execute local reactions */
+	/* If no transition was taken */
 	if ((transitioned_after) == (transitioned_before))
 	{ 
+		/* then execute local reactions. */
 		if (timeEvents[1])
 		{ 
 			a1++;
@@ -436,9 +441,10 @@ sc::integer QTimerStatechart::main_region_Second_react(const sc::integer transit
 			transitioned_after = 0;
 		} 
 	} 
-	/* If no transition was taken then execute local reactions */
+	/* If no transition was taken */
 	if ((transitioned_after) == (transitioned_before))
 	{ 
+		/* then execute local reactions. */
 		if (timeEvents[4])
 		{ 
 			a2++;
@@ -458,19 +464,10 @@ sc::integer QTimerStatechart::main_region_Second_react(const sc::integer transit
 
 sc::integer QTimerStatechart::main_region__final__react(const sc::integer transitioned_before) {
 	/* The reactions of state null. */
-	sc::integer transitioned_after = transitioned_before;
-	if ((transitioned_after) < (0))
-	{ 
-	} 
-	/* If no transition was taken then execute local reactions */
-	if ((transitioned_after) == (transitioned_before))
-	{ 
-		transitioned_after = react(transitioned_before);
-	} 
-	return transitioned_after;
+	return react(transitioned_before);
 }
 
-void QTimerStatechart::clearInEvents() {
+void QTimerStatechart::clearInEvents() noexcept {
 	timeEvents[0] = false;
 	timeEvents[1] = false;
 	timeEvents[2] = false;
@@ -516,8 +513,7 @@ void QTimerStatechart::runCycle() {
 	{ 
 		microStep();
 		clearInEvents();
-		dispatchEvent(getNextEvent());
-	} while (((((((timeEvents[0]) || (timeEvents[1])) || (timeEvents[2])) || (timeEvents[3])) || (timeEvents[4])) || (timeEvents[5])) || (timeEvents[6]));
+	} while (dispatchEvent(getNextEvent()));
 	isExecuting = false;
 }
 
@@ -542,6 +538,7 @@ void QTimerStatechart::exit() {
 	isExecuting = true;
 	/* Default exit sequence for statechart Statechart */
 	exseq_main_region();
+	stateConfVector[0] = QTimerStatechart::State::NO_STATE;
 	isExecuting = false;
 }
 
@@ -549,4 +546,5 @@ void QTimerStatechart::exit() {
 void QTimerStatechart::triggerWithoutEvent() {
 	runCycle();
 }
+
 

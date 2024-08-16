@@ -1,6 +1,6 @@
 /* #
 # SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2022-2023 Steffen A. Mork
+# SPDX-FileCopyrightText: Copyright (C) 2022-2024 Steffen A. Mork
 # */
 
 #ifndef QTIMERSTATECHART_H_
@@ -15,7 +15,10 @@ class QTimerStatechart;
 #include <deque>
 #include "../src-lib/sc_types.h"
 #include "../src-lib/sc_statemachine.h"
+#include "../src-lib/sc_eventdriven.h"
 #include "../src-lib/sc_timer.h"
+#include <memory>
+#include <string.h>
 #include <QObject>
 
 /*! \file
@@ -23,12 +26,10 @@ Header of the state machine 'Statechart'.
 */
 
 
-class QTimerStatechart : public QObject, public sc::timer::TimedInterface, public sc::StatemachineInterface
+class QTimerStatechart : public QObject, public sc::timer::TimedInterface, public std::enable_shared_from_this<sc::timer::TimedInterface>, public sc::EventDrivenInterface
 {
-	Q_OBJECT
-	
 	public:
-		QTimerStatechart(QObject *parent);
+		explicit QTimerStatechart(QObject *parent) noexcept;
 		
 		virtual ~QTimerStatechart();
 		
@@ -44,10 +45,10 @@ class QTimerStatechart : public QObject, public sc::timer::TimedInterface, publi
 		};
 		
 		/*! The number of states. */
-		static const sc::integer numStates = 3;
-		static const sc::integer scvi_main_region_First = 0;
-		static const sc::integer scvi_main_region_Second = 0;
-		static const sc::integer scvi_main_region__final_ = 0;
+		static constexpr const sc::integer numStates {3};
+		static constexpr const sc::integer scvi_main_region_First {0};
+		static constexpr const sc::integer scvi_main_region_Second {0};
+		static constexpr const sc::integer scvi_main_region__final_ {0};
 		
 		/*! Enumeration of all events which are consumed. */
 		enum class Event
@@ -65,59 +66,42 @@ class QTimerStatechart : public QObject, public sc::timer::TimedInterface, publi
 		class EventInstance
 		{
 			public:
-				explicit EventInstance(Event id) : eventId(id){}
+				explicit  EventInstance(Event id) noexcept : eventId(id){}
 				virtual ~EventInstance() = default;
 				const Event eventId;
 		};
 		
-		/*! Can be used by the client code to trigger a run to completion step without raising an event. */
-		void triggerWithoutEvent();
 		
 		/*! Gets the value of the variable 'counter' that is defined in the default interface scope. */
-		sc::integer getCounter() const;
-		
+		sc::integer getCounter() const noexcept;
 		/*! Sets the value of the variable 'counter' that is defined in the default interface scope. */
-		void setCounter(sc::integer counter);
-		
+		void setCounter(sc::integer counter) noexcept;
 		/*! Gets the value of the variable 'max' that is defined in the default interface scope. */
-		static sc::integer getMax() ;
-		
+		static sc::integer getMax()  noexcept;
 		/*! Gets the value of the variable 'exit12' that is defined in the default interface scope. */
-		static sc::integer getExit12() ;
-		
+		static sc::integer getExit12()  noexcept;
 		/*! Gets the value of the variable 'exit21' that is defined in the default interface scope. */
-		static sc::integer getExit21() ;
-		
+		static sc::integer getExit21()  noexcept;
 		/*! Gets the value of the variable 'a1' that is defined in the default interface scope. */
-		sc::integer getA1() const;
-		
+		sc::integer getA1() const noexcept;
 		/*! Sets the value of the variable 'a1' that is defined in the default interface scope. */
-		void setA1(sc::integer a1);
-		
+		void setA1(sc::integer a1) noexcept;
 		/*! Gets the value of the variable 'b1' that is defined in the default interface scope. */
-		sc::integer getB1() const;
-		
+		sc::integer getB1() const noexcept;
 		/*! Sets the value of the variable 'b1' that is defined in the default interface scope. */
-		void setB1(sc::integer b1);
-		
+		void setB1(sc::integer b1) noexcept;
 		/*! Gets the value of the variable 'a2' that is defined in the default interface scope. */
-		sc::integer getA2() const;
-		
+		sc::integer getA2() const noexcept;
 		/*! Sets the value of the variable 'a2' that is defined in the default interface scope. */
-		void setA2(sc::integer a2);
-		
+		void setA2(sc::integer a2) noexcept;
 		/*! Gets the value of the variable 'b2' that is defined in the default interface scope. */
-		sc::integer getB2() const;
-		
+		sc::integer getB2() const noexcept;
 		/*! Sets the value of the variable 'b2' that is defined in the default interface scope. */
-		void setB2(sc::integer b2);
-		
+		void setB2(sc::integer b2) noexcept;
 		/*! Gets the value of the variable 'c2' that is defined in the default interface scope. */
-		sc::integer getC2() const;
-		
+		sc::integer getC2() const noexcept;
 		/*! Sets the value of the variable 'c2' that is defined in the default interface scope. */
-		void setC2(sc::integer c2);
-		
+		void setC2(sc::integer c2) noexcept;
 		//! Inner class for default interface scope operation callbacks.
 		class OperationCallback
 		{
@@ -130,64 +114,67 @@ class QTimerStatechart : public QObject, public sc::timer::TimedInterface, publi
 		};
 		
 		/*! Set the working instance of the operation callback interface 'OperationCallback'. */
-		void setOperationCallback(OperationCallback* operationCallback);
+		void setOperationCallback(std::shared_ptr<OperationCallback> operationCallback) noexcept;
+		
+		/*! Can be used by the client code to trigger a run to completion step without raising an event. */
+		void triggerWithoutEvent() override;
 		
 		/*
 		 * Functions inherited from StatemachineInterface
 		 */
-		void enter() override;
+		 void enter() override;
 		
-		void exit() override;
+		 void exit() override;
 		
 		/*!
 		 * Checks if the state machine is active (until 2.4.1 this method was used for states).
 		 * A state machine is active if it has been entered. It is inactive if it has not been entered at all or if it has been exited.
 		 */
-		bool isActive() const override;
+		 bool isActive() const noexcept override;
 		
 		
 		/*!
 		* Checks if all active states are final. 
 		* If there are no active states then the state machine is considered being inactive. In this case this method returns false.
 		*/
-		bool isFinal() const override;
+		 bool isFinal() const noexcept override;
 		
 		/*! 
 		 * Checks if member of the state machine must be set. For example an operation callback.
 		 */
-		bool check() const;
+		bool check() const noexcept;
 		
 		/*
 		 * Functions inherited from TimedStatemachineInterface
 		 */
-		void setTimerService(sc::timer::TimerServiceInterface* timerService_) override;
+		void setTimerService(std::shared_ptr<sc::timer::TimerServiceInterface> timerService_) noexcept override;
 		
-		sc::timer::TimerServiceInterface* getTimerService() override;
+		std::shared_ptr<sc::timer::TimerServiceInterface> getTimerService() noexcept override;
 		
 		void raiseTimeEvent(sc::eventid event) override;
 		
-		sc::integer getNumberOfParallelTimeEvents() override;
+		sc::integer getNumberOfParallelTimeEvents() noexcept override;
 		
 		
 		
 		/*! Checks if the specified state is active (until 2.4.1 the used method for states was calles isActive()). */
-		bool isStateActive(State state) const;
+		bool isStateActive(State state) const noexcept;
 		
 		//! number of time events used by the state machine.
-		static const sc::integer timeEventsCount = 7;
+		static const sc::integer timeEventsCount {7};
 		
 		//! number of time events that can be active at once.
-		static const sc::integer parallelTimeEventsCount = 4;
+		static const sc::integer parallelTimeEventsCount {4};
 		
 		
 	protected:
 		
 		
-		std::deque<EventInstance*> incomingEventQueue;
+		std::deque<std::unique_ptr<EventInstance>> incomingEventQueue;
 		
-		EventInstance* getNextEvent();
+		std::unique_ptr<EventInstance> getNextEvent() noexcept;
 		
-		void dispatchEvent(EventInstance* event);
+		bool dispatchEvent(std::unique_ptr<EventInstance> event) noexcept;
 		
 		
 		
@@ -195,31 +182,33 @@ class QTimerStatechart : public QObject, public sc::timer::TimedInterface, publi
 		QTimerStatechart(const QTimerStatechart &rhs);
 		QTimerStatechart& operator=(const QTimerStatechart&);
 		
-		sc::integer counter;
-		static const sc::integer max;
-		static const sc::integer exit12;
-		static const sc::integer exit21;
-		sc::integer a1;
-		sc::integer b1;
-		sc::integer a2;
-		sc::integer b2;
-		sc::integer c2;
+		sc::integer counter {1};
+		static constexpr const sc::integer max {2};
+		static constexpr const sc::integer exit12 {3100};
+		static constexpr const sc::integer exit21 {2600};
+		sc::integer a1 {0};
+		sc::integer b1 {0};
+		sc::integer a2 {0};
+		sc::integer b2 {0};
+		sc::integer c2 {0};
+		
 		
 		
 		//! the maximum number of orthogonal states defines the dimension of the state configuration vector.
-		static const sc::ushort maxOrthogonalStates = 1;
+		static const sc::ushort maxOrthogonalStates {1};
 		
-		sc::timer::TimerServiceInterface* timerService;
+		std::shared_ptr<sc::timer::TimerServiceInterface> timerService;
 		bool timeEvents[timeEventsCount];
 		
 		
 		State stateConfVector[maxOrthogonalStates];
 		
 		
-		OperationCallback* ifaceOperationCallback;
 		
+		std::shared_ptr<OperationCallback> ifaceOperationCallback {nullptr};
 		
-		bool isExecuting;
+		bool isExecuting {false};
+		
 		
 		
 		// prototypes of all internal functions
@@ -242,10 +231,9 @@ class QTimerStatechart : public QObject, public sc::timer::TimedInterface, publi
 		sc::integer main_region_First_react(const sc::integer transitioned_before);
 		sc::integer main_region_Second_react(const sc::integer transitioned_before);
 		sc::integer main_region__final__react(const sc::integer transitioned_before);
-		void clearInEvents();
+		void clearInEvents() noexcept;
 		void microStep();
 		void runCycle();
-		
 		
 		
 		

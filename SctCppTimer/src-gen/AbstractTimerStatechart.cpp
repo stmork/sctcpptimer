@@ -1,6 +1,6 @@
 /* #
 # SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2022-2023 Steffen A. Mork
+# SPDX-FileCopyrightText: Copyright (C) 2022-2024 Steffen A. Mork
 # */
 
 #include "AbstractTimerStatechart.h"
@@ -10,22 +10,9 @@ Implementation of the state machine 'Statechart'
 */
 
 
-const sc::integer AbstractTimerStatechart::max = 2;
-const sc::integer AbstractTimerStatechart::exit12 = 3100;
-const sc::integer AbstractTimerStatechart::exit21 = 2600;
 
 
-
-AbstractTimerStatechart::AbstractTimerStatechart() :
-	counter(1),
-	a1(0),
-	b1(0),
-	a2(0),
-	b2(0),
-	c2(0),
-	timerService(nullptr),
-	ifaceOperationCallback(nullptr),
-	isExecuting(false)
+AbstractTimerStatechart::AbstractTimerStatechart() noexcept
 {
 	for (sc::ushort state_vec_pos = 0; state_vec_pos < maxOrthogonalStates; ++state_vec_pos)
 		stateConfVector[state_vec_pos] = AbstractTimerStatechart::State::NO_STATE;
@@ -39,12 +26,12 @@ AbstractTimerStatechart::~AbstractTimerStatechart()
 
 
 
-AbstractTimerStatechart::EventInstance* AbstractTimerStatechart::getNextEvent()
+std::unique_ptr<AbstractTimerStatechart::EventInstance> AbstractTimerStatechart::getNextEvent() noexcept
 {
-	AbstractTimerStatechart::EventInstance* nextEvent = 0;
+	std::unique_ptr<AbstractTimerStatechart::EventInstance> nextEvent = 0;
 
 	if(!incomingEventQueue.empty()) {
-		nextEvent = incomingEventQueue.front();
+		nextEvent = std::move(incomingEventQueue.front());
 		incomingEventQueue.pop_front();
 	}
 	
@@ -53,10 +40,15 @@ AbstractTimerStatechart::EventInstance* AbstractTimerStatechart::getNextEvent()
 }					
 
 
-void AbstractTimerStatechart::dispatchEvent(AbstractTimerStatechart::EventInstance * event)
+template<typename EWV, typename EV>
+std::unique_ptr<EWV> cast_event_pointer_type (std::unique_ptr<EV>&& event){
+    return std::unique_ptr<EWV>{static_cast<EWV*>(event.release())};
+}
+	
+bool AbstractTimerStatechart::dispatchEvent(std::unique_ptr<AbstractTimerStatechart::EventInstance> event) noexcept
 {
 	if(event == nullptr) {
-		return;
+		return false;
 	}
 								
 	switch(event->eventId)
@@ -75,25 +67,26 @@ void AbstractTimerStatechart::dispatchEvent(AbstractTimerStatechart::EventInstan
 			break;
 		}
 		default:
-			/* do nothing */
-			break;
+			//pointer got out of scope
+			return false;
 	}
-	delete event;
+	//pointer got out of scope
+	return true;
 }
 
 
 
-bool AbstractTimerStatechart::isActive() const
+bool AbstractTimerStatechart::isActive() const noexcept
 {
 	return stateConfVector[0] != AbstractTimerStatechart::State::NO_STATE;
 }
 
-bool AbstractTimerStatechart::isFinal() const
+bool AbstractTimerStatechart::isFinal() const noexcept
 {
-	return (stateConfVector[0] == AbstractTimerStatechart::State::main_region__final_);
+		return (stateConfVector[0] == AbstractTimerStatechart::State::main_region__final_);
 }
 
-bool AbstractTimerStatechart::check() const {
+bool AbstractTimerStatechart::check() const noexcept{
 	if(timerService == nullptr) {
 		return false;
 	}
@@ -104,17 +97,17 @@ bool AbstractTimerStatechart::check() const {
 }
 
 
-void AbstractTimerStatechart::setTimerService(sc::timer::TimerServiceInterface* timerService_)
+void AbstractTimerStatechart::setTimerService(std::shared_ptr<sc::timer::TimerServiceInterface> timerService_) noexcept
 {
 	this->timerService = timerService_;
 }
 
-sc::timer::TimerServiceInterface* AbstractTimerStatechart::getTimerService()
+std::shared_ptr<sc::timer::TimerServiceInterface> AbstractTimerStatechart::getTimerService() noexcept
 {
 	return timerService;
 }
 
-sc::integer AbstractTimerStatechart::getNumberOfParallelTimeEvents() {
+sc::integer AbstractTimerStatechart::getNumberOfParallelTimeEvents() noexcept {
 	return parallelTimeEventsCount;
 }
 
@@ -122,13 +115,13 @@ void AbstractTimerStatechart::raiseTimeEvent(sc::eventid evid)
 {
 	if (evid < timeEventsCount)
 	{
-		incomingEventQueue.push_back(new EventInstance(static_cast<AbstractTimerStatechart::Event>(evid + static_cast<sc::integer>(AbstractTimerStatechart::Event::_te0_main_region_First_))));
+		incomingEventQueue.push_back(std::unique_ptr< EventInstance>(new EventInstance(static_cast<AbstractTimerStatechart::Event>(evid + static_cast<sc::integer>(AbstractTimerStatechart::Event::_te0_main_region_First_)))));
 		runCycle();
 	}
 }
 
 
-bool AbstractTimerStatechart::isStateActive(State state) const
+bool AbstractTimerStatechart::isStateActive(State state) const noexcept
 {
 	switch (state)
 	{
@@ -156,82 +149,85 @@ bool AbstractTimerStatechart::isStateActive(State state) const
 	}
 }
 
-sc::integer AbstractTimerStatechart::getCounter() const
+sc::integer AbstractTimerStatechart::getCounter() const noexcept
 {
-	return counter;
+	return counter
+	;
 }
 
-void AbstractTimerStatechart::setCounter(sc::integer counter_)
+void AbstractTimerStatechart::setCounter(sc::integer counter_) noexcept
 {
 	this->counter = counter_;
 }
-
-sc::integer AbstractTimerStatechart::getMax() 
+sc::integer AbstractTimerStatechart::getMax() noexcept
 {
-	return max;
+	return max
+	;
 }
 
-sc::integer AbstractTimerStatechart::getExit12() 
+sc::integer AbstractTimerStatechart::getExit12() noexcept
 {
-	return exit12;
+	return exit12
+	;
 }
 
-sc::integer AbstractTimerStatechart::getExit21() 
+sc::integer AbstractTimerStatechart::getExit21() noexcept
 {
-	return exit21;
+	return exit21
+	;
 }
 
-sc::integer AbstractTimerStatechart::getA1() const
+sc::integer AbstractTimerStatechart::getA1() const noexcept
 {
-	return a1;
+	return a1
+	;
 }
 
-void AbstractTimerStatechart::setA1(sc::integer a1_)
+void AbstractTimerStatechart::setA1(sc::integer a1_) noexcept
 {
 	this->a1 = a1_;
 }
-
-sc::integer AbstractTimerStatechart::getB1() const
+sc::integer AbstractTimerStatechart::getB1() const noexcept
 {
-	return b1;
+	return b1
+	;
 }
 
-void AbstractTimerStatechart::setB1(sc::integer b1_)
+void AbstractTimerStatechart::setB1(sc::integer b1_) noexcept
 {
 	this->b1 = b1_;
 }
-
-sc::integer AbstractTimerStatechart::getA2() const
+sc::integer AbstractTimerStatechart::getA2() const noexcept
 {
-	return a2;
+	return a2
+	;
 }
 
-void AbstractTimerStatechart::setA2(sc::integer a2_)
+void AbstractTimerStatechart::setA2(sc::integer a2_) noexcept
 {
 	this->a2 = a2_;
 }
-
-sc::integer AbstractTimerStatechart::getB2() const
+sc::integer AbstractTimerStatechart::getB2() const noexcept
 {
-	return b2;
+	return b2
+	;
 }
 
-void AbstractTimerStatechart::setB2(sc::integer b2_)
+void AbstractTimerStatechart::setB2(sc::integer b2_) noexcept
 {
 	this->b2 = b2_;
 }
-
-sc::integer AbstractTimerStatechart::getC2() const
+sc::integer AbstractTimerStatechart::getC2() const noexcept
 {
-	return c2;
+	return c2
+	;
 }
 
-void AbstractTimerStatechart::setC2(sc::integer c2_)
+void AbstractTimerStatechart::setC2(sc::integer c2_) noexcept
 {
 	this->c2 = c2_;
 }
-
-void AbstractTimerStatechart::setOperationCallback(OperationCallback* operationCallback)
+void AbstractTimerStatechart::setOperationCallback(std::shared_ptr<OperationCallback> operationCallback) noexcept
 {
 	ifaceOperationCallback = operationCallback;
 }
@@ -241,9 +237,9 @@ void AbstractTimerStatechart::setOperationCallback(OperationCallback* operationC
 void AbstractTimerStatechart::enact_main_region_First()
 {
 	/* Entry action for state 'First'. */
-	timerService->setTimer(this, 0, AbstractTimerStatechart::exit12, false);
-	timerService->setTimer(this, 1, 301, true);
-	timerService->setTimer(this, 2, 749, false);
+	timerService->setTimer(shared_from_this(), 0, (static_cast<sc::time> (AbstractTimerStatechart::exit12)), false);
+	timerService->setTimer(shared_from_this(), 1, (static_cast<sc::time> (301)), true);
+	timerService->setTimer(shared_from_this(), 2, (static_cast<sc::time> (749)), false);
 	ifaceOperationCallback->dump("Enter first state");
 }
 
@@ -251,10 +247,10 @@ void AbstractTimerStatechart::enact_main_region_First()
 void AbstractTimerStatechart::enact_main_region_Second()
 {
 	/* Entry action for state 'Second'. */
-	timerService->setTimer(this, 3, AbstractTimerStatechart::exit21, false);
-	timerService->setTimer(this, 4, 250, true);
-	timerService->setTimer(this, 5, 150, true);
-	timerService->setTimer(this, 6, 350, false);
+	timerService->setTimer(shared_from_this(), 3, (static_cast<sc::time> (AbstractTimerStatechart::exit21)), false);
+	timerService->setTimer(shared_from_this(), 4, (static_cast<sc::time> (250)), true);
+	timerService->setTimer(shared_from_this(), 5, (static_cast<sc::time> (150)), true);
+	timerService->setTimer(shared_from_this(), 6, (static_cast<sc::time> (350)), false);
 	ifaceOperationCallback->dump("Enter second state");
 }
 
@@ -262,9 +258,9 @@ void AbstractTimerStatechart::enact_main_region_Second()
 void AbstractTimerStatechart::exact_main_region_First()
 {
 	/* Exit action for state 'First'. */
-	timerService->unsetTimer(this, 0);
-	timerService->unsetTimer(this, 1);
-	timerService->unsetTimer(this, 2);
+	timerService->unsetTimer(shared_from_this(), 0);
+	timerService->unsetTimer(shared_from_this(), 1);
+	timerService->unsetTimer(shared_from_this(), 2);
 	ifaceOperationCallback->dump("Exit first state");
 }
 
@@ -272,10 +268,10 @@ void AbstractTimerStatechart::exact_main_region_First()
 void AbstractTimerStatechart::exact_main_region_Second()
 {
 	/* Exit action for state 'Second'. */
-	timerService->unsetTimer(this, 3);
-	timerService->unsetTimer(this, 4);
-	timerService->unsetTimer(this, 5);
-	timerService->unsetTimer(this, 6);
+	timerService->unsetTimer(shared_from_this(), 3);
+	timerService->unsetTimer(shared_from_this(), 4);
+	timerService->unsetTimer(shared_from_this(), 5);
+	timerService->unsetTimer(shared_from_this(), 6);
 	ifaceOperationCallback->dump("Exit second state");
 }
 
@@ -403,9 +399,10 @@ sc::integer AbstractTimerStatechart::main_region_First_react(const sc::integer t
 			transitioned_after = 0;
 		} 
 	} 
-	/* If no transition was taken then execute local reactions */
+	/* If no transition was taken */
 	if ((transitioned_after) == (transitioned_before))
 	{ 
+		/* then execute local reactions. */
 		if (timeEvents[1])
 		{ 
 			a1++;
@@ -435,9 +432,10 @@ sc::integer AbstractTimerStatechart::main_region_Second_react(const sc::integer 
 			transitioned_after = 0;
 		} 
 	} 
-	/* If no transition was taken then execute local reactions */
+	/* If no transition was taken */
 	if ((transitioned_after) == (transitioned_before))
 	{ 
+		/* then execute local reactions. */
 		if (timeEvents[4])
 		{ 
 			a2++;
@@ -457,19 +455,10 @@ sc::integer AbstractTimerStatechart::main_region_Second_react(const sc::integer 
 
 sc::integer AbstractTimerStatechart::main_region__final__react(const sc::integer transitioned_before) {
 	/* The reactions of state null. */
-	sc::integer transitioned_after = transitioned_before;
-	if ((transitioned_after) < (0))
-	{ 
-	} 
-	/* If no transition was taken then execute local reactions */
-	if ((transitioned_after) == (transitioned_before))
-	{ 
-		transitioned_after = react(transitioned_before);
-	} 
-	return transitioned_after;
+	return react(transitioned_before);
 }
 
-void AbstractTimerStatechart::clearInEvents() {
+void AbstractTimerStatechart::clearInEvents() noexcept {
 	timeEvents[0] = false;
 	timeEvents[1] = false;
 	timeEvents[2] = false;
@@ -515,8 +504,7 @@ void AbstractTimerStatechart::runCycle() {
 	{ 
 		microStep();
 		clearInEvents();
-		dispatchEvent(getNextEvent());
-	} while (((((((timeEvents[0]) || (timeEvents[1])) || (timeEvents[2])) || (timeEvents[3])) || (timeEvents[4])) || (timeEvents[5])) || (timeEvents[6]));
+	} while (dispatchEvent(getNextEvent()));
 	isExecuting = false;
 }
 
@@ -541,6 +529,7 @@ void AbstractTimerStatechart::exit() {
 	isExecuting = true;
 	/* Default exit sequence for statechart Statechart */
 	exseq_main_region();
+	stateConfVector[0] = AbstractTimerStatechart::State::NO_STATE;
 	isExecuting = false;
 }
 
@@ -548,4 +537,5 @@ void AbstractTimerStatechart::exit() {
 void AbstractTimerStatechart::triggerWithoutEvent() {
 	runCycle();
 }
+
 

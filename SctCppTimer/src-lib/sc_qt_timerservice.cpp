@@ -1,118 +1,69 @@
 /* #
 # SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2022 Steffen A. Mork
+# SPDX-FileCopyrightText: Copyright (C) 2022-2024 Steffen A. Mork
 # */
 
 #include "sc_qt_timerservice.h"
 
-		
 using namespace sc::qt;
+using namespace sc::timer;
 
+using Qt::TimerType::PreciseTimer;
+using Qt::TimerType::CoarseTimer;
 
-SCTimer::SCTimer(QObject *parent, sc::timer::TimedInterface *machine, const sc::eventid id) :
-    QTimer(parent),
-    machine(machine),
-    eventId(id)
-{
-    connect(this, SIGNAL(timeout()), this, SLOT(triggerTimeEvent()));
-}
-
-void SCTimer::triggerTimeEvent()
-{
-    emit fireTimeEvent(machine, eventId);
-}
-
-
-
-SCTimerService::SCTimerService(QObject *parent) : QObject(parent)
+SCTimerService::SCTimerService(QObject * parent) : QObject(parent)
 {
 }
 
-
-void SCTimerService::setTimer(sc::timer::TimedInterface *statemachine, sc::eventid event, int time_ms, bool isPeriodic)
+void SCTimerService::setTimer(
+	std::shared_ptr<TimedInterface> statemachine,
+	sc::eventid                     event,
+	sc::time                        time_ms,
+	bool                            is_periodic)
 {
-    SCTimer *timer = nullptr;
+	QTimer  *  timer          = getTimer(statemachine, event);
+	const bool high_precision = (time_ms % 1000) != 0;
 
-    // retrieve the timer map for the state machine
-    QMap<sc::eventid, SCTimer*> *eventTimerMap = machineTimerMapMap.value(statemachine);
-
-    // retrieve and stop a timer if it already exists for the event.
-    if (eventTimerMap != nullptr) {
-
-        if (eventTimerMap->contains(event)) {
-           SCTimer *timer = eventTimerMap->value(event);
-           timer->stop();
-        }
-    }
-
-    //setup the event timer map for the state machine if it not alrewady exists
-    if ( eventTimerMap == nullptr) {
-        eventTimerMap = new QMap<sc::eventid, SCTimer*>();
-        machineTimerMapMap.insert(statemachine, eventTimerMap);
-    }
-
-    // create a timer if it not already exists
-    if (timer == nullptr) {
-		timer = new SCTimer(this, statemachine, event);
-        eventTimerMap->insert(event, timer);
-        timer->connect(timer, SIGNAL(fireTimeEvent(sc::timer::TimedInterface*,sc::eventid)), this, SLOT(raiseTimeEvent(sc::timer::TimedInterface*,sc::eventid)));
-    }
-
-    // amor the timer
-    timer->setTimerType(Qt::TimerType::PreciseTimer);
-    timer->setInterval(time_ms);
-    timer->setSingleShot(!isPeriodic);
-    timer->start();
-
+	// armor the timer
+	timer->setTimerType(high_precision ? PreciseTimer : CoarseTimer);
+	timer->setInterval(time_ms);
+	timer->setSingleShot(!is_periodic);
+	timer->start();
 }
 
-
-SCTimer* SCTimerService::getTimer(sc::timer::TimedInterface *machine, sc::eventid event)
+void SCTimerService::unsetTimer(std::shared_ptr<TimedInterface> statemachine, sc::eventid event)
 {
-    SCTimer *timer = nullptr;
+	QTimer * timer = this->getTimer(statemachine, event);
 
-    // retrieve the timer map for the state machine
-    QMap<sc::eventid, SCTimer*> *eventTimerMap = machineTimerMapMap.value(machine);
-
-    // retrieve and a timer registered for the event.
-    if (eventTimerMap != nullptr) {
-
-        if (eventTimerMap->contains(event)) {
-            timer = eventTimerMap->value(event);
-        }
-    }
-
-    return timer;
+	timer->stop();
 }
 
-
-void SCTimerService::unsetTimer(sc::timer::TimedInterface *statemachine, sc::eventid event)
+QTimer * SCTimerService::getTimer(
+	std::shared_ptr<sc::timer::TimedInterface> & statemachine,
+	sc::eventid                                  event)
 {
-    SCTimer *timer = this->getTimer(statemachine, event);
+	TimerKey   key{ statemachine.get(), event };
+	QTimer  *  timer = nullptr;
 
-    if (timer != nullptr) {
-        timer->stop();
-    }
+	Q_ASSERT(statemachine);
+	if (chart_map.contains(key))
+	{
+		timer = chart_map[key];
+	}
+	else
+	{
+		timer = new QTimer(this);
 
-    // do nothing else as the timer may be reused...
+		chart_map.insert(key, timer);
+		connect(timer, &QTimer::timeout, [statemachine, event]()
+		{
+			statemachine->raiseTimeEvent(event);
+		});
+	}
+	Q_ASSERT(timer != nullptr);
+	return timer;
 }
-
-
-void SCTimerService::raiseTimeEvent(sc::timer::TimedInterface *machine, sc::eventid event)
-{
-    SCTimer *timer = this->getTimer(machine, event);
-    if (timer != nullptr && timer->isSingleShot()) {
-        timer->stop();
-    }
-
-    if (machine != nullptr) {
-        machine->raiseTimeEvent(event);
-    }
-}
-
 
 void SCTimerService::cancel()
 {
 }
-
-

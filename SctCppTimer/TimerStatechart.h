@@ -1,6 +1,6 @@
 //
 //  SPDX-License-Identifier: MIT
-//  SPDX-FileCopyrightText: Copyright (C) 2021-2023 Steffen A. Mork
+//  SPDX-FileCopyrightText: Copyright (C) 2021-2024 Steffen A. Mork
 //
 
 #pragma once
@@ -23,10 +23,10 @@ namespace sc::timer
  */
 class TimerStatechart :
 	public AbstractTimerStatechart,
-	protected AbstractTimerStatechart::OperationCallback
+	public AbstractTimerStatechart::OperationCallback
 {
 public:
-	explicit TimerStatechart(sc::timer::SctCppTimerService & service);
+	explicit TimerStatechart();
 	virtual ~TimerStatechart() = default;
 
 private:

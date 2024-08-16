@@ -1,28 +1,24 @@
-/* #
-# SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2021 Steffen A. Mork
-# */
+//
+//  SPDX-License-Identifier: MIT
+//  SPDX-FileCopyrightText: Copyright (C) 2008-2024 Steffen A. Mork
+//
+
+#pragma once
 
 #ifndef SC_TYPES_H_
 #define SC_TYPES_H_
 
-/* As <cstdint> is not available on all platforms we choose to include <stdint.h>. You can switch to <cstdint> by commenting and uncommenting the lines below.*/
-// #include <cstdint>
-#include <stdint.h>
-
+#include <cstdint>
 #include <string>
 
 namespace sc
 {
-
-// typedef int_fast16_t   short;
-	typedef uint_fast16_t  ushort;
-	typedef int32_t        integer;
-	typedef int16_t		   errorCode;
-	typedef double         real;
-
-	typedef uint_fast16_t  eventid;
-
+	typedef uint16_t   ushort;
+	typedef int        integer;
+	typedef int        errorCode;
+	typedef double     real;
+	typedef unsigned   eventid;
+	typedef int        time;
 }
 
-#endif /* SC_TYPES_H_ */
+#endif

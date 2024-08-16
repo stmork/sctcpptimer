@@ -14,7 +14,7 @@ SctCppTimer::SctCppTimer(const eventid id) : event_id(id)
 
 void SctCppTimer::start(
 	TimedInterface * timed_interface,
-	integer          time_ms,
+	sc::time         time_ms,
 	bool             is_periodic)
 
 {

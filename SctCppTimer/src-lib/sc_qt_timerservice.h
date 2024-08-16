@@ -1,71 +1,61 @@
 /* #
 # SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2022 Steffen A. Mork
+# SPDX-FileCopyrightText: Copyright (C) 2022-2024 Steffen A. Mork
 # */
 
 #ifndef SC_QT_TIMERSERVICE_H_
 #define SC_QT_TIMERSERVICE_H_
 
+#include <memory>
 
-#include <QObject>
 #include <QTimer>
-#include <QMap>
-#include <QPair>
+#include <QHash>
 
 #include "sc_timer.h"
 
-
-namespace sc
+namespace sc::qt
 {
+	class SCTimerService : public QObject, public sc::timer::TimerServiceInterface
+	{
+		Q_OBJECT
 
-namespace qt
-{
+	public:
+		explicit SCTimerService(QObject * parent);
 
-    class SCTimer : public QTimer
-    {
-        Q_OBJECT
+		virtual void setTimer(
+			std::shared_ptr<sc::timer::TimedInterface> statemachine,
+			sc::eventid                                event,
+			sc::time                                   time_ms,
+			bool                                       isPeriodic) override;
+		virtual void unsetTimer(
+			std::shared_ptr<sc::timer::TimedInterface> statemachine,
+			sc::eventid                                event) override;
+		virtual void cancel();
 
-    public:
-        explicit SCTimer(QObject * parent, sc::timer::TimedInterface* machine, const sc::eventid id);
+	protected:
 
-    signals:
-        void fireTimeEvent(sc::timer::TimedInterface *machine, sc::eventid event);
+		/**
+		 * This is the two dimensional key for finding a QTimer instance.
+		 */
+		typedef std::pair<sc::timer::TimedInterface *, sc::eventid> TimerKey;
 
-    public slots:
-        void triggerTimeEvent();
+		/**
+		 * This defines a map from a two dimensional key to a concrete
+		 * QTimer instance.
+		 */
+		typedef QHash<TimerKey, QTimer *>                           TimerMap;
 
-    protected:
-        sc::timer::TimedInterface *machine;
-        sc::eventid eventId;
-    };
+		/**
+		 * The map from all statemachines and their IDs to all existing timers.
+		 */
+		TimerMap                                                    chart_map;
 
-
-
-    class SCTimerService : public QObject, public sc::timer::TimerServiceInterface
-    {
-        Q_OBJECT
-
-    public:
-        explicit SCTimerService(QObject *parent);
-
-        virtual void setTimer(sc::timer::TimedInterface* statemachine, sc::eventid event, sc::integer time_ms, bool isPeriodic);
-        virtual void unsetTimer(sc::timer::TimedInterface* statemachine, sc::eventid event);
-        virtual void cancel();
-
-    signals:
-
-    public slots:
-        void raiseTimeEvent(sc::timer::TimedInterface *machine, sc::eventid event);
-
-    protected:
-        QMap<sc::timer::TimedInterface*,QMap<sc::eventid, SCTimer*>*> machineTimerMapMap;
-        SCTimer* getTimer(sc::timer::TimedInterface *machine, sc::eventid event);
-
-    };
-
-} // namespace qt
-
-} // namespace sc
+		[[nodiscard]]
+		QTimer * getTimer(
+			std::shared_ptr<sc::timer::TimedInterface> & statemachine,
+			sc::eventid                                  event);
+	};
+}
 
 #endif // SC_QT_TIMERSERVICE_H_
 

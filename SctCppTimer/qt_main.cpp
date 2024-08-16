@@ -1,6 +1,6 @@
 //
 //  SPDX-License-Identifier: MIT
-//  SPDX-FileCopyrightText: Copyright (C) 2022-2023 Steffen A. Mork
+//  SPDX-FileCopyrightText: Copyright (C) 2022-2024 Steffen A. Mork
 //
 
 #include <stdlib.h>
@@ -37,13 +37,13 @@ public:
 int main(int argc, char * argv[])
 {
 	QCoreApplication app(argc, argv);
-	SCTimerService   timer_service(nullptr);
-	QTimerStatechart statechart(nullptr);
-	Dump             dumper;
+	std::shared_ptr<SCTimerService>    timer_service = std::make_shared<SCTimerService>(nullptr);
+	std::shared_ptr<Dump>              dumper        = std::make_shared<Dump>();
+	std::shared_ptr<QTimerStatechart>  statechart    = std::make_shared<QTimerStatechart>(nullptr);
 
-	statechart.setTimerService(&timer_service);
-	statechart.setOperationCallback(&dumper);
-	statechart.enter();
+	statechart->setTimerService(timer_service);
+	statechart->setOperationCallback(dumper);
+	statechart->enter();
 
 	QTimer::singleShot(12000, []
 	{

@@ -3,10 +3,12 @@ TEMPLATE = app
 HEADERS += \
 	src-gen/AbstractTimerStatechart.h \
 	src-lib/sc_runner_timed.h \
-	Statechart.h
+	Statechart.h \
+	src-lib/sc_timer_service.h
 
 SOURCES += \
 	src-gen/AbstractTimerStatechart.cpp \
+	src-lib/sc_timer_service.cpp \
 	src-test/StatechartTest.cc \
 	src-lib/sc_runner_timed.cpp
 

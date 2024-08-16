@@ -1,12 +1,16 @@
-/* #
-# SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2021 Steffen A. Mork
-# */
+/* *
+//
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: Copyright (C) 2022-2024 Steffen A. Mork
+//
+* */
 
 #ifndef SC_TIMER_H_
 #define SC_TIMER_H_
 
 #include "sc_types.h"
+#include <memory>
+#include <cstddef>
 
 namespace sc
 {
@@ -29,12 +33,12 @@ namespace sc
 			Set the timer service for the state machine. It must be set
 			externally on a timed state machine before a run cycle can be executed.
 			*/
-			virtual void setTimerService(sc::timer::TimerServiceInterface * timerService) = 0;
+			virtual void setTimerService(std::shared_ptr<sc::timer::TimerServiceInterface> timerService) = 0;
 
 			/*!
-			Returns the currently used timer service.
+			Return the currently used timer service.
 			*/
-			virtual sc::timer::TimerServiceInterface * getTimerService() = 0;
+			virtual std::shared_ptr<sc::timer::TimerServiceInterface> getTimerService() = 0;
 
 			/*!
 			Callback method if a time event occurred.
@@ -42,10 +46,10 @@ namespace sc
 			virtual void raiseTimeEvent(sc::eventid event) = 0;
 
 			/*!
-			Method to retrieve the number of time events that can be
-			active at once in this state machine.
+			Retrieve the number of time events that can be active at once in this state machine.
 			*/
 			virtual sc::integer getNumberOfParallelTimeEvents() = 0;
+
 		};
 
 		inline TimedInterface::~TimedInterface() {}
@@ -63,12 +67,12 @@ namespace sc
 			/*!
 			Starts the timing for a time event.
 			*/
-			virtual void setTimer(TimedInterface * statemachine, sc::eventid event, sc::integer time_ms, bool isPeriodic) = 0;
+			virtual void setTimer(std::shared_ptr<TimedInterface> statemachine, sc::eventid event, sc::time time_ms, bool isPeriodic) = 0;
 
 			/*!
 			Unsets the given time event.
 			*/
-			virtual void unsetTimer(TimedInterface * statemachine, sc::eventid event) = 0;
+			virtual void unsetTimer(std::shared_ptr<TimedInterface> statemachine, sc::eventid event) = 0;
 		};
 
 		inline TimerServiceInterface::~TimerServiceInterface() {}

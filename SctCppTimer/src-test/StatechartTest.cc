@@ -1,10 +1,12 @@
 /** *
 //
 // SPDX-License-Identifier: MIT
-// SPDX-FileCopyrightText: Copyright (C) 2021-2023 Steffen A. Mork
+// SPDX-FileCopyrightText: Copyright (C) 2022-2024 Steffen A. Mork
 //
 * */
 #include <string>
+#include <list>
+#include <algorithm>
 #include "gtest/gtest.h"
 #include "Statechart.h"
 #include "sc_runner_timed.h"
@@ -14,7 +16,7 @@
 
 namespace  {
 
-Statechart* statechart;
+std::shared_ptr<Statechart> statechart;
 
 
 class DumpMock{
@@ -86,37 +88,36 @@ static DumpMock* dumpMock;
 
 class MockDefault : public Statechart::OperationCallback {
 	public:
-	void dump(std::string text) override {
+	void dump(std::string text) {
 		dumpMock->dump(text);
 	}
 };
 
 //! The timers are managed by a timer service. */
-static TimedSctUnitRunner * runner;
+static std::shared_ptr<TimedSctUnitRunner > runner;
 
 class StatechartTest : public ::testing::Test{
 	protected:
-	virtual void SetUp() override {
-		statechart = new Statechart();
-		runner = new TimedSctUnitRunner(
-			statechart,
-			true,
-			200
+	std::shared_ptr<MockDefault> defaultMock = std::make_shared<MockDefault>();
+	virtual void SetUp() {
+		statechart = std::make_shared<Statechart>();
+		size_t maximalParallelTimeEvents = (size_t)statechart->getNumberOfParallelTimeEvents();
+		runner = std::make_shared<TimedSctUnitRunner>(
+			maximalParallelTimeEvents
 		);
 		statechart->setTimerService(runner);
+		dumpMock = new DumpMock();
+		statechart->setOperationCallback(defaultMock);
 	}
-	virtual void TearDown() override {
-		delete statechart;
-		delete runner;
+	virtual void TearDown() {
+		delete dumpMock;
+		 statechart.reset();
+		 runner.reset();
 	}
 };
 
 
 TEST_F(StatechartTest, testFirst) {
-	dumpMock = new DumpMock();
-	
-	MockDefault defaultMock;
-	statechart->setOperationCallback(&defaultMock);
 	statechart->enter();
 	
 	EXPECT_TRUE(dumpMock->calledAtLeastOnce());
@@ -135,14 +136,8 @@ TEST_F(StatechartTest, testFirst) {
 	
 	EXPECT_TRUE((statechart->getB1()) == (1));
 	
-	
-	dumpMock->reset();
 }
 TEST_F(StatechartTest, testSecond) {
-	dumpMock = new DumpMock();
-	
-	MockDefault defaultMock;
-	statechart->setOperationCallback(&defaultMock);
 	statechart->enter();
 	
 	EXPECT_TRUE(dumpMock->calledAtLeastOnce());
@@ -161,14 +156,8 @@ TEST_F(StatechartTest, testSecond) {
 	
 	EXPECT_TRUE((statechart->getC2()) == (0));
 	
-	
-	dumpMock->reset();
 }
 TEST_F(StatechartTest, testReenterFirst) {
-	dumpMock = new DumpMock();
-	
-	MockDefault defaultMock;
-	statechart->setOperationCallback(&defaultMock);
 	statechart->enter();
 	
 	EXPECT_TRUE(dumpMock->calledAtLeastOnce());
@@ -187,13 +176,8 @@ TEST_F(StatechartTest, testReenterFirst) {
 	
 	EXPECT_TRUE((statechart->getCounter()) == (1));
 	
-	
-	dumpMock->reset();
 }
 TEST_F(StatechartTest, testLeave) {
-	
-	MockDefault defaultMock;
-	statechart->setOperationCallback(&defaultMock);
 	statechart->enter();
 	
 	sc::integer i = statechart->getCounter();
@@ -218,7 +202,6 @@ TEST_F(StatechartTest, testLeave) {
 	EXPECT_TRUE((statechart->getC2()) == (statechart->getMax()));
 	
 	EXPECT_TRUE((statechart->getCounter()) == (statechart->getMax()));
-	
 	
 }
 

@@ -1,6 +1,6 @@
 /* #
 # SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2022-2024 Steffen A. Mork
+# SPDX-FileCopyrightText: Copyright (C) 2022-2025 Steffen A. Mork
 # */
 
 #include "AbstractTimerStatechart.h"
@@ -379,11 +379,6 @@ void AbstractTimerStatechart::react_main_region__entry_Default()
 	enseq_main_region_First_default();
 }
 
-sc::integer AbstractTimerStatechart::react(const sc::integer transitioned_before) {
-	/* State machine reactions. */
-	return transitioned_before;
-}
-
 sc::integer AbstractTimerStatechart::main_region_First_react(const sc::integer transitioned_before) {
 	/* The reactions of state First. */
 	sc::integer transitioned_after = transitioned_before;
@@ -395,7 +390,6 @@ sc::integer AbstractTimerStatechart::main_region_First_react(const sc::integer t
 			ifaceOperationCallback->dump("1 -> 2");
 			timeEvents[0] = false;
 			enseq_main_region_Second_default();
-			react(0);
 			transitioned_after = 0;
 		} 
 	} 
@@ -413,7 +407,7 @@ sc::integer AbstractTimerStatechart::main_region_First_react(const sc::integer t
 			b1++;
 			ifaceOperationCallback->dump("Single shot");
 		} 
-		transitioned_after = react(transitioned_before);
+		transitioned_after = transitioned_before;
 	} 
 	return transitioned_after;
 }
@@ -448,14 +442,9 @@ sc::integer AbstractTimerStatechart::main_region_Second_react(const sc::integer 
 		{ 
 			c2++;
 		} 
-		transitioned_after = react(transitioned_before);
+		transitioned_after = transitioned_before;
 	} 
 	return transitioned_after;
-}
-
-sc::integer AbstractTimerStatechart::main_region__final__react(const sc::integer transitioned_before) {
-	/* The reactions of state null. */
-	return react(transitioned_before);
 }
 
 void AbstractTimerStatechart::clearInEvents() noexcept {
@@ -483,7 +472,6 @@ void AbstractTimerStatechart::microStep() {
 		}
 		case AbstractTimerStatechart::State::main_region__final_ :
 		{
-			main_region__final__react(-1);
 			break;
 		}
 		default:

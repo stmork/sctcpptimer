@@ -1,6 +1,6 @@
 /* #
 # SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2021 Steffen A. Mork
+# SPDX-FileCopyrightText: Copyright (C) 2022-2025 Steffen A. Mork
 # */
 
 #ifndef SC_STATEMACHINE_H_

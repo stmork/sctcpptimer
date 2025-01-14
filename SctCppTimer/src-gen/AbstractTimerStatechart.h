@@ -1,6 +1,6 @@
 /* #
 # SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2022-2024 Steffen A. Mork
+# SPDX-FileCopyrightText: Copyright (C) 2022-2025 Steffen A. Mork
 # */
 
 #ifndef ABSTRACTTIMERSTATECHART_H_
@@ -226,10 +226,8 @@ class AbstractTimerStatechart : public sc::timer::TimedInterface, public std::en
 		void exseq_main_region();
 		void react_main_region__choice_0();
 		void react_main_region__entry_Default();
-		sc::integer react(const sc::integer transitioned_before);
 		sc::integer main_region_First_react(const sc::integer transitioned_before);
 		sc::integer main_region_Second_react(const sc::integer transitioned_before);
-		sc::integer main_region__final__react(const sc::integer transitioned_before);
 		void clearInEvents() noexcept;
 		void microStep();
 		void runCycle();

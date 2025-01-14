@@ -1,7 +1,9 @@
-/* #
-# SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2022-2024 Steffen A. Mork
-# */
+/* *
+//
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: Copyright (C) 2022-2024 Steffen A. Mork
+//
+* */
 
 #ifndef SC_CYCLEBASED_H_
 #define SC_CYCLEBASED_H_

@@ -16,6 +16,7 @@ HEADERS += \
 	SctCppTimerService.h \
 	TimerStatechart.h \
 	src-gen/AbstractTimerStatechart.h \
+	src-lib/sc_eventdriven.h  \
 	src-lib/sc_statemachine.h \
 	src-lib/sc_timer.h \
 	src-lib/sc_types.h

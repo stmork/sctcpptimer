@@ -6,6 +6,7 @@ TEMPLATE  = app
 HEADERS += \
 	src-gen/QTimerStatechart.h \
 	src-lib/sc_qt_timerservice.h \
+	src-lib/sc_eventdriven.h  \
 	src-lib/sc_statemachine.h \
 	src-lib/sc_timer.h \
 	src-lib/sc_types.h

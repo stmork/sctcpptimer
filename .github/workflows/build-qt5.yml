@@ -1,0 +1,23 @@
+name: Yakindu SCT C++11/Qt5 Timer Service (qmake)
+on: [push]
+
+jobs:
+   SCT-Timerservice-qmake:
+      runs-on: ubuntu-latest
+      steps:
+         - uses: actions/checkout@v3
+         - run: sudo apt update -y
+         - name: Install needed components
+           run: sudo apt install -y qtbase5-dev cppcheck libgtest-dev
+         - name: QMake
+           run: qmake -r
+         - name: Build
+           run: make -j `nproc`
+         - name: CPP-Check
+           run: make cppcheck
+         - name: Test
+           run: SctCppTimer/SctUnitTimer --gtest_output="xml:gtest-results.xml"
+         - name: Run C++ Timer Service
+           run: SctCppTimer/SctCppTimer
+         - name: Run Qt Timer Service
+           run: SctCppTimer/SctQtTimer

@@ -4,7 +4,7 @@
 #
 
 cmake_minimum_required(VERSION 3.16)
-project(Calculator VERSION 1.0.0 LANGUAGES CXX)
+project(SctCppTimer VERSION 1.0.0 LANGUAGES CXX)
 
 find_package(Qt6    REQUIRED COMPONENTS Core)
 find_package(GTest  REQUIRED)

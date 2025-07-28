@@ -8,6 +8,9 @@ SctCppTimer.file  = SctCppTimer/SctCppTimer.pro
 SctQtTimer.file   = SctCppTimer/SctQtTimer.pro
 SctUnitTimer.file = SctCppTimer/SctUnitTimer.pro
 
+SctQtTimer.depends   = SctCppTimer
+SctUnitTimer.depends = SctQtTimer
+
 QMAKE_CLEAN += cppcheck.xml
 QMAKE_CLEAN += gtest-results.xml
 

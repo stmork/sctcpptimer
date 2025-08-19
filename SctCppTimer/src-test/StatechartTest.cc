@@ -16,89 +16,102 @@
 
 namespace  {
 
-std::shared_ptr<Statechart> statechart;
-
-
-class DumpMock{
-	struct parameters {
-		std::string text;
+class StatechartTest : public ::testing::Test{
+	public:
+		
+	protected:
+	std::shared_ptr<Statechart> statechart;
+	
+	
+	public:
+	class DumpMock{
+		struct parameters {
+			std::string text;
+			int callCount;
+			inline bool operator==(const parameters& other) {
+				return (this->text == other.text);
+			}
+		};
+		public:
+		StatechartTest* owner;
+		std::list<DumpMock::parameters> paramCount;
 		int callCount;
-		inline bool operator==(const parameters& other) {
-			return (this->text == other.text);
+		
+		DumpMock(StatechartTest* owner) : 
+			owner(owner),
+			callCount(0)
+			{}
+		
+	
+		bool calledAtLeast(const int times){
+			return (callCount >= times);
+		}
+		
+		bool calledAtLeastOnce(){
+			return (callCount>0);
+		}
+	
+		bool calledAtLeast(const int times, const std::string text){
+			parameters p;
+			p.text = text;
+			
+			std::list<DumpMock::parameters>::iterator i = std::find(paramCount.begin(), paramCount.end(), p);
+			if(i != paramCount.end()) {
+				return (i->callCount >= times);
+			}else{
+				return false;
+			}
+		}
+		
+		bool calledAtLeastOnce(const std::string text){
+			parameters p;
+			p.text = text;
+			
+			std::list<DumpMock::parameters>::iterator i = std::find(paramCount.begin(), paramCount.end(), p);
+			if(i != paramCount.end()) {
+				return (i->callCount > 0);
+			}else{
+				return false;
+			}
+		}
+	
+		void dump(const std::string text) {
+			++callCount;
+			
+			parameters p;
+			p.text = text;
+			
+			std::list<DumpMock::parameters>::iterator i = std::find(paramCount.begin(), paramCount.end(), p);
+			if(i != paramCount.end()) {
+				p.callCount = (++i->callCount);
+				paramCount.erase(i);
+				
+			}else{
+				p.callCount = 1;
+			}
+			paramCount.push_back(p);
+		}
+		void reset() {
+			callCount = 0;
+			paramCount.clear();
 		}
 	};
-	public:
-	std::list<DumpMock::parameters> paramCount;
-	int callCount;
-
-	bool calledAtLeast(const int times){
-		return (callCount >= times);
-	}
+	DumpMock* dumpMock;
 	
-	bool calledAtLeastOnce(){
-		return (callCount>0);
-	}
-
-	bool calledAtLeast(const int times, const std::string text){
-		parameters p;
-		p.text = text;
-		
-		std::list<DumpMock::parameters>::iterator i = std::find(paramCount.begin(), paramCount.end(), p);
-		if(i != paramCount.end()) {
-			return (i->callCount >= times);
-		}else{
-			return false;
+	class MockDefault : public Statechart::OperationCallback {
+		public:
+		StatechartTest* owner;
+		MockDefault(StatechartTest* owner) : owner(owner) {}
+		void dump(std::string text) {
+			owner->dumpMock->dump(text);
 		}
-	}
+	};
 	
-	bool calledAtLeastOnce(const std::string text){
-		parameters p;
-		p.text = text;
-		
-		std::list<DumpMock::parameters>::iterator i = std::find(paramCount.begin(), paramCount.end(), p);
-		if(i != paramCount.end()) {
-			return (i->callCount > 0);
-		}else{
-			return false;
-		}
-	}
-
-	void dump(const std::string text) {
-		++callCount;
-		
-		parameters p;
-		p.text = text;
-		
-		std::list<DumpMock::parameters>::iterator i = std::find(paramCount.begin(), paramCount.end(), p);
-		if(i != paramCount.end()) {
-			p.callCount = (++i->callCount);
-			paramCount.erase(i);
-			
-		}else{
-			p.callCount = 1;
-		}
-		paramCount.push_back(p);
-	}
-	void reset() {
-		callCount = 0;
-		paramCount.clear();
-	}
-};
-static DumpMock* dumpMock;
-
-class MockDefault : public Statechart::OperationCallback {
-	public:
-	void dump(std::string text) {
-		dumpMock->dump(text);
-	}
-};
-
-//! The timers are managed by a timer service. */
-static std::shared_ptr<TimedSctUnitRunner > runner;
-
-class StatechartTest : public ::testing::Test{
-	protected:
-	std::shared_ptr<MockDefault> defaultMock = std::make_shared<MockDefault>();
+	//! The timers are managed by a timer service. */
+	std::shared_ptr<TimedSctUnitRunner > runner;
+	
+	std::shared_ptr<MockDefault> defaultMock;
+	
 	virtual void SetUp() {
 		statechart = std::make_shared<Statechart>();
 		size_t maximalParallelTimeEvents = (size_t)statechart->getNumberOfParallelTimeEvents();
@@ -106,15 +119,18 @@ class StatechartTest : public ::testing::Test{
 			maximalParallelTimeEvents
 		);
 		statechart->setTimerService(runner);
-		dumpMock = new DumpMock();
+		dumpMock = new DumpMock(this);
+		defaultMock = std::make_shared<MockDefault>(this);
 		statechart->setOperationCallback(defaultMock);
 	}
 	virtual void TearDown() {
 		delete dumpMock;
 		 statechart.reset();
+		defaultMock.reset();
 		 runner.reset();
 	}
 };
+
 
 
 TEST_F(StatechartTest, testFirst) {

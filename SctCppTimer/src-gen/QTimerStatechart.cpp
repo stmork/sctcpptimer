@@ -37,7 +37,7 @@ QTimerStatechart::~QTimerStatechart()
 
 std::unique_ptr<QTimerStatechart::EventInstance> QTimerStatechart::getNextEvent() noexcept
 {
-	std::unique_ptr<QTimerStatechart::EventInstance> nextEvent = 0;
+	std::unique_ptr<QTimerStatechart::EventInstance> nextEvent = nullptr;
 
 	if(!incomingEventQueue.empty()) {
 		nextEvent = std::move(incomingEventQueue.front());
@@ -95,7 +95,8 @@ bool QTimerStatechart::isFinal() const noexcept
 		return (stateConfVector[0] == QTimerStatechart::State::main_region__final_);
 }
 
-bool QTimerStatechart::check() const noexcept{
+bool QTimerStatechart::check() const noexcept
+{
 	if(timerService == nullptr) {
 		return false;
 	}

@@ -28,7 +28,7 @@ AbstractTimerStatechart::~AbstractTimerStatechart()
 
 std::unique_ptr<AbstractTimerStatechart::EventInstance> AbstractTimerStatechart::getNextEvent() noexcept
 {
-	std::unique_ptr<AbstractTimerStatechart::EventInstance> nextEvent = 0;
+	std::unique_ptr<AbstractTimerStatechart::EventInstance> nextEvent = nullptr;
 
 	if(!incomingEventQueue.empty()) {
 		nextEvent = std::move(incomingEventQueue.front());
@@ -86,7 +86,8 @@ bool AbstractTimerStatechart::isFinal() const noexcept
 		return (stateConfVector[0] == AbstractTimerStatechart::State::main_region__final_);
 }
 
-bool AbstractTimerStatechart::check() const noexcept{
+bool AbstractTimerStatechart::check() const noexcept
+{
 	if(timerService == nullptr) {
 		return false;
 	}

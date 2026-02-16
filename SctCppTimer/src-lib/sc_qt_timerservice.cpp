@@ -1,7 +1,7 @@
-/* #
-# SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2022-2024 Steffen A. Mork
-# */
+/*
+ * SPDX-License-Identifier: MIT
+ * SPDX-FileCopyrightText: Copyright (C) 2022-2026 Steffen A. Mork
+ */
 
 #include "sc_qt_timerservice.h"
 
@@ -36,6 +36,23 @@ void SCTimerService::unsetTimer(std::shared_ptr<TimedInterface> statemachine, sc
 	QTimer * timer = this->getTimer(statemachine, event);
 
 	timer->stop();
+}
+
+void SCTimerService::unsetTimerRaw(
+	TimedInterface * statemachine,
+	sc::eventid      event)
+{
+	TimerKey key{ statemachine, event };
+
+	if (chart_map.contains(key))
+	{
+		QTimer * timer = chart_map[key];
+
+		Q_ASSERT(timer != nullptr);
+		timer->stop();
+		chart_map.remove(key);
+		delete timer;
+	}
 }
 
 QTimer * SCTimerService::getTimer(

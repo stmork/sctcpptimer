@@ -1,7 +1,7 @@
 /* *
 //
 // SPDX-License-Identifier: MIT
-// SPDX-FileCopyrightText: Copyright (C) 2022-2024 Steffen A. Mork
+// SPDX-FileCopyrightText: Copyright (C) 2022-2026 Steffen A. Mork
 //
 * */
 
@@ -208,5 +208,44 @@ sc::time TimerService::time_till_next_task()
 	}
 
 	return time;
+}
+
+
+/*! Unset the given time event from the desctructor.
+ */
+void TimerService::unsetTimerRaw(TimedInterface * statemachine_, sc::eventid event)
+{
+	size_t prev_idx = length;
+	size_t idx = next_active_task;
+
+	while (idx < length)
+	{
+		TimerTask & task = tasks[idx];
+
+		auto handle_ptr = task.data.get.time_event.handle.lock().get();
+		if (task.data.type == TimerTask::TaskData::TaskType::TIME_EVENT_TASK &&
+			handle_ptr == statemachine_ &&
+			task.data.get.time_event.pt_evid == event)
+		{
+			if (prev_idx == length)
+			{
+				next_active_task = task.next_task_idx;
+			}
+			else
+			{
+				tasks[prev_idx].next_task_idx = task.next_task_idx;
+			}
+
+			task.next_task_idx = next_free_task;
+			next_free_task = idx;
+
+			task.data.get.time_event.handle.reset();
+
+			break;
+		}
+
+		prev_idx = idx;
+		idx = task.next_task_idx;
+	}
 }
 

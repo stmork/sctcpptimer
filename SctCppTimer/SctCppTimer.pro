@@ -1,6 +1,11 @@
+#
+#  SPDX-License-Identifier: MIT
+#  SPDX-FileCopyrightText: Copyright (C) 2021-2026 Steffen A. Mork
+#
+
 QT       -= core
 QT       -= gui widgets
-CONFIG   += c++17
+CONFIG   += c++20
 TEMPLATE  = app
 
 SOURCES += main.cpp \

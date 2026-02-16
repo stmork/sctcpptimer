@@ -93,6 +93,10 @@ namespace sc::timer
 			std::shared_ptr<TimedInterface> statemachine,
 			sc::eventid                     event) override;
 
+		virtual void unsetTimerRaw(
+			TimedInterface * statemachine,
+			sc::eventid      event) override;
+
 	protected:
 		/**
 		 * This method finds a specific SctCppTimer instance depending on

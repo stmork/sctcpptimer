@@ -1,6 +1,6 @@
 /* #
 # SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2022-2025 Steffen A. Mork
+# SPDX-FileCopyrightText: Copyright (C) 2022-2026 Steffen A. Mork
 # */
 
 #include "QTimerStatechart.h"
@@ -31,6 +31,14 @@ QTimerStatechart::QTimerStatechart(QObject *parent) noexcept :
 
 QTimerStatechart::~QTimerStatechart()
 {
+	if(!timerService) return;
+	timerService->unsetTimerRaw(this, 0);
+	timerService->unsetTimerRaw(this, 1);
+	timerService->unsetTimerRaw(this, 2);
+	timerService->unsetTimerRaw(this, 3);
+	timerService->unsetTimerRaw(this, 4);
+	timerService->unsetTimerRaw(this, 5);
+	timerService->unsetTimerRaw(this, 6);
 }
 
 
@@ -62,7 +70,6 @@ bool QTimerStatechart::dispatchEvent(std::unique_ptr<QTimerStatechart::EventInst
 								
 	switch(event->eventId)
 	{
-		
 		
 		case QTimerStatechart::Event::_te0_main_region_First_:
 		case QTimerStatechart::Event::_te1_main_region_First_:
@@ -161,8 +168,7 @@ bool QTimerStatechart::isStateActive(State state) const noexcept
 
 sc::integer QTimerStatechart::getCounter() const noexcept
 {
-	return counter
-	;
+	return counter;
 }
 
 void QTimerStatechart::setCounter(sc::integer counter_) noexcept
@@ -171,26 +177,22 @@ void QTimerStatechart::setCounter(sc::integer counter_) noexcept
 }
 sc::integer QTimerStatechart::getMax() noexcept
 {
-	return max
-	;
+	return max;
 }
 
 sc::integer QTimerStatechart::getExit12() noexcept
 {
-	return exit12
-	;
+	return exit12;
 }
 
 sc::integer QTimerStatechart::getExit21() noexcept
 {
-	return exit21
-	;
+	return exit21;
 }
 
 sc::integer QTimerStatechart::getA1() const noexcept
 {
-	return a1
-	;
+	return a1;
 }
 
 void QTimerStatechart::setA1(sc::integer a1_) noexcept
@@ -199,8 +201,7 @@ void QTimerStatechart::setA1(sc::integer a1_) noexcept
 }
 sc::integer QTimerStatechart::getB1() const noexcept
 {
-	return b1
-	;
+	return b1;
 }
 
 void QTimerStatechart::setB1(sc::integer b1_) noexcept
@@ -209,8 +210,7 @@ void QTimerStatechart::setB1(sc::integer b1_) noexcept
 }
 sc::integer QTimerStatechart::getA2() const noexcept
 {
-	return a2
-	;
+	return a2;
 }
 
 void QTimerStatechart::setA2(sc::integer a2_) noexcept
@@ -219,8 +219,7 @@ void QTimerStatechart::setA2(sc::integer a2_) noexcept
 }
 sc::integer QTimerStatechart::getB2() const noexcept
 {
-	return b2
-	;
+	return b2;
 }
 
 void QTimerStatechart::setB2(sc::integer b2_) noexcept
@@ -229,8 +228,7 @@ void QTimerStatechart::setB2(sc::integer b2_) noexcept
 }
 sc::integer QTimerStatechart::getC2() const noexcept
 {
-	return c2
-	;
+	return c2;
 }
 
 void QTimerStatechart::setC2(sc::integer c2_) noexcept
@@ -508,6 +506,8 @@ void QTimerStatechart::runCycle() {
 
 void QTimerStatechart::enter() {
 	/* Activates the state machine. */
+	{
+	};
 	if (isExecuting)
 	{ 
 		return;

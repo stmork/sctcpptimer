@@ -1,3 +1,8 @@
+#
+#  SPDX-License-Identifier: MIT
+#  SPDX-FileCopyrightText: Copyright (C) 2021-2026 Steffen A. Mork
+#
+
 TEMPLATE = subdirs
 SUBDIRS  = \
 	SctCppTimer \
@@ -24,7 +29,8 @@ QMAKE_EXTRA_TARGETS += astyle cppcheck
 
 astyle.commands = astyle */*.cpp */*.h
 cppcheck.commands = cppcheck \
-	--language=c++ --std=c++14 \
+	--suppress=preprocessorErrorDirective\
+	--language=c++ --std=c++20 \
 	--xml-version=2 --force -q -j 3 \
 	*/*.cpp */*.h 2>cppcheck.xml
  

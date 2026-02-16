@@ -1,7 +1,7 @@
-/* #
-# SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2022-2024 Steffen A. Mork
-# */
+/*
+ * SPDX-License-Identifier: MIT
+ * SPDX-FileCopyrightText: Copyright (C) 2022-2026 Steffen A. Mork
+ */
 
 #ifndef SC_QT_TIMERSERVICE_H_
 #define SC_QT_TIMERSERVICE_H_
@@ -20,7 +20,7 @@ namespace sc::qt
 		Q_OBJECT
 
 	public:
-		explicit SCTimerService(QObject * parent);
+		explicit SCTimerService(QObject * parent = nullptr);
 
 		virtual void setTimer(
 			std::shared_ptr<sc::timer::TimedInterface> statemachine,
@@ -30,6 +30,9 @@ namespace sc::qt
 		virtual void unsetTimer(
 			std::shared_ptr<sc::timer::TimedInterface> statemachine,
 			sc::eventid                                event) override;
+		virtual void unsetTimerRaw(
+			sc::timer::TimedInterface * statemachine,
+			sc::eventid                 event) override;
 		virtual void cancel();
 
 	protected:

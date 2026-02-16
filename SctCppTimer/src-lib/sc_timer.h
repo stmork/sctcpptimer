@@ -1,7 +1,7 @@
 /* *
 //
 // SPDX-License-Identifier: MIT
-// SPDX-FileCopyrightText: Copyright (C) 2022-2024 Steffen A. Mork
+// SPDX-FileCopyrightText: Copyright (C) 2022-2026 Steffen A. Mork
 //
 * */
 
@@ -73,6 +73,7 @@ namespace sc
 			Unsets the given time event.
 			*/
 			virtual void unsetTimer(std::shared_ptr<TimedInterface> statemachine, sc::eventid event) = 0;
+			virtual void unsetTimerRaw(TimedInterface * statemachine, sc::eventid event) = 0; // destructor-only
 		};
 
 		inline TimerServiceInterface::~TimerServiceInterface() {}

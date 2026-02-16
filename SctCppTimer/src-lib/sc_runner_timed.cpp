@@ -34,6 +34,10 @@ void TimedSctUnitRunner::unsetTimer(std::shared_ptr<sc::timer::TimedInterface> s
 {
 	timerServiceImplementation.unsetTimer(statemachine_, event);
 }
+void TimedSctUnitRunner::unsetTimerRaw(sc::timer::TimedInterface * statemachine_, sc::eventid event) noexcept
+{
+	timerServiceImplementation.unsetTimerRaw(statemachine_, event);
+}
 
 void TimedSctUnitRunner::cancel() noexcept
 {

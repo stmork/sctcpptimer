@@ -1,7 +1,7 @@
 /* *
 //
 // SPDX-License-Identifier: MIT
-// SPDX-FileCopyrightText: Copyright (C) 2022-2024 Steffen A. Mork
+// SPDX-FileCopyrightText: Copyright (C) 2022-2026 Steffen A. Mork
 //
 * */
 #ifndef SC_TIMER_SERVICE_H_
@@ -248,6 +248,10 @@ namespace sc
 			/*! Unset the given time event.
 			 */
 			virtual void unsetTimer(std::shared_ptr<TimedInterface >statemachine_, sc::eventid event) override;
+
+			/*! Unset the time event for the state machine from the destructor.
+			 */
+			virtual void unsetTimerRaw(TimedInterface * statemachine_, sc::eventid event) override;
 
 			/*! Set a timer for running cycles of the given statemachine.
 			 */

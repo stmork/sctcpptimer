@@ -1,3 +1,8 @@
+#
+#  SPDX-License-Identifier: MIT
+#  SPDX-FileCopyrightText: Copyright (C) 2021-2026 Steffen A. Mork
+#
+
 TEMPLATE = app
 
 HEADERS += \

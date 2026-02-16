@@ -23,6 +23,7 @@ public:
 	void proceed_cycles(sc::integer cycles);
 	virtual void setTimer(std::shared_ptr<sc::timer::TimedInterface> statemachine_, sc::eventid event, sc::time time_ms, bool isPeriodic) override;
 	virtual void unsetTimer(std::shared_ptr<sc::timer::TimedInterface> statemachine_, sc::eventid event) noexcept override;
+	virtual void unsetTimerRaw(sc::timer::TimedInterface * statemachine_, sc::eventid event) noexcept override;
 	virtual void cancel() noexcept;
 private:
 	sc::timer::TimerService timerServiceImplementation;

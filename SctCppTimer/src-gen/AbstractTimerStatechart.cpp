@@ -1,6 +1,6 @@
 /* #
 # SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2022-2025 Steffen A. Mork
+# SPDX-FileCopyrightText: Copyright (C) 2022-2026 Steffen A. Mork
 # */
 
 #include "AbstractTimerStatechart.h"
@@ -22,6 +22,14 @@ AbstractTimerStatechart::AbstractTimerStatechart() noexcept
 
 AbstractTimerStatechart::~AbstractTimerStatechart()
 {
+	if(!timerService) return;
+	timerService->unsetTimerRaw(this, 0);
+	timerService->unsetTimerRaw(this, 1);
+	timerService->unsetTimerRaw(this, 2);
+	timerService->unsetTimerRaw(this, 3);
+	timerService->unsetTimerRaw(this, 4);
+	timerService->unsetTimerRaw(this, 5);
+	timerService->unsetTimerRaw(this, 6);
 }
 
 
@@ -53,7 +61,6 @@ bool AbstractTimerStatechart::dispatchEvent(std::unique_ptr<AbstractTimerStatech
 								
 	switch(event->eventId)
 	{
-		
 		
 		case AbstractTimerStatechart::Event::_te0_main_region_First_:
 		case AbstractTimerStatechart::Event::_te1_main_region_First_:
@@ -152,8 +159,7 @@ bool AbstractTimerStatechart::isStateActive(State state) const noexcept
 
 sc::integer AbstractTimerStatechart::getCounter() const noexcept
 {
-	return counter
-	;
+	return counter;
 }
 
 void AbstractTimerStatechart::setCounter(sc::integer counter_) noexcept
@@ -162,26 +168,22 @@ void AbstractTimerStatechart::setCounter(sc::integer counter_) noexcept
 }
 sc::integer AbstractTimerStatechart::getMax() noexcept
 {
-	return max
-	;
+	return max;
 }
 
 sc::integer AbstractTimerStatechart::getExit12() noexcept
 {
-	return exit12
-	;
+	return exit12;
 }
 
 sc::integer AbstractTimerStatechart::getExit21() noexcept
 {
-	return exit21
-	;
+	return exit21;
 }
 
 sc::integer AbstractTimerStatechart::getA1() const noexcept
 {
-	return a1
-	;
+	return a1;
 }
 
 void AbstractTimerStatechart::setA1(sc::integer a1_) noexcept
@@ -190,8 +192,7 @@ void AbstractTimerStatechart::setA1(sc::integer a1_) noexcept
 }
 sc::integer AbstractTimerStatechart::getB1() const noexcept
 {
-	return b1
-	;
+	return b1;
 }
 
 void AbstractTimerStatechart::setB1(sc::integer b1_) noexcept
@@ -200,8 +201,7 @@ void AbstractTimerStatechart::setB1(sc::integer b1_) noexcept
 }
 sc::integer AbstractTimerStatechart::getA2() const noexcept
 {
-	return a2
-	;
+	return a2;
 }
 
 void AbstractTimerStatechart::setA2(sc::integer a2_) noexcept
@@ -210,8 +210,7 @@ void AbstractTimerStatechart::setA2(sc::integer a2_) noexcept
 }
 sc::integer AbstractTimerStatechart::getB2() const noexcept
 {
-	return b2
-	;
+	return b2;
 }
 
 void AbstractTimerStatechart::setB2(sc::integer b2_) noexcept
@@ -220,8 +219,7 @@ void AbstractTimerStatechart::setB2(sc::integer b2_) noexcept
 }
 sc::integer AbstractTimerStatechart::getC2() const noexcept
 {
-	return c2
-	;
+	return c2;
 }
 
 void AbstractTimerStatechart::setC2(sc::integer c2_) noexcept
@@ -499,6 +497,8 @@ void AbstractTimerStatechart::runCycle() {
 
 void AbstractTimerStatechart::enter() {
 	/* Activates the state machine. */
+	{
+	};
 	if (isExecuting)
 	{ 
 		return;

@@ -51,6 +51,25 @@ void SctCppTimerService::unsetTimer(
 	wait.notify_all();
 }
 
+void SctCppTimerService::unsetTimerRaw(
+	TimedInterface * statemachine,
+	sc::eventid      event)
+{
+	TimerKey           key(statemachine, event);
+	TimerMap::iterator it = timer_map.find(key);
+
+	if (it != timer_map.end())
+	{
+		SctCppTimer * timer = it->second;
+
+		queue.erase(timer);
+		timer_map.erase(it);
+		delete timer;
+
+		wait.notify_all();
+	}
+}
+
 SctCppTimer * SctCppTimerService::findTimer(
 	std::shared_ptr<TimedInterface> & statemachine,
 	sc::eventid                       event)

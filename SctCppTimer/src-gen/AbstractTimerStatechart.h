@@ -1,6 +1,6 @@
 /* #
 # SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2022-2025 Steffen A. Mork
+# SPDX-FileCopyrightText: Copyright (C) 2022-2026 Steffen A. Mork
 # */
 
 #ifndef ABSTRACTTIMERSTATECHART_H_
@@ -69,6 +69,8 @@ class AbstractTimerStatechart : public sc::timer::TimedInterface, public std::en
 				virtual ~EventInstance() = default;
 				const Event eventId;
 		};
+		
+		
 		
 		
 		/*! Gets the value of the variable 'counter' that is defined in the default interface scope. */
@@ -176,7 +178,6 @@ class AbstractTimerStatechart : public sc::timer::TimedInterface, public std::en
 		bool dispatchEvent(std::unique_ptr<EventInstance> event) noexcept;
 		
 		
-		
 	private:
 		AbstractTimerStatechart(const AbstractTimerStatechart &rhs);
 		AbstractTimerStatechart& operator=(const AbstractTimerStatechart&);
@@ -231,7 +232,6 @@ class AbstractTimerStatechart : public sc::timer::TimedInterface, public std::en
 		void clearInEvents() noexcept;
 		void microStep();
 		void runCycle();
-		
 		
 		
 		

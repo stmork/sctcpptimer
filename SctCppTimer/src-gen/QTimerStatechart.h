@@ -1,6 +1,6 @@
 /* #
 # SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2022-2025 Steffen A. Mork
+# SPDX-FileCopyrightText: Copyright (C) 2022-2026 Steffen A. Mork
 # */
 
 #ifndef QTIMERSTATECHART_H_
@@ -70,6 +70,8 @@ class QTimerStatechart : public QObject, public sc::timer::TimedInterface, publi
 				virtual ~EventInstance() = default;
 				const Event eventId;
 		};
+		
+		
 		
 		
 		/*! Gets the value of the variable 'counter' that is defined in the default interface scope. */
@@ -177,7 +179,6 @@ class QTimerStatechart : public QObject, public sc::timer::TimedInterface, publi
 		bool dispatchEvent(std::unique_ptr<EventInstance> event) noexcept;
 		
 		
-		
 	private:
 		QTimerStatechart(const QTimerStatechart &rhs);
 		QTimerStatechart& operator=(const QTimerStatechart&);
@@ -232,7 +233,6 @@ class QTimerStatechart : public QObject, public sc::timer::TimedInterface, publi
 		void clearInEvents() noexcept;
 		void microStep();
 		void runCycle();
-		
 		
 		
 		

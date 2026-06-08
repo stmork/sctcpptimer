@@ -1,7 +1,7 @@
-//
-//  SPDX-License-Identifier: MIT
-//  SPDX-FileCopyrightText: Copyright (C) 2008-2024 Steffen A. Mork
-//
+/* #
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: Copyright (C) 2022-2026 Steffen A. Mork
+# */
 
 #pragma once
 
@@ -11,14 +11,18 @@
 #include <cstdint>
 #include <string>
 
+#ifndef SC_UNUSED
+#define SC_UNUSED(x) (void)(x)
+#endif
+
 namespace sc
 {
 	typedef uint16_t   ushort;
 	typedef int        integer;
 	typedef int        errorCode;
 	typedef double     real;
-	typedef unsigned   eventid;
 	typedef int        time;
+	typedef unsigned   eventid;
 }
 
-#endif
+#endif /* SC_TYPES_H_ */

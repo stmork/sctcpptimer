@@ -1,9 +1,7 @@
-/* *
-//
-// SPDX-License-Identifier: MIT
-// SPDX-FileCopyrightText: Copyright (C) 2022-2026 Steffen A. Mork
-//
-* */
+/* #
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: Copyright (C) 2022-2026 Steffen A. Mork
+# */
 
 #ifndef SC_TIMER_H_
 #define SC_TIMER_H_

@@ -197,7 +197,7 @@ class AbstractTimerStatechart : public sc::timer::TimedInterface, public std::en
 		//! the maximum number of orthogonal states defines the dimension of the state configuration vector.
 		static const sc::ushort maxOrthogonalStates {1};
 		
-		std::shared_ptr<sc::timer::TimerServiceInterface> timerService;
+		std::shared_ptr<sc::timer::TimerServiceInterface> timerService = {};
 		bool timeEvents[timeEventsCount];
 		
 		

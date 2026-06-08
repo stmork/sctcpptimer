@@ -14,9 +14,7 @@ Implementation of the state machine 'Statechart'
 
 AbstractTimerStatechart::AbstractTimerStatechart() noexcept
 {
-	for (sc::ushort state_vec_pos = 0; state_vec_pos < maxOrthogonalStates; ++state_vec_pos)
-		stateConfVector[state_vec_pos] = AbstractTimerStatechart::State::NO_STATE;
-	
+	std::fill(std::begin(stateConfVector), std::end(stateConfVector), AbstractTimerStatechart::State::NO_STATE);
 	clearInEvents();
 }
 

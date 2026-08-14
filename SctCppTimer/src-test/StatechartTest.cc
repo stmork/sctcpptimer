@@ -104,6 +104,7 @@ class StatechartTest : public ::testing::Test{
 		public:
 		StatechartTest* owner;
 		MockDefault(StatechartTest* owner) : owner(owner) {}
+		virtual ~MockDefault() = default;
 		void dump(std::string text) {
 			owner->dumpMock->dump(text);
 		}

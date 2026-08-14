@@ -1,4 +1,4 @@
-GeneratorModel for sctunit::cpp11 {
+GeneratorModel for create::sctunit::cpp {
 
 	const PROJECT : string = "SctCppTimer"
 

@@ -29,14 +29,15 @@ QTimerStatechart::QTimerStatechart(QObject *parent) noexcept :
 
 QTimerStatechart::~QTimerStatechart()
 {
-	if(!timerService) return;
-	timerService->unsetTimerRaw(this, 0);
-	timerService->unsetTimerRaw(this, 1);
-	timerService->unsetTimerRaw(this, 2);
-	timerService->unsetTimerRaw(this, 3);
-	timerService->unsetTimerRaw(this, 4);
-	timerService->unsetTimerRaw(this, 5);
-	timerService->unsetTimerRaw(this, 6);
+	if (timerService != nullptr) {
+		timerService->unsetTimerRaw(this, 0);
+		timerService->unsetTimerRaw(this, 1);
+		timerService->unsetTimerRaw(this, 2);
+		timerService->unsetTimerRaw(this, 3);
+		timerService->unsetTimerRaw(this, 4);
+		timerService->unsetTimerRaw(this, 5);
+		timerService->unsetTimerRaw(this, 6);
+	}
 }
 
 
@@ -126,11 +127,11 @@ sc::integer QTimerStatechart::getNumberOfParallelTimeEvents() noexcept {
 	return parallelTimeEventsCount;
 }
 
-void QTimerStatechart::raiseTimeEvent(sc::eventid evid)
+void QTimerStatechart::raiseTimeEvent(sc::eventid event)
 {
-	if (evid < timeEventsCount)
+	if (event < timeEventsCount)
 	{
-		incomingEventQueue.push_back(std::unique_ptr< EventInstance>(new EventInstance(static_cast<QTimerStatechart::Event>(evid + static_cast<sc::integer>(QTimerStatechart::Event::_te0_main_region_First_)))));
+		incomingEventQueue.push_back(std::unique_ptr< EventInstance>(new EventInstance(static_cast<QTimerStatechart::Event>(event + static_cast<sc::integer>(QTimerStatechart::Event::_te0_main_region_First_)))));
 		runCycle();
 	}
 }
@@ -243,9 +244,9 @@ void QTimerStatechart::setOperationCallback(std::shared_ptr<OperationCallback> o
 void QTimerStatechart::enact_main_region_First()
 {
 	/* Entry action for state 'First'. */
-	timerService->setTimer(shared_from_this(), 0, (static_cast<sc::time> (QTimerStatechart::exit12)), false);
-	timerService->setTimer(shared_from_this(), 1, (static_cast<sc::time> (301)), true);
-	timerService->setTimer(shared_from_this(), 2, (static_cast<sc::time> (749)), false);
+	timerService->setTimer(shared_from_this(), 0, (static_cast<::sc::time> (QTimerStatechart::exit12)), false);
+	timerService->setTimer(shared_from_this(), 1, (static_cast<::sc::time> (301)), true);
+	timerService->setTimer(shared_from_this(), 2, (static_cast<::sc::time> (749)), false);
 	ifaceOperationCallback->dump("Enter first state");
 }
 
@@ -253,10 +254,10 @@ void QTimerStatechart::enact_main_region_First()
 void QTimerStatechart::enact_main_region_Second()
 {
 	/* Entry action for state 'Second'. */
-	timerService->setTimer(shared_from_this(), 3, (static_cast<sc::time> (QTimerStatechart::exit21)), false);
-	timerService->setTimer(shared_from_this(), 4, (static_cast<sc::time> (250)), true);
-	timerService->setTimer(shared_from_this(), 5, (static_cast<sc::time> (150)), true);
-	timerService->setTimer(shared_from_this(), 6, (static_cast<sc::time> (350)), false);
+	timerService->setTimer(shared_from_this(), 3, (static_cast<::sc::time> (QTimerStatechart::exit21)), false);
+	timerService->setTimer(shared_from_this(), 4, (static_cast<::sc::time> (250)), true);
+	timerService->setTimer(shared_from_this(), 5, (static_cast<::sc::time> (150)), true);
+	timerService->setTimer(shared_from_this(), 6, (static_cast<::sc::time> (350)), false);
 	ifaceOperationCallback->dump("Enter second state");
 }
 

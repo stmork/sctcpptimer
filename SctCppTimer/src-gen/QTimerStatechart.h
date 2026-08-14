@@ -108,9 +108,11 @@ class QTimerStatechart : public QObject, public sc::timer::TimedInterface, publi
 		class OperationCallback
 		{
 			public:
-				virtual ~OperationCallback() = 0;
-				
 				virtual void dump(std::string text) = 0;
+				
+				
+			protected:
+				~OperationCallback() noexcept = default;
 				
 				
 		};
@@ -163,10 +165,10 @@ class QTimerStatechart : public QObject, public sc::timer::TimedInterface, publi
 		bool isStateActive(State state) const noexcept;
 		
 		//! number of time events used by the state machine.
-		static const sc::integer timeEventsCount {7};
+		static constexpr sc::integer timeEventsCount {7};
 		
 		//! number of time events that can be active at once.
-		static const sc::integer parallelTimeEventsCount {4};
+		static constexpr sc::integer parallelTimeEventsCount {4};
 		
 		
 	protected:
@@ -195,14 +197,13 @@ class QTimerStatechart : public QObject, public sc::timer::TimedInterface, publi
 		
 		
 		
-		//! the maximum number of orthogonal states defines the dimension of the state configuration vector.
-		static const sc::ushort maxOrthogonalStates {1};
+		static constexpr sc::ushort maxOrthogonalStates {1};
 		
 		std::shared_ptr<sc::timer::TimerServiceInterface> timerService = {};
-		bool timeEvents[timeEventsCount];
+		bool timeEvents[timeEventsCount] = {};
 		
 		
-		State stateConfVector[maxOrthogonalStates];
+		State stateConfVector[maxOrthogonalStates] = {};
 		
 		
 		
@@ -240,7 +241,6 @@ class QTimerStatechart : public QObject, public sc::timer::TimedInterface, publi
 };
 
 
-inline QTimerStatechart::OperationCallback::~OperationCallback() {}
 
 
 #endif /* QTIMERSTATECHART_H_ */

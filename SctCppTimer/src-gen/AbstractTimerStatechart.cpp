@@ -12,7 +12,10 @@ Implementation of the state machine 'Statechart'
 
 
 
-AbstractTimerStatechart::AbstractTimerStatechart() noexcept
+AbstractTimerStatechart::AbstractTimerStatechart() noexcept :
+	sc::timer::TimedInterface(),
+				std::enable_shared_from_this<sc::timer::TimedInterface>(),
+				sc::EventDrivenInterface()
 {
 	std::fill(std::begin(stateConfVector), std::end(stateConfVector), AbstractTimerStatechart::State::NO_STATE);
 	clearInEvents();
@@ -20,14 +23,15 @@ AbstractTimerStatechart::AbstractTimerStatechart() noexcept
 
 AbstractTimerStatechart::~AbstractTimerStatechart()
 {
-	if(!timerService) return;
-	timerService->unsetTimerRaw(this, 0);
-	timerService->unsetTimerRaw(this, 1);
-	timerService->unsetTimerRaw(this, 2);
-	timerService->unsetTimerRaw(this, 3);
-	timerService->unsetTimerRaw(this, 4);
-	timerService->unsetTimerRaw(this, 5);
-	timerService->unsetTimerRaw(this, 6);
+	if (timerService != nullptr) {
+		timerService->unsetTimerRaw(this, 0);
+		timerService->unsetTimerRaw(this, 1);
+		timerService->unsetTimerRaw(this, 2);
+		timerService->unsetTimerRaw(this, 3);
+		timerService->unsetTimerRaw(this, 4);
+		timerService->unsetTimerRaw(this, 5);
+		timerService->unsetTimerRaw(this, 6);
+	}
 }
 
 
@@ -117,11 +121,11 @@ sc::integer AbstractTimerStatechart::getNumberOfParallelTimeEvents() noexcept {
 	return parallelTimeEventsCount;
 }
 
-void AbstractTimerStatechart::raiseTimeEvent(sc::eventid evid)
+void AbstractTimerStatechart::raiseTimeEvent(sc::eventid event)
 {
-	if (evid < timeEventsCount)
+	if (event < timeEventsCount)
 	{
-		incomingEventQueue.push_back(std::unique_ptr< EventInstance>(new EventInstance(static_cast<AbstractTimerStatechart::Event>(evid + static_cast<sc::integer>(AbstractTimerStatechart::Event::_te0_main_region_First_)))));
+		incomingEventQueue.push_back(std::unique_ptr< EventInstance>(new EventInstance(static_cast<AbstractTimerStatechart::Event>(event + static_cast<sc::integer>(AbstractTimerStatechart::Event::_te0_main_region_First_)))));
 		runCycle();
 	}
 }
@@ -234,9 +238,9 @@ void AbstractTimerStatechart::setOperationCallback(std::shared_ptr<OperationCall
 void AbstractTimerStatechart::enact_main_region_First()
 {
 	/* Entry action for state 'First'. */
-	timerService->setTimer(shared_from_this(), 0, (static_cast<sc::time> (AbstractTimerStatechart::exit12)), false);
-	timerService->setTimer(shared_from_this(), 1, (static_cast<sc::time> (301)), true);
-	timerService->setTimer(shared_from_this(), 2, (static_cast<sc::time> (749)), false);
+	timerService->setTimer(shared_from_this(), 0, (static_cast<::sc::time> (AbstractTimerStatechart::exit12)), false);
+	timerService->setTimer(shared_from_this(), 1, (static_cast<::sc::time> (301)), true);
+	timerService->setTimer(shared_from_this(), 2, (static_cast<::sc::time> (749)), false);
 	ifaceOperationCallback->dump("Enter first state");
 }
 
@@ -244,10 +248,10 @@ void AbstractTimerStatechart::enact_main_region_First()
 void AbstractTimerStatechart::enact_main_region_Second()
 {
 	/* Entry action for state 'Second'. */
-	timerService->setTimer(shared_from_this(), 3, (static_cast<sc::time> (AbstractTimerStatechart::exit21)), false);
-	timerService->setTimer(shared_from_this(), 4, (static_cast<sc::time> (250)), true);
-	timerService->setTimer(shared_from_this(), 5, (static_cast<sc::time> (150)), true);
-	timerService->setTimer(shared_from_this(), 6, (static_cast<sc::time> (350)), false);
+	timerService->setTimer(shared_from_this(), 3, (static_cast<::sc::time> (AbstractTimerStatechart::exit21)), false);
+	timerService->setTimer(shared_from_this(), 4, (static_cast<::sc::time> (250)), true);
+	timerService->setTimer(shared_from_this(), 5, (static_cast<::sc::time> (150)), true);
+	timerService->setTimer(shared_from_this(), 6, (static_cast<::sc::time> (350)), false);
 	ifaceOperationCallback->dump("Enter second state");
 }
 
